@@ -28,7 +28,8 @@ import Box from '@material-ui/core/Box';
 import { flexbox } from '@material-ui/system';
 import Favorite from '@material-ui/icons/Favorite';
 import ReactGA from 'react-ga';
-
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+import { useTheme } from '@material-ui/core/styles';
 const originList = [
     "All",
     "France",
@@ -126,6 +127,8 @@ const useStyles = makeStyles(theme => ({
         padding: theme.spacing(6),
     },
     pagination: {
+        marginLeft:"-50px",
+        marginRight:"-50px",
         paddingTop: '3em',
         paddingBottom: '3em',
         textAlign: 'center'
@@ -137,14 +140,14 @@ const useStyles = makeStyles(theme => ({
 
     },
     pageRootStandard: {
-        margin: "0.5em",
+        margin: "0.25em",
         backgroundColor: '#393942',
         '&:hover': {
             backgroundColor: 'rgba(255, 255, 255, 0.8)',
         },
     },
     pageRootCurrent: {
-        margin: "0.5em",
+        margin: "0.25em",
         backgroundColor: '#393942',
         '&:hover': {
             backgroundColor: 'rgba(255, 255, 255, 0.8)',
@@ -265,8 +268,10 @@ function PostCard(props) {
 function PostGrid(props) {
     const classes = useStyles();
     const router = useRouter();
+    const theme = useTheme();
     let currentTags = router.query.tags ? router.query.tags.split(',') : []
-
+    const matches = useMediaQuery(theme.breakpoints.down('sm'));
+    console.log(matches)
     const handlePageClick = (offset) => {
         router.push({
             pathname: '/',
@@ -294,6 +299,8 @@ function PostGrid(props) {
                 total={props.entries.total}
                 onClick={(e, offset) => handlePageClick(offset)}
                 size="large"
+                innerButtonCount={matches?-1:1}
+                outerButtonCount={matches?-1:1}
                 className={classes.pagination}
                 currentPageColor='secondary'
                 classes={{
@@ -405,6 +412,7 @@ function MainPage(props) {
     const classes = useStyles();
     const router = useRouter();
     
+    
     ReactGA.pageview(router.asPath);
     const handleClick1 = (event) => {
         let currentTags = router.query.tags.split(',')
@@ -422,10 +430,11 @@ function MainPage(props) {
             <div className={classes.heroContent}>
                 <Container maxWidth="xl" >
                     <Typography variant="h1" align="center"> scaredpanties</Typography>
+                    <Container maxWidth="xs">
                     <Typography variant="h6" align="center" color="textSecondary" className={classes.heroTypography} paragraph>
-                        a handpicked and lovely currated Lingerie brands catalog
+                        a handpicked and lovely curated lingerie brands catalog
                     </Typography>
-
+                    </Container>
                 </Container>
             </div>
             <SocialLinks />
