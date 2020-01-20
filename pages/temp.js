@@ -1,1 +1,0 @@
-{props.entries.map(entry => <h3 key={entry.fields.title} >{entry.fields.title}</h3>)}
