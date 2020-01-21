@@ -30,6 +30,8 @@ import Favorite from '@material-ui/icons/Favorite';
 import ReactGA from 'react-ga';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useTheme } from '@material-ui/core/styles';
+import Badge from '@material-ui/core/Badge';
+
 const originList = [
     "All",
     "France",
@@ -102,7 +104,7 @@ const client = contentful.createClient({
 
 function initializeReactGAmain() {
     ReactGA.initialize('UA-39274880-4');
-    
+
 }
 
 initializeReactGAmain()
@@ -128,14 +130,14 @@ const useStyles = makeStyles(theme => ({
         padding: theme.spacing(6),
     },
     pagination: {
-        marginLeft:"-50px",
-        marginRight:"-50px",
+        marginLeft: "-50px",
+        marginRight: "-50px",
         paddingTop: '3em',
         paddingBottom: '3em',
         textAlign: 'center'
     },
     pageLabel: {
-        
+
         paddingLeft: '0.5em',
         paddingRight: '0.5em'
 
@@ -143,7 +145,7 @@ const useStyles = makeStyles(theme => ({
     },
     pageRootStandard: {
         margin: "0.4em",
-        padding:"0.4em",
+        padding: "0.4em",
         backgroundColor: '#393942',
         '&:hover': {
             backgroundColor: 'rgba(255, 255, 255, 0.8)',
@@ -151,7 +153,7 @@ const useStyles = makeStyles(theme => ({
     },
     pageRootCurrent: {
         margin: "0.5em",
-        padding:"0.5em",
+        padding: "0.5em",
         backgroundColor: '#393942',
         '&:hover': {
             backgroundColor: 'rgba(255, 255, 255, 0.8)',
@@ -215,9 +217,10 @@ function SocialLinks() {
 
 function PostCard(props) {
     const classes = useStyles();
-    
+
     return (
         <Grid item xs={12} sm={6} md={4}>
+
             <Card >
                 <CardHeader
                     classes={{
@@ -240,30 +243,47 @@ function PostCard(props) {
                             {props.entrie.fields.title}
                         </Link>
                     }
-                    subheader={<Typography variant="subtitle2" color="textSecondary">{props.entrie.fields.origin}</Typography>}
+                    subheader={<Box >
+                                <Typography display="inline" variant="subtitle2" color="textSecondary">
+                                    {props.entrie.fields.origin}
+                                </Typography>
+                                <Typography display="inline" style={{float:"right"}} variant="subtitle2" color="textSecondary">
+                                    {props.entrie.fields.sizes?props.entrie.fields.sizes.toString():""}
+                                </Typography>
+                                </Box>
+                                }
 
                     action={props.entrie.fields.fav === true ? <Favorite style={{ color: "red", margin: "auto" }} /> : null}
                 />
 
                 <CardMedia
-                    
-                    image={props.entrie.fields.thumbnail?props.entrie.fields.thumbnail.fields.file.url:'https://via.placeholder.com/150'}
+
+                    image={props.entrie.fields.thumbnail ? props.entrie.fields.thumbnail.fields.file.url : 'https://via.placeholder.com/150'}
                     className={classes.cardMedia}
                 />
+
+
                 <CardContent>
+
                     <Typography variant="body2" color="textSecondary" gutterBottom component="p">
                         {props.entrie.fields.desc}
                     </Typography>
 
+
+                </CardContent>
+                <CardActionArea>
                     <Box display="flex" flexWrap="wrap" justifyContent="space-around" style={{ marginTop: "5px" }}>
                         {props.entrie.fields.tags.map(tag => (
                             <Typography key={tag} color="textSecondary" style={{ margin: "3px" }} variant="subtitle2">{tag}</Typography>
                         ))}
                     </Box>
 
-                </CardContent>
+                </CardActionArea>
+
+
 
             </Card>
+
         </Grid>
     )
 }
@@ -275,7 +295,7 @@ function PostGrid(props) {
     const theme = useTheme();
     let currentTags = router.query.tags ? router.query.tags.split(',') : []
     const matches = useMediaQuery(theme.breakpoints.down('sm'));
-    
+
     const handlePageClick = (offset) => {
         router.push({
             pathname: '/',
@@ -303,8 +323,8 @@ function PostGrid(props) {
                 total={props.entries.total}
                 onClick={(e, offset) => handlePageClick(offset)}
                 size="large"
-                innerButtonCount={matches?1:2}
-                outerButtonCount={matches?1:2}
+                innerButtonCount={matches ? 1 : 2}
+                outerButtonCount={matches ? 1 : 2}
                 className={classes.pagination}
                 currentPageColor='secondary'
                 classes={{
@@ -312,7 +332,7 @@ function PostGrid(props) {
                     rootCurrent: classes.pageRootCurrent,
                     rootEllipsis: classes.pageRootStandard,
                     rootStandard: classes.pageRootStandard,
-                    rootEnd:classes.pageRootStandard,
+                    rootEnd: classes.pageRootStandard,
                     label: classes.pageLabel, // class name, e.g. `classes-nesting-label-x`
                 }}
 
@@ -416,8 +436,8 @@ function SelectSize(props) {
 function MainPage(props) {
     const classes = useStyles();
     const router = useRouter();
-    
-    
+
+
     ReactGA.pageview('/catalog');
     const handleClick1 = (event) => {
         let currentTags = router.query.tags.split(',')
@@ -436,8 +456,8 @@ function MainPage(props) {
                 <Container maxWidth="xl" >
                     <Typography variant="h1" align="center"> scaredpanties</Typography>
                     <Container maxWidth="xs">
-                    <Typography variant="h6" align="center" color="textSecondary" className={classes.heroTypography} paragraph>
-                        a handpicked and lovely curated lingerie brands catalog
+                        <Typography variant="h6" align="center" color="textSecondary" className={classes.heroTypography} paragraph>
+                            a handpicked and lovely curated lingerie brands catalog
                     </Typography>
                     </Container>
                 </Container>
@@ -473,7 +493,7 @@ function MainPage(props) {
 
 MainPage.getInitialProps = async (context) => {
     const entries = await client.getEntries({
-        include:1,
+        include: 1,
         'fields.tags[all]': (context.query.tags == 'All' || context.query.tags === '') ? undefined : context.query.tags,
         'fields.origin': (context.query.origin === 'All' || context.query.origin === '') ? undefined : context.query.origin,
         'fields.sizes': (context.query.sizes != 'All') ? context.query.sizes : undefined,
@@ -482,7 +502,7 @@ MainPage.getInitialProps = async (context) => {
         skip: parseInt(context.query.offset) ? parseInt(context.query.offset) : 0
     })
     //console.log(entries.items)
-    
+
     return { entries: entries }
 }
 
