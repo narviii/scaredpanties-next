@@ -107,6 +107,7 @@ function initializeReactGAmain() {
 
 initializeReactGAmain()
 
+
 const useStyles = makeStyles(theme => ({
     heroContent: {
         backgroundImage: "url(" + "https://blog.scaredpanties.com/content/images/size/w2000/2019/06/B0010006_extended2.jpg" + ")",
@@ -149,8 +150,8 @@ const useStyles = makeStyles(theme => ({
         },
     },
     pageRootCurrent: {
-        margin: "0.25em",
-        padding:"0.25em",
+        margin: "0.5em",
+        padding:"0.5em",
         backgroundColor: '#393942',
         '&:hover': {
             backgroundColor: 'rgba(255, 255, 255, 0.8)',
@@ -274,7 +275,7 @@ function PostGrid(props) {
     const theme = useTheme();
     let currentTags = router.query.tags ? router.query.tags.split(',') : []
     const matches = useMediaQuery(theme.breakpoints.down('sm'));
-    console.log(matches)
+    
     const handlePageClick = (offset) => {
         router.push({
             pathname: '/',
@@ -417,7 +418,7 @@ function MainPage(props) {
     const router = useRouter();
     
     
-    ReactGA.pageview(router.asPath);
+    ReactGA.pageview('/catalog');
     const handleClick1 = (event) => {
         let currentTags = router.query.tags.split(',')
         currentTags.push('Clothes')
