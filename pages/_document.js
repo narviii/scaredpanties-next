@@ -11,7 +11,7 @@ export default class MyDocument extends Document {
           {/* PWA primary color */}
           <meta property="og:title" content="Lingerie brands catalog."/>
           <meta property="og:description" content="A list and catalog of lingerie brands assembled and lovely currated by scaredpanties."/>
-          <meta property="og:image" content="https://blog.scaredpanties.com/content/images/size/w2000/2019/06/B0010006_extended2.jpg"/>
+          <meta property="og:image" content="https://blog.scaredpanties.com/content/images/2020/01/fb_preview.jpg"/>
           <meta property="og:url" content="https://catalog.scaredpanties.com"/>
 
           <meta name="theme-color" content={theme.palette.primary.main} />
