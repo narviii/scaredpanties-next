@@ -18,7 +18,7 @@ export default class MyDocument extends Document {
           <meta name="twitter:title" content="Lingerie brands catalog."/>
           <meta name="twitter:description" content="A list and catalog of lingerie brands assembled and lovely currated by scaredpanties."/>
           <meta name="twitter:image" content="https://blog.scaredpanties.com/content/images/2020/01/fb_preview.jpg"/>
-          <meta name="twitter:card" content="summary_image_scaredpanties"/>
+          <meta name="twitter:card" content="summary_large_image"/>
 
           <meta name="theme-color" content={theme.palette.primary.main} />
           <link
