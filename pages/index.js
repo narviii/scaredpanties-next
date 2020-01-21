@@ -30,7 +30,10 @@ import Favorite from '@material-ui/icons/Favorite';
 import ReactGA from 'react-ga';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useTheme } from '@material-ui/core/styles';
-import Badge from '@material-ui/core/Badge';
+import MailchimpSubscribe from "react-mailchimp-subscribe"
+
+const url = "https://scaredpanties.us20.list-manage.com/subscribe/post?u=65173dffd9ab714c0d2d985ab&amp;id=ed2dc9ceb2";
+
 
 const originList = [
     "All",
@@ -103,7 +106,7 @@ const client = contentful.createClient({
 //UA-39274880-4 dev
 
 function initializeReactGAmain() {
-    ReactGA.initialize('UA-39274880-4');
+    ReactGA.initialize('UA-39274880-3');
 
 }
 
@@ -159,6 +162,14 @@ const useStyles = makeStyles(theme => ({
             backgroundColor: 'rgba(255, 255, 255, 0.8)',
         },
     },
+    ms: {
+        textAlign: "center",
+        padding: "10px",
+
+        '& *': {
+            fontSize: "1.2em",
+        },
+        },
     cardAction: {
         marginTop: '0px',
         marginRight: '0px'
@@ -172,6 +183,8 @@ const useStyles = makeStyles(theme => ({
         },
 
     },
+
+
 
 
 
@@ -244,14 +257,14 @@ function PostCard(props) {
                         </Link>
                     }
                     subheader={<Box >
-                                <Typography display="inline" variant="subtitle2" color="textSecondary">
-                                    {props.entrie.fields.origin}
-                                </Typography>
-                                <Typography display="inline" style={{float:"right"}} variant="subtitle2" color="textSecondary">
-                                    {props.entrie.fields.sizes?props.entrie.fields.sizes.toString():""}
-                                </Typography>
-                                </Box>
-                                }
+                        <Typography display="inline" variant="subtitle2" color="textSecondary">
+                            {props.entrie.fields.origin}
+                        </Typography>
+                        <Typography display="inline" style={{ float: "right" }} variant="subtitle2" color="textSecondary">
+                            {props.entrie.fields.sizes ? props.entrie.fields.sizes.toString() : ""}
+                        </Typography>
+                    </Box>
+                    }
 
                     action={props.entrie.fields.fav === true ? <Favorite style={{ color: "red", margin: "auto" }} /> : null}
                 />
@@ -474,6 +487,10 @@ function MainPage(props) {
             <PostGrid entries={props.entries} />
             <Container maxWidth="md" style={{ textAlign: "center" }}>
                 <Typography variant="subtitle2" color="textSecondary">Currently i have {props.entries.total} lingerie brands in my catalog from {originList.length} countries. Come back soon, i will add more!</Typography>
+            </Container>
+            <Container maxWidth="sm" className={classes.ms} justify="space-between"  >
+                <Typography gutterBottom variant="h6">subscribe to scaredpanties updates:</Typography>
+                <MailchimpSubscribe url={url} />
             </Container>
 
             <footer className={classes.footer} >
