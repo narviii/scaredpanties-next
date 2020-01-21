@@ -518,7 +518,7 @@ MainPage.getInitialProps = async (context) => {
         limit: 12,
         skip: parseInt(context.query.offset) ? parseInt(context.query.offset) : 0
     })
-    //console.log(entries.items)
+
 
     return { entries: entries }
 }
