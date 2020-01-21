@@ -134,13 +134,15 @@ const useStyles = makeStyles(theme => ({
         textAlign: 'center'
     },
     pageLabel: {
-        paddingLeft: '1em',
-        paddingRight: '1em'
+        
+        paddingLeft: '0.5em',
+        paddingRight: '0.5em'
 
 
     },
     pageRootStandard: {
-        margin: "0.25em",
+        margin: "0.4em",
+        padding:"0.4em",
         backgroundColor: '#393942',
         '&:hover': {
             backgroundColor: 'rgba(255, 255, 255, 0.8)',
@@ -148,6 +150,7 @@ const useStyles = makeStyles(theme => ({
     },
     pageRootCurrent: {
         margin: "0.25em",
+        padding:"0.25em",
         backgroundColor: '#393942',
         '&:hover': {
             backgroundColor: 'rgba(255, 255, 255, 0.8)',
@@ -299,8 +302,8 @@ function PostGrid(props) {
                 total={props.entries.total}
                 onClick={(e, offset) => handlePageClick(offset)}
                 size="large"
-                innerButtonCount={matches?-1:1}
-                outerButtonCount={matches?-1:1}
+                innerButtonCount={matches?1:2}
+                outerButtonCount={matches?1:2}
                 className={classes.pagination}
                 currentPageColor='secondary'
                 classes={{
@@ -308,6 +311,7 @@ function PostGrid(props) {
                     rootCurrent: classes.pageRootCurrent,
                     rootEllipsis: classes.pageRootStandard,
                     rootStandard: classes.pageRootStandard,
+                    rootEnd:classes.pageRootStandard,
                     label: classes.pageLabel, // class name, e.g. `classes-nesting-label-x`
                 }}
 
