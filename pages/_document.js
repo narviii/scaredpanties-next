@@ -9,12 +9,21 @@ export default class MyDocument extends Document {
       <html lang="en">
         <Head>
           {/* PWA primary color */}
+          <meta property="og:title" content="Lingerie brands catalog."/>
+          <meta property="og:description" content="A list and catalog of lingerie brands assembled and lovely currated by scaredpanties."/>
+          <meta property="og:image" content="https://blog.scaredpanties.com/content/images/size/w2000/2019/06/B0010006_extended2.jpg"/>
+          <meta property="og:url" content="https://catalog.scaredpanties.com"/>
+
           <meta name="theme-color" content={theme.palette.primary.main} />
           <link
             rel="stylesheet"
             href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
           />
           <link rel="icon" type="image/x-icon" href="favicon.ico" />
+          <meta
+            name="description"
+            content="A handpicked and lovely curated lingerie brands catalog by scaredpanties."
+          />
         </Head>
         <body>
           <Main />
