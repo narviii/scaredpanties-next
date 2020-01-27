@@ -112,7 +112,7 @@ const client = contentful.createClient({
 //UA-39274880-4 dev
 
 function initializeReactGAmain() {
-    ReactGA.initialize('UA-39274880-3');
+    ReactGA.initialize('UA-39274880-4');
 
 }
 
@@ -153,7 +153,7 @@ const useStyles = makeStyles(theme => ({
 
     },
     pageRootStandard: {
-        margin: "0.4em",
+        margin: "0.25em",
         padding: "0.4em",
         backgroundColor: '#393942',
         '&:hover': {
@@ -161,7 +161,7 @@ const useStyles = makeStyles(theme => ({
         },
     },
     pageRootCurrent: {
-        margin: "0.5em",
+        margin: "0.25em",
         padding: "0.5em",
         backgroundColor: '#393942',
         '&:hover': {

@@ -12,7 +12,7 @@ const theme = createMuiTheme({
 theme.typography.h1 = {
   fontSize: '6rem',
   '@media (max-width:650px)': {
-    fontSize: '3.3rem',
+    fontSize: '2.8rem',
   },
 };
 
