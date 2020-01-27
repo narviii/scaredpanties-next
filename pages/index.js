@@ -31,6 +31,9 @@ import ReactGA from 'react-ga';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useTheme } from '@material-ui/core/styles';
 import MailchimpSubscribe from "react-mailchimp-subscribe"
+import ToggleButton from '@material-ui/lab/ToggleButton';
+import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
+
 
 const url = "https://scaredpanties.us20.list-manage.com/subscribe/post?u=65173dffd9ab714c0d2d985ab&amp;id=ed2dc9ceb2";
 
@@ -75,7 +78,6 @@ const originList = [
 ]
 
 const tagList = [
-    "All",
     "Swimwear",
     "Lingerie",
     "Clothes",
@@ -96,6 +98,10 @@ const sizeList = [
     "Small cup",
     "Large cup"
 ]
+
+originList.sort()
+tagList.sort()
+tagList.unshift("All")
 
 const client = contentful.createClient({
     space: 'y1tpc6gwyz3g',
@@ -130,7 +136,7 @@ const useStyles = makeStyles(theme => ({
     },
     footer: {
 
-        padding: theme.spacing(6),
+        padding: theme.spacing(4),
     },
     pagination: {
         marginLeft: "-50px",
@@ -163,13 +169,15 @@ const useStyles = makeStyles(theme => ({
         },
     },
     ms: {
-        textAlign: "center",
+        
+        
+        
         padding: "10px",
 
         '& *': {
             fontSize: "1.2em",
         },
-        },
+    },
     cardAction: {
         marginTop: '0px',
         marginRight: '0px'
@@ -204,10 +212,11 @@ function Copyright() {
 
 function SocialLinks() {
     return (
-        <Container maxWidth="md">
+        <Container maxWidth="md" style={{ marginTop: "20px" }}>
             <Grid container justify="space-between" alignItems="center" spacing={2}>
                 <Grid item>
-                    <Button variant="outlined" color="primary" href="https://blog.scaredpanties.com" > BLOG </Button>
+                    <Button size="large" variant="outlined" color="inherit" href="https://blog.scaredpanties.com" > BLOG </Button>
+                    <Button style={{marginLeft:"30px"}}size="large" variant="outlined" color="primary" href="#subscribe" > SUBSCRIBE </Button>
                 </Grid>
                 <Grid item>
                     <IconButton color="primary" aria-label="Mail to scaredpanties" href="mailto:scaredpanties@gmail.com">
@@ -313,10 +322,7 @@ function PostGrid(props) {
         router.push({
             pathname: '/',
             query: {
-                sizes: router.query.sizes,
-                origin: router.query.origin,
-                tags: router.query.tags,
-                offset: offset,
+                ...router.query,offset:offset
 
             },
         })
@@ -361,9 +367,11 @@ function SelectOrigin(props) {
         router.push({
             pathname: '/',
             query: {
-                tags: router.query.tags,
-                sizes: router.query.sizes,
+                
+                ...router.query,
                 origin: event.target.value,
+                offset:0
+                
             },
         })
     }
@@ -392,15 +400,17 @@ function SelectTags(props) {
         router.push({
             pathname: '/',
             query: {
-                origin: router.query.origin,
-                sizes: router.query.sizes,
-                tags: event.target.value,
+                
+                ...router.query,
+                tags:event.target.value,
+                offset:0
+                
             },
         })
     }
     return (
         <FormControl variant="outlined" className={classes.formControl}>
-            <InputLabel id="tag-select">Brand tags</InputLabel>
+            <InputLabel id="tag-select">Products</InputLabel>
             <Select
 
                 labelId="tag-select"
@@ -423,9 +433,11 @@ function SelectSize(props) {
         router.push({
             pathname: '/',
             query: {
-                origin: router.query.origin,
-                tags: router.query.tags,
-                sizes: event.target.value,
+                
+                ...router.query,
+                sizes:event.target.value,
+                offset:0
+                
             },
         })
     }
@@ -446,10 +458,43 @@ function SelectSize(props) {
     )
 }
 
+function OrderSelector(props) {
+    const router = useRouter();
+    const handleChange = (event,order) => {
+        router.push({
+            pathname: '/',
+            query: {
+                
+                ...router.query,order:order,
+               
+               
+            },
+        })
+        
+        
+    }
+
+    return (
+        <ToggleButtonGroup style={{margin:"auto"}}
+            value={(!router.query.order)?"newest":router.query.order} 
+            onChange={handleChange}
+            size="large" exclusive 
+            aria-label="ordering">
+            <ToggleButton aria-label="newest" value="newest">
+               Newest
+            </ToggleButton>
+            <ToggleButton aria-label="alphabet" value="alphabet">
+                Alphabet
+            </ToggleButton>
+        </ToggleButtonGroup>
+    )
+}
+
 function MainPage(props) {
     const classes = useStyles();
     const router = useRouter();
 
+    
 
     ReactGA.pageview('/catalog');
     const handleClick1 = (event) => {
@@ -477,18 +522,22 @@ function MainPage(props) {
             </div>
             <SocialLinks />
             <Container maxWidth='lg' style={{ marginTop: "10px", marginBottom: "20px" }} >
-                <Box justifyContent="center" display="flex" flexWrap="wrap">
+                <Box justifyContent="center" alignContent="center" display="flex" flexWrap="wrap">
                     <SelectOrigin />
                     <SelectTags />
                     <SelectSize />
+                    <OrderSelector />
                 </Box>
 
             </Container>
             <PostGrid entries={props.entries} />
-            <Container maxWidth="md" style={{ textAlign: "center" }}>
-                <Typography variant="subtitle2" color="textSecondary">Currently i have {props.entries.total} lingerie brands in my catalog from {originList.length} countries. Come back soon, i will add more!</Typography>
+            <Container maxWidth="sm" style={{ textAlign: "center" }}>
+                <Favorite style={{ color: "red" }} />
+                <Typography variant="subtitle2" color="textSecondary">
+
+                    This sign means the brand is my favorite! Currently i have {props.entries.total} lingerie brands in my catalog from {originList.length} countries. Come back soon, i will add more!</Typography>
             </Container>
-            <Container maxWidth="sm" className={classes.ms} justify="space-between"  >
+            <Container id="subscribe" maxWidth="sm" align="center" className={classes.ms} justify="center"  >
                 <Typography gutterBottom variant="h6">subscribe to scaredpanties updates:</Typography>
                 <MailchimpSubscribe url={url} />
             </Container>
@@ -511,6 +560,7 @@ function MainPage(props) {
 MainPage.getInitialProps = async (context) => {
     const entries = await client.getEntries({
         include: 1,
+        order: (context.query.order == 'alphabet' ? 'fields.title' : 'sys.updatedAt'),
         'fields.tags[all]': (context.query.tags == 'All' || context.query.tags === '') ? undefined : context.query.tags,
         'fields.origin': (context.query.origin === 'All' || context.query.origin === '') ? undefined : context.query.origin,
         'fields.sizes': (context.query.sizes != 'All') ? context.query.sizes : undefined,
@@ -518,7 +568,7 @@ MainPage.getInitialProps = async (context) => {
         limit: 12,
         skip: parseInt(context.query.offset) ? parseInt(context.query.offset) : 0
     })
-
+    //console.log(entries.items)
 
     return { entries: entries }
 }
