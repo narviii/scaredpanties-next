@@ -319,6 +319,11 @@ function PostGrid(props) {
     const matches = useMediaQuery(theme.breakpoints.down('sm'));
 
     const handlePageClick = (offset) => {
+        ReactGA.event({
+            category: 'user',
+            action: 'navigation',
+            label: 'pagination'
+        })
         router.push({
             pathname: '/',
             query: {
@@ -364,6 +369,11 @@ function SelectOrigin(props) {
     const classes = useStyles();
     const router = useRouter();
     const handleChange = (event) => {
+        ReactGA.event({
+            category: 'user',
+            action: 'navigation',
+            label: 'origin'
+        })
         router.push({
             pathname: '/',
             query: {
@@ -397,6 +407,11 @@ function SelectTags(props) {
     const classes = useStyles();
     const router = useRouter();
     const handleChange = (event) => {
+        ReactGA.event({
+            category: 'user',
+            action: 'navigation',
+            label: 'tags'
+        })
         router.push({
             pathname: '/',
             query: {
@@ -430,6 +445,11 @@ function SelectSize(props) {
     const classes = useStyles();
     const router = useRouter();
     const handleChange = (event) => {
+        ReactGA.event({
+            category: 'user',
+            action: 'navigation',
+            label: 'size'
+        })
         router.push({
             pathname: '/',
             query: {
@@ -461,6 +481,11 @@ function SelectSize(props) {
 function OrderSelector(props) {
     const router = useRouter();
     const handleChange = (event,order) => {
+        ReactGA.event({
+            category: 'user',
+            action: 'navigation',
+            label: 'order'
+        })
         router.push({
             pathname: '/',
             query: {
