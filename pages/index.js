@@ -33,7 +33,7 @@ import { useTheme } from '@material-ui/core/styles';
 import MailchimpSubscribe from "react-mailchimp-subscribe"
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
-
+import {Subscribe} from '../src/subscribe'
 
 const url = "https://scaredpanties.us20.list-manage.com/subscribe/post?u=65173dffd9ab714c0d2d985ab&amp;id=ed2dc9ceb2";
 
@@ -112,7 +112,7 @@ const client = contentful.createClient({
 //UA-39274880-4 dev
 
 function initializeReactGAmain() {
-    ReactGA.initialize('UA-39274880-3');
+    ReactGA.initialize('UA-39274880-4');
 
 }
 
@@ -216,7 +216,7 @@ function SocialLinks() {
             <Grid container justify="space-between" alignItems="center" spacing={2}>
                 <Grid item>
                     <Button size="large" variant="outlined" color="inherit" href="https://blog.scaredpanties.com" > BLOG </Button>
-                    <Button style={{marginLeft:"30px"}}size="large" variant="outlined" color="primary" href="#subscribe" > SUBSCRIBE </Button>
+                    <Subscribe/>
                 </Grid>
                 <Grid item>
                     <IconButton color="primary" aria-label="Mail to scaredpanties" href="mailto:scaredpanties@gmail.com">
@@ -561,10 +561,6 @@ function MainPage(props) {
                 <Typography variant="subtitle2" color="textSecondary">
 
                     This sign means the brand is my favorite! Currently i have {props.entries.total} lingerie brands in my catalog from {originList.length} countries. Come back soon, i will add more!</Typography>
-            </Container>
-            <Container id="subscribe" maxWidth="sm" align="center" className={classes.ms} justify="center"  >
-                <Typography gutterBottom variant="h6">subscribe to scaredpanties updates:</Typography>
-                <MailchimpSubscribe url={url} />
             </Container>
 
             <footer className={classes.footer} >
