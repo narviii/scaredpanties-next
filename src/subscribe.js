@@ -43,7 +43,7 @@ export function Subscribe() {
         Subscribe
       </Button>
       <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
-        <DialogTitle id="form-dialog-title">Subscribe to updates</DialogTitle>
+        <DialogTitle id="form-dialog-title">Subscribe to catalog updates</DialogTitle>
         <DialogContent>
           <DialogContentText>
             Leave your email and i will let you know when something new will pop up

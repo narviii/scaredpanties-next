@@ -215,7 +215,7 @@ function SocialLinks() {
         <Container maxWidth="md" style={{ marginTop: "20px" }}>
             <Grid container justify="space-between" alignItems="center" spacing={2}>
                 <Grid item>
-                    <Button size="large" variant="outlined" color="inherit" href="https://blog.scaredpanties.com" > BLOG </Button>
+                    <Button size="large" variant="outlined" color="inherit" href="https://blog.scaredpanties.com" > SCAREDPANTIES BLOG </Button>
                     <Subscribe/>
                 </Grid>
                 <Grid item>
@@ -581,7 +581,7 @@ function MainPage(props) {
 MainPage.getInitialProps = async (context) => {
     const entries = await client.getEntries({
         include: 1,
-        order: (context.query.order == 'alphabet' ? 'fields.title' : 'sys.updatedAt'),
+        order: (context.query.order == 'alphabet' ? 'fields.title' : '-sys.updatedAt'),
         'fields.tags[all]': (context.query.tags == 'All' || context.query.tags === '') ? undefined : context.query.tags,
         'fields.origin': (context.query.origin === 'All' || context.query.origin === '') ? undefined : context.query.origin,
         'fields.sizes': (context.query.sizes != 'All') ? context.query.sizes : undefined,
