@@ -33,7 +33,7 @@ import { useTheme } from '@material-ui/core/styles';
 import MailchimpSubscribe from "react-mailchimp-subscribe"
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
-import {Subscribe} from '../src/subscribe'
+import { Subscribe } from '../src/subscribe'
 
 const url = "https://scaredpanties.us20.list-manage.com/subscribe/post?u=65173dffd9ab714c0d2d985ab&amp;id=ed2dc9ceb2";
 
@@ -169,9 +169,9 @@ const useStyles = makeStyles(theme => ({
         },
     },
     ms: {
-        
-        
-        
+
+
+
         padding: "10px",
 
         '& *': {
@@ -216,7 +216,7 @@ function SocialLinks() {
             <Grid container justify="space-between" alignItems="center" spacing={2}>
                 <Grid item>
                     <Button size="large" variant="outlined" color="inherit" href="https://blog.scaredpanties.com" > SCAREDPANTIES BLOG </Button>
-                    <Subscribe/>
+                    <Subscribe />
                 </Grid>
                 <Grid item>
                     <IconButton color="primary" aria-label="Mail to scaredpanties" href="mailto:scaredpanties@gmail.com">
@@ -277,13 +277,23 @@ function PostCard(props) {
 
                     action={props.entrie.fields.fav === true ? <Favorite style={{ color: "red", margin: "auto" }} /> : null}
                 />
+                <Link
+                    color="textPrimary"
+                    href={props.entrie.fields.link}
+                    onClick={() => {
+                        ReactGA.event({
+                            category: 'user',
+                            action: 'outbound',
+                            label: props.entrie.fields.title
+                        })
+                    }}
 
-                <CardMedia
-
-                    image={props.entrie.fields.thumbnail ? props.entrie.fields.thumbnail.fields.file.url : 'https://via.placeholder.com/150'}
-                    className={classes.cardMedia}
-                />
-
+                >
+                    <CardMedia
+                        image={props.entrie.fields.thumbnail ? props.entrie.fields.thumbnail.fields.file.url : 'https://via.placeholder.com/150'}
+                        className={classes.cardMedia}
+                    />
+                </Link>
 
                 <CardContent>
 
@@ -327,7 +337,7 @@ function PostGrid(props) {
         router.push({
             pathname: '/',
             query: {
-                ...router.query,offset:offset
+                ...router.query, offset: offset
 
             },
         })
@@ -377,17 +387,17 @@ function SelectOrigin(props) {
         router.push({
             pathname: '/',
             query: {
-                
+
                 ...router.query,
                 origin: event.target.value,
-                offset:0
-                
+                offset: 0
+
             },
         })
     }
     return (
         <FormControl variant="outlined" className={classes.formControl}>
-            <InputLabel id="origin-select">Country of origin</InputLabel>
+            <InputLabel id="origin-select">Country</InputLabel>
             <Select
 
                 labelId="origin-select"
@@ -415,11 +425,11 @@ function SelectTags(props) {
         router.push({
             pathname: '/',
             query: {
-                
+
                 ...router.query,
-                tags:event.target.value,
-                offset:0
-                
+                tags: event.target.value,
+                offset: 0
+
             },
         })
     }
@@ -453,17 +463,17 @@ function SelectSize(props) {
         router.push({
             pathname: '/',
             query: {
-                
+
                 ...router.query,
-                sizes:event.target.value,
-                offset:0
-                
+                sizes: event.target.value,
+                offset: 0
+
             },
         })
     }
     return (
         <FormControl variant="outlined" className={classes.formControl}>
-            <InputLabel id="size-select">Sizes available</InputLabel>
+            <InputLabel id="size-select">Sizes</InputLabel>
             <Select
                 onChange={handleChange}
                 labelId="size-select"
@@ -480,7 +490,7 @@ function SelectSize(props) {
 
 function OrderSelector(props) {
     const router = useRouter();
-    const handleChange = (event,order) => {
+    const handleChange = (event, order) => {
         ReactGA.event({
             category: 'user',
             action: 'navigation',
@@ -489,24 +499,24 @@ function OrderSelector(props) {
         router.push({
             pathname: '/',
             query: {
-                
-                ...router.query,order:order,
-               
-               
+
+                ...router.query, order: order,
+
+
             },
         })
-        
-        
+
+
     }
 
     return (
-        <ToggleButtonGroup style={{margin:"auto"}}
-            value={(!router.query.order)?"newest":router.query.order} 
+        <ToggleButtonGroup style={{ margin: "auto" }}
+            value={(!router.query.order) ? "newest" : router.query.order}
             onChange={handleChange}
-            size="large" exclusive 
+            size="large" exclusive
             aria-label="ordering">
             <ToggleButton aria-label="newest" value="newest">
-               Newest
+                Newest
             </ToggleButton>
             <ToggleButton aria-label="alphabet" value="alphabet">
                 Alphabet
@@ -519,7 +529,7 @@ function MainPage(props) {
     const classes = useStyles();
     const router = useRouter();
 
-    
+
 
     ReactGA.pageview('/catalog');
     const handleClick1 = (event) => {
