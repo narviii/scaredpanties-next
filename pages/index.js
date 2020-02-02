@@ -577,7 +577,7 @@ function MainPage(props) {
                 <Favorite style={{ color: "red" }} />
                 <Typography variant="subtitle2" color="textSecondary">
 
-                    This sign means the brand is my favorite! Currently i have {props.entries.sys.total} lingerie brands in my catalog from {originList.length} countries. Come back soon, i will add more!</Typography>
+                    This sign means the brand is my favorite! Currently i have {props.entries.total} lingerie brands in my catalog from {originList.length} countries. Come back soon, i will add more!</Typography>
             </Container>
 
             <footer className={classes.footer} >
