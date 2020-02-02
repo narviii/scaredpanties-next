@@ -89,7 +89,14 @@ const tagList = [
     "Men",
     "Shapewear",
     "Dress Up",
-    "Sport"
+    "Sport",
+    "Jewelry",
+    "Bridal",
+    "Leakproof",
+    "Maternity",
+    "Surgery",
+    "Thermal",
+    "Shoes"
 ]
 
 const sizeList = [
@@ -540,7 +547,7 @@ function MainPage(props) {
             query: { tags: currentTags.toString() },
         })
     }
-
+    
     return (
 
         <React.Fragment>
@@ -570,7 +577,7 @@ function MainPage(props) {
                 <Favorite style={{ color: "red" }} />
                 <Typography variant="subtitle2" color="textSecondary">
 
-                    This sign means the brand is my favorite! Currently i have {props.entries.total} lingerie brands in my catalog from {originList.length} countries. Come back soon, i will add more!</Typography>
+                    This sign means the brand is my favorite! Currently i have {props.entries.sys.total} lingerie brands in my catalog from {originList.length} countries. Come back soon, i will add more!</Typography>
             </Container>
 
             <footer className={classes.footer} >
@@ -600,6 +607,7 @@ MainPage.getInitialProps = async (context) => {
         skip: parseInt(context.query.offset) ? parseInt(context.query.offset) : 0
     })
     //console.log(entries.items)
+    //console.log(entries)
 
     return { entries: entries }
 }
