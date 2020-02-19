@@ -34,6 +34,7 @@ import MailchimpSubscribe from "react-mailchimp-subscribe"
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import { Subscribe } from '../src/subscribe'
+import * as moment from 'moment';
 
 const url = "https://scaredpanties.us20.list-manage.com/subscribe/post?u=65173dffd9ab714c0d2d985ab&amp;id=ed2dc9ceb2";
 
@@ -246,7 +247,7 @@ function SocialLinks() {
 
 function PostCard(props) {
     const classes = useStyles();
-
+    console.log(moment(props.entrie.sys.updatedAt).fromNow())
     return (
         <Grid item xs={12} sm={6} md={4}>
 
@@ -279,6 +280,7 @@ function PostCard(props) {
                         <Typography display="inline" style={{ float: "right" }} variant="subtitle2" color="textSecondary">
                             {props.entrie.fields.sizes ? props.entrie.fields.sizes.toString() : ""}
                         </Typography>
+
                     </Box>
                     }
 
@@ -307,6 +309,9 @@ function PostCard(props) {
                     <Typography variant="body2" color="textSecondary" gutterBottom component="p">
                         {props.entrie.fields.desc}
                     </Typography>
+                    <Typography color="textSecondary" align="right" variant="caption" display="block" gutterBottom>
+                        {'Last update: ' + moment(props.entrie.sys.updatedAt).fromNow()}
+                     </Typography>
 
 
                 </CardContent>
@@ -316,7 +321,7 @@ function PostCard(props) {
                             <Typography key={tag} color="textSecondary" style={{ margin: "3px" }} variant="subtitle2">{tag}</Typography>
                         ))}
                     </Box>
-
+                
                 </CardActionArea>
 
 
@@ -547,7 +552,7 @@ function MainPage(props) {
             query: { tags: currentTags.toString() },
         })
     }
-    
+
     return (
 
         <React.Fragment>
