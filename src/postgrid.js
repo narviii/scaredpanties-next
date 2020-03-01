@@ -140,7 +140,7 @@ function PostCard(props) {
 
                 >
                     <CardMedia
-                        image={props.entrie.fields.thumbnail ? props.entrie.fields.thumbnail.fields.file.url : 'https://via.placeholder.com/150'}
+                        image={props.entrie.fields.thumbnail ? props.entrie.fields.thumbnail.fields.file.url + '?w=1024' : 'https://via.placeholder.com/150'}
                         className={classes.cardMedia}
                     />
                 </Link>
@@ -189,7 +189,7 @@ export function PostGrid(props) {
             label: 'pagination'
         })
         router.push({
-            pathname: '/',
+            pathname: router.pathname,
             query: {
                 ...router.query, offset: offset
 

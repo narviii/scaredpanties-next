@@ -35,7 +35,7 @@ const useStyles = makeStyles(theme => ({
     searchBar: {
         margin: theme.spacing(2),
 
-        width:500,
+        width: 500,
 
     }
 }))
@@ -84,10 +84,10 @@ function SearchBar(props) {
     const [input, setInput] = useState('')
     const router = useRouter();
 
-    const enterPress=(e)=> {
-        if(e.keyCode == 13){
+    const enterPress = (e) => {
+        if (e.keyCode == 13) {
             handleSearch()
-         }
+        }
     }
 
     const handleSearch = () => {
@@ -95,7 +95,9 @@ function SearchBar(props) {
             pathname: '/search',
             query: {
 
-                ...router.query, search: input,
+                ...router.query,
+                search: input,
+                offset:null
 
 
             },
@@ -105,8 +107,8 @@ function SearchBar(props) {
     return (
         <Container maxWidth='lg' style={{ margin: '20px auto' }}>
             <Box justifyContent="center" alignContent="center" display="flex" flexWrap="wrap">
-                <TextField  onKeyDown={enterPress}  value={input} onChange={(e) => setInput(e.target.value)} className={classes.searchBar}   id="brand-search" label="Search for a brand" variant="outlined" />
-                <Button  onClick={handleSearch} size="large" variant="outlined" color="inherit"> SEARCH</Button>
+                <TextField onKeyDown={enterPress} value={input} onChange={(e) => setInput(e.target.value)} className={classes.searchBar} id="brand-search" label="Search for a brand" variant="outlined" />
+                <Button onClick={handleSearch} size="large" variant="outlined" color="inherit"> SEARCH</Button>
             </Box>
         </Container>
     )
