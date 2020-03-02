@@ -160,7 +160,7 @@ function PostCard(props) {
                 
                     <Box display="flex" flexWrap="wrap" justifyContent="left" style={{ margin: "10px" }}>
                         {props.entrie.fields.tags.map(tag => (
-                            <Chip key={tag}  label={tag} style={{ margin: "3px" }} variant="subtitle2"/>
+                            <Chip key={tag}  label={tag} style={{ margin: "3px" }}/>
                         ))}
                     </Box>
                 
