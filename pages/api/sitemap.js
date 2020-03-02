@@ -17,6 +17,7 @@ export default async function sitemap(req,res) {
 
     const smStream = new SitemapStream({ hostname: 'https://catalog.scaredpanties.com' });
     smStream.write({ url: ``, changefreq: 'weekly'})
+    smStream.write({ url: `/search`, changefreq: 'weekly'})
     for(i=0;i<=pages;i++){
         smStream.write({ url: `?sizes=&origin=&tags=&offset=${i*12}`, changefreq: 'weekly'})
     }
