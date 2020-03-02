@@ -35,9 +35,13 @@ const client = contentful.createClient({
 
 const useStyles = makeStyles(theme => ({
     searchBar: {
-        margin: theme.spacing(1),
+        margin: theme.spacing(2),
+        width: '40em',
+        [theme.breakpoints.down('sm')]: {
+            width: "20em"
+        },
 
-        width: 500,
+
 
     }
 }))
@@ -107,7 +111,7 @@ function SearchBar(props) {
 
     }
     return (
-        <Container maxWidth='lg' >
+        <Container maxWidth='lg' style={{marginBottom:'20px'}} >
 
             <Grid container justify="center" alignItems="center" spacing={2}>
 
