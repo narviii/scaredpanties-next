@@ -17,6 +17,7 @@ import {Typography} from '@material-ui/core';
 import * as moment from 'moment';
 import Favorite from '@material-ui/icons/Favorite';
 import ReactGA from 'react-ga';
+import Chip from '@material-ui/core/Chip';
 
 
 const useStyles = makeStyles(theme => ({
@@ -156,14 +157,14 @@ function PostCard(props) {
 
 
                 </CardContent>
-                <CardActionArea>
-                    <Box display="flex" flexWrap="wrap" justifyContent="space-around" style={{ marginTop: "5px" }}>
+                
+                    <Box display="flex" flexWrap="wrap" justifyContent="left" style={{ margin: "10px" }}>
                         {props.entrie.fields.tags.map(tag => (
-                            <Typography key={tag} color="textSecondary" style={{ margin: "3px" }} variant="subtitle2">{tag}</Typography>
+                            <Chip key={tag}  label={tag} style={{ margin: "3px" }} variant="subtitle2"/>
                         ))}
                     </Box>
                 
-                </CardActionArea>
+                
 
 
 

@@ -22,7 +22,7 @@ export function SocialLinks(props) {
                     <Subscribe />
                 </Grid>
                 <Grid item>
-                    {props.search?<Button size="large" variant="outlined" color="inherit" href="/search" > SEARCH </Button>:null}
+                    {props.search?<Button size="large" variant="outlined" color="inherit" href="/search" > SEARCH CATALOG </Button>:<Button size="large" variant="outlined" color="inherit" href="/" > BACK TO CATALOG </Button>}
                     <IconButton color="primary" aria-label="Mail to scaredpanties" href="mailto:scaredpanties@gmail.com">
                         <MailIcon />
                     </IconButton>

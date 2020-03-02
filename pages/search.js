@@ -12,6 +12,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import { useState } from 'react'
 import { useRouter } from 'next/router';
 import ReactGA from 'react-ga';
+import Grid from '@material-ui/core/Grid';
+
 
 
 
@@ -33,7 +35,7 @@ const client = contentful.createClient({
 
 const useStyles = makeStyles(theme => ({
     searchBar: {
-        margin: theme.spacing(2),
+        margin: theme.spacing(1),
 
         width: 500,
 
@@ -97,7 +99,7 @@ function SearchBar(props) {
 
                 ...router.query,
                 search: input,
-                offset:null
+                offset: null
 
 
             },
@@ -105,11 +107,17 @@ function SearchBar(props) {
 
     }
     return (
-        <Container maxWidth='lg' style={{ margin: '20px auto' }}>
-            <Box justifyContent="center" alignContent="center" display="flex" flexWrap="wrap">
-                <TextField onKeyDown={enterPress} value={input} onChange={(e) => setInput(e.target.value)} className={classes.searchBar} id="brand-search" label="Search for a brand" variant="outlined" />
-                <Button onClick={handleSearch} size="large" variant="outlined" color="inherit"> SEARCH</Button>
-            </Box>
+        <Container maxWidth='lg' >
+
+            <Grid container justify="center" alignItems="center" spacing={2}>
+
+                <Grid item>
+                    <TextField onKeyDown={enterPress} value={input} onChange={(e) => setInput(e.target.value)} className={classes.searchBar} id="brand-search" label="Search for a brand" variant="outlined" />
+                </Grid>
+                <Grid item>
+                    <Button onClick={handleSearch} fullWidth size="large" variant="outlined" color="inherit"> SEARCH</Button>
+                </Grid>
+            </Grid>
         </Container>
     )
 }
