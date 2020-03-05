@@ -1,10 +1,15 @@
 
 const firestore = require('@google-cloud/firestore');
+const admin = require('firebase-admin');
 
-const db = new firestore({
-    projectId: 'apploan-b02b0',
-    keyFilename: './apploan-535837fc3b12.json',
-});
+const serviceAccount = require('./apploan-535837fc3b12.json');
+
+
+admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount)
+    });
+
+const db = admin.firestore();
 
 export default async function viewcount(req, res) {
     const increment = firestore.FieldValue.increment(1);

@@ -1,11 +1,6 @@
 {
     "routes": [
       { "src": "/sitemap.xml", "dest": "/api/sitemap" }
-    ],
-    
-      "env": {
-        "GOOGLE_APPLICATION_CREDENTIALS": "./apploan-535837fc3b12.json"
-        
-      }
-    
+    ]
+ 
   }
