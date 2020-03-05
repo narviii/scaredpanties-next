@@ -3,7 +3,7 @@ const firestore = require('@google-cloud/firestore');
 
 const db = new firestore({
     projectId: 'apploan-b02b0',
-    keyFilename: 'apploan-535837fc3b12.json',
+    keyFilename: './apploan-535837fc3b12.json',
 });
 
 export default async function viewcount(req, res) {
