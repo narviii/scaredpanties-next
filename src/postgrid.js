@@ -11,13 +11,14 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import CardHeader from '@material-ui/core/CardHeader';
 import Link from '@material-ui/core/Link';
-import {makeStyles} from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
-import {Typography} from '@material-ui/core';
+import { Typography } from '@material-ui/core';
 import * as moment from 'moment';
 import Favorite from '@material-ui/icons/Favorite';
 import ReactGA from 'react-ga';
 import Chip from '@material-ui/core/Chip';
+const axios = require('axios');
 
 
 const useStyles = makeStyles(theme => ({
@@ -103,6 +104,14 @@ function PostCard(props) {
                             color="textPrimary"
                             href={props.entrie.fields.link}
                             onClick={() => {
+                                axios.get('/api/viewcount', {
+                                    params: {
+                                        brandname: props.entrie.fields.title
+                                    }
+                                })
+                                    .catch(function (error) {
+                                        console.log(error);
+                                    })
                                 ReactGA.event({
                                     category: 'user',
                                     action: 'outbound',
@@ -153,18 +162,18 @@ function PostCard(props) {
                     </Typography>
                     <Typography color="textSecondary" align="right" variant="caption" display="block" gutterBottom>
                         {'Last update: ' + moment(props.entrie.sys.updatedAt).fromNow()}
-                     </Typography>
+                    </Typography>
 
 
                 </CardContent>
-                
-                    <Box display="flex" flexWrap="wrap" justifyContent="left" style={{ margin: "10px" }}>
-                        {props.entrie.fields.tags.map(tag => (
-                            <Chip key={tag}  label={tag} style={{ margin: "3px" }}/>
-                        ))}
-                    </Box>
-                
-                
+
+                <Box display="flex" flexWrap="wrap" justifyContent="left" style={{ margin: "10px" }}>
+                    {props.entrie.fields.tags.map(tag => (
+                        <Chip key={tag} label={tag} style={{ margin: "3px" }} />
+                    ))}
+                </Box>
+
+
 
 
 
@@ -177,6 +186,8 @@ function PostCard(props) {
 
 
 export function PostGrid(props) {
+
+
     const classes = useStyles();
     const router = useRouter();
     const theme = useTheme();
@@ -189,6 +200,7 @@ export function PostGrid(props) {
             action: 'navigation',
             label: 'pagination'
         })
+
         router.push({
             pathname: router.pathname,
             query: {
@@ -222,7 +234,7 @@ export function PostGrid(props) {
                     rootEllipsis: classes.pageRootStandard,
                     rootStandard: classes.pageRootStandard,
                     rootEnd: classes.pageRootStandard,
-                    label: classes.pageLabel, 
+                    label: classes.pageLabel,
                 }}
 
             />

@@ -14,6 +14,9 @@ import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import {Hero} from '../src/hero'
 import {Footer} from '../src/footer';
 import {PostGrid} from '../src/postgrid'
+//import firebase from '../src/firebase'
+//import { useAuthState } from 'react-firebase-hooks/auth';
+
 
 const url = "https://scaredpanties.us20.list-manage.com/subscribe/post?u=65173dffd9ab714c0d2d985ab&amp;id=ed2dc9ceb2";
 
@@ -99,7 +102,7 @@ const client = contentful.createClient({
 //UA-39274880-4 dev
 
 function initializeReactGAmain() {
-    ReactGA.initialize('UA-39274880-3');
+    ReactGA.initialize('UA-39274880-4');
 
 }
 
@@ -328,6 +331,7 @@ function OrderSelector(props) {
 }
 
 function MainPage(props) {
+    //const [user, initialising, error] = useAuthState(firebase.auth());
 
     ReactGA.pageview('/catalog');
 
