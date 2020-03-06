@@ -21,7 +21,7 @@ import Grid from '@material-ui/core/Grid';
 //UA-39274880-4 dev
 
 function initializeReactGAmain() {
-    ReactGA.initialize('UA-39274880-3');
+    ReactGA.initialize('UA-39274880-4');
 
 }
 

@@ -1,18 +1,18 @@
+import * as admin from 'firebase-admin';
 
-const firestore = require('@google-cloud/firestore');
-const admin = require('firebase-admin');
-
-const serviceAccount = require('./apploan-535837fc3b12.json');
-
+let serviceAccount = require('./apploan-535837fc3b12.json');
 
 admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount)
-    });
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: 'https://apploan-b02b0.firebaseio.com"'
+});
 
-const db = admin.firestore();
+
+
 
 export default async function viewcount(req, res) {
-    const increment = firestore.FieldValue.increment(1);
+    const db = admin.firestore();
+    const increment = admin.firestore.FieldValue.increment(1);
     db.collection('brand_views').doc(req.query.brandname).update({views:increment})
         .catch((err)=>{
             console.log(err.code)
