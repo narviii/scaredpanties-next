@@ -13,6 +13,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/router';
 import ReactGA from 'react-ga';
 import Grid from '@material-ui/core/Grid';
+import {originList} from '../src/constants'
 
 
 
@@ -46,44 +47,6 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-const originList = [
-    "All",
-    "France",
-    "USA",
-    "UK",
-    "Australia",
-    "Japan",
-    "Latvia",
-    "Spain",
-    "Germany",
-    "Thailand",
-    "Ukraine",
-    "Poland",
-    "Russia",
-    "New Zealand",
-    "Canada",
-    "Italy",
-    "Switzerland",
-    "Belgium",
-    "Portugal",
-    "Bulgaria",
-    "Turkey",
-    "Belarus",
-    "Denmark",
-    "Hungary",
-    "Austria",
-    "Estonia",
-    "Norway",
-    "Israel",
-    "Netherlands",
-    "Romania",
-    "Mexico",
-    "Slovenia",
-    "China",
-    "Sweden",
-    "Colombia",
-    "Chile"
-]
 
 function SearchBar(props) {
     const classes = useStyles()

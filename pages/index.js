@@ -1,8 +1,10 @@
 const contentful = require('contentful')
-import {useRouter} from 'next/router';
+import React, { useState } from 'react';
+
+import { useRouter } from 'next/router';
 import CssBaseline from '@material-ui/core/CssBaseline'
 import Container from '@material-ui/core/Container';
-import {makeStyles} from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
@@ -11,83 +13,22 @@ import Box from '@material-ui/core/Box';
 import ReactGA from 'react-ga';
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
-import {Hero} from '../src/hero'
-import {Footer} from '../src/footer';
-import {PostGrid} from '../src/postgrid'
-//import firebase from '../src/firebase'
-//import { useAuthState } from 'react-firebase-hooks/auth';
+import { Hero } from '../src/hero'
+import { Footer } from '../src/footer';
+import { PostGrid } from '../src/postgrid'
+import firebase from 'firebase'
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { originList, tagList, sizeList } from '../src/constants'
+import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
+import Dialog from '@material-ui/core/Dialog';
+import Button from '@material-ui/core/Button'
+
 
 
 const url = "https://scaredpanties.us20.list-manage.com/subscribe/post?u=65173dffd9ab714c0d2d985ab&amp;id=ed2dc9ceb2";
 
 
-const originList = [
-    "All",
-    "France",
-    "USA",
-    "UK",
-    "Australia",
-    "Japan",
-    "Latvia",
-    "Spain",
-    "Germany",
-    "Thailand",
-    "Ukraine",
-    "Poland",
-    "Russia",
-    "New Zealand",
-    "Canada",
-    "Italy",
-    "Switzerland",
-    "Belgium",
-    "Portugal",
-    "Bulgaria",
-    "Turkey",
-    "Belarus",
-    "Denmark",
-    "Hungary",
-    "Austria",
-    "Estonia",
-    "Norway",
-    "Israel",
-    "Netherlands",
-    "Romania",
-    "Mexico",
-    "Slovenia",
-    "China",
-    "Sweden",
-    "Colombia",
-    "Chile"
-]
 
-const tagList = [
-    "Swimwear",
-    "Lingerie",
-    "Clothes",
-    "Lounge",
-    "Corsets",
-    "Accessories",
-    "Hosiery",
-    "BDSM",
-    "Men",
-    "Shapewear",
-    "Dress Up",
-    "Sport",
-    "Jewelry",
-    "Bridal",
-    "Leakproof",
-    "Maternity",
-    "Surgery",
-    "Thermal",
-    "Shoes"
-]
-
-const sizeList = [
-    "All",
-    "Tailored",
-    "Small cup",
-    "Large cup"
-]
 
 originList.sort()
 tagList.sort()
@@ -102,11 +43,13 @@ const client = contentful.createClient({
 //UA-39274880-4 dev
 
 function initializeReactGAmain() {
-    ReactGA.initialize('UA-39274880-3');
+    ReactGA.initialize('UA-39274880-4');
 
 }
 
 initializeReactGAmain()
+
+
 
 
 const useStyles = makeStyles(theme => ({
@@ -330,16 +273,70 @@ function OrderSelector(props) {
     )
 }
 
+function LoginControl(props) {
+    if (props.user) {
+        return <Button color="inherit" onClick={props.logout}>Log out</Button>
+    } else {
+        return <Button onClick={props.loginDialogOpen} color="inherit">Login</Button>
+    }
+
+}
+
 function MainPage(props) {
-    //const [user, initialising, error] = useAuthState(firebase.auth());
+
+    let firebaseConfig = {
+        apiKey: "AIzaSyC-XsQSxDu3ksJljGu1L4tdMAoWxw19BAA",
+        authDomain: "apploan-b02b0.firebaseapp.com",
+        databaseURL: "https://apploan-b02b0.firebaseio.com",
+        projectId: "apploan-b02b0",
+        storageBucket: "apploan-b02b0.appspot.com",
+        messagingSenderId: "89457067349",
+        appId: "1:89457067349:web:4ad8e01e27923828b1dbdc",
+        measurementId: "G-HBMD8TZ1WB"
+    };
+
+    if (!firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
+    }
+
+    const uiConfig = {
+        signInFlow: 'popup',
+        credentialHelper: 'none',
+        signInOptions: [
+            firebase.auth.EmailAuthProvider.PROVIDER_ID
+        ],
+        callbacks: {
+            signInSuccessWithAuthResult: () => false
+        }
+    };
+
+    const [open, setOpen] = useState(false)
+
+    const logout = () => {
+        firebase.auth().signOut();
+    };
+    const loginDialogOpen = () => {
+        setOpen(true)
+    }
+    const loginDialogClose = () => {
+        setOpen(false)
+    }
+    const [user, initialising, error] = useAuthState(firebase.auth());
 
     ReactGA.pageview('/catalog');
+
+
 
     return (
 
         <React.Fragment>
             <CssBaseline />
-            <Hero search={true}/>
+            <LoginControl user={user} loginDialogOpen={loginDialogOpen} logout={logout} />
+            <Dialog open={open} onClose={loginDialogClose} aria-labelledby="loginDialog">
+                <StyledFirebaseAuth uiConfig={{ ...uiConfig, callbacks: { signInSuccess: loginDialogClose } }} firebaseAuth={firebase.auth()} />
+            </Dialog>
+
+            <Hero search={true} />
             <Container maxWidth='lg' style={{ marginTop: "10px", marginBottom: "20px" }} >
                 <Box justifyContent="center" alignContent="center" display="flex" flexWrap="wrap">
                     <SelectOrigin />
@@ -351,7 +348,7 @@ function MainPage(props) {
 
             <PostGrid entries={props.entries} />
 
-            <Footer entries={props.stats} originList={originList}/>
+            <Footer entries={props.stats} originList={originList} />
 
         </React.Fragment>
 
@@ -372,10 +369,10 @@ MainPage.getInitialProps = async (context) => {
     })
 
     const stats = await client.getEntries({
-        limit:1
+        limit: 1
     })
 
-    return { entries: entries,stats:stats }
+    return { entries: entries, stats: stats }
 }
 
 
