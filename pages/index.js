@@ -22,6 +22,7 @@ import { originList, tagList, sizeList } from '../src/constants'
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 import Dialog from '@material-ui/core/Dialog';
 import Button from '@material-ui/core/Button'
+import {Nav} from '../src/nav'
 
 
 
@@ -273,14 +274,8 @@ function OrderSelector(props) {
     )
 }
 
-function LoginControl(props) {
-    if (props.user) {
-        return <Button color="inherit" onClick={props.logout}>Log out</Button>
-    } else {
-        return <Button onClick={props.loginDialogOpen} color="inherit">Login</Button>
-    }
+const FireContext = React.createContext();
 
-}
 
 function MainPage(props) {
 
@@ -298,30 +293,7 @@ function MainPage(props) {
     if (!firebase.apps.length) {
         firebase.initializeApp(firebaseConfig);
     }
-
-    const uiConfig = {
-        signInFlow: 'popup',
-        credentialHelper: 'none',
-        signInOptions: [
-            firebase.auth.EmailAuthProvider.PROVIDER_ID
-        ],
-        callbacks: {
-            signInSuccessWithAuthResult: () => false
-        }
-    };
-
-    const [open, setOpen] = useState(false)
-
-    const logout = () => {
-        firebase.auth().signOut();
-    };
-    const loginDialogOpen = () => {
-        setOpen(true)
-    }
-    const loginDialogClose = () => {
-        setOpen(false)
-    }
-    const [user, initialising, error] = useAuthState(firebase.auth());
+    
 
     ReactGA.pageview('/catalog');
 
@@ -331,25 +303,20 @@ function MainPage(props) {
 
         <React.Fragment>
             <CssBaseline />
-            <LoginControl user={user} loginDialogOpen={loginDialogOpen} logout={logout} />
-            <Dialog open={open} onClose={loginDialogClose} aria-labelledby="loginDialog">
-                <StyledFirebaseAuth uiConfig={{ ...uiConfig, callbacks: { signInSuccess: loginDialogClose } }} firebaseAuth={firebase.auth()} />
-            </Dialog>
-
-            <Hero search={true} />
-            <Container maxWidth='lg' style={{ marginTop: "10px", marginBottom: "20px" }} >
-                <Box justifyContent="center" alignContent="center" display="flex" flexWrap="wrap">
-                    <SelectOrigin />
-                    <SelectTags />
-                    <SelectSize />
-                    <OrderSelector />
-                </Box>
-            </Container>
-
-            <PostGrid entries={props.entries} />
-
-            <Footer entries={props.stats} originList={originList} />
-
+            <FireContext.Provider value={firebase}>
+                <Nav/>
+                <Hero search={true}/>
+                <Container maxWidth='lg' style={{ marginTop: "10px", marginBottom: "20px" }} >
+                    <Box justifyContent="center" alignContent="center" display="flex" flexWrap="wrap">
+                        <SelectOrigin />
+                        <SelectTags />
+                        <SelectSize />
+                        <OrderSelector />
+                    </Box>
+                </Container>
+                <PostGrid entries={props.entries} />
+                <Footer entries={props.stats} originList={originList} />
+            </FireContext.Provider>
         </React.Fragment>
 
     );
@@ -377,3 +344,4 @@ MainPage.getInitialProps = async (context) => {
 
 
 export default MainPage;
+export {FireContext}

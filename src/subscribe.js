@@ -39,7 +39,7 @@ export function Subscribe() {
 
   return (
     <div style={{ display: "inline-block" }}>
-      <Button style={{ marginLeft: "30px" }} size="large" variant="outlined" color="primary" onClick={handleClickOpen}>
+      <Button size="large"   onClick={handleClickOpen}>
         Subscribe
       </Button>
       <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">

@@ -18,6 +18,10 @@ import * as moment from 'moment';
 import Favorite from '@material-ui/icons/Favorite';
 import ReactGA from 'react-ga';
 import Chip from '@material-ui/core/Chip';
+import IconButton from '@material-ui/core/IconButton'
+import { useContext } from "react";
+import { FireContext } from '../pages/index'
+
 const axios = require('axios');
 
 
@@ -90,9 +94,15 @@ const useStyles = makeStyles(theme => ({
 
 
 function PostCard(props) {
+
+    function addFav(){
+        console.log(props.entrie.sys.id)
+    }
+    const firebase = useContext(FireContext);
+
     const classes = useStyles();
     return (
-        <Grid item xs={12} sm={6} md={4}>
+        <Grid item xs={12} sm={6} md={4} lg={3}>
 
             <Card >
                 <CardHeader
@@ -128,14 +138,16 @@ function PostCard(props) {
                         <Typography display="inline" variant="subtitle2" color="textSecondary">
                             {props.entrie.fields.origin}
                         </Typography>
-                        <Typography display="inline" style={{ float: "right" }} variant="subtitle2" color="textSecondary">
-                            {props.entrie.fields.sizes ? props.entrie.fields.sizes.toString() : ""}
-                        </Typography>
+
 
                     </Box>
                     }
 
-                    action={props.entrie.fields.fav === true ? <Favorite style={{ color: "red", margin: "auto" }} /> : null}
+                    action={
+                        <IconButton onClick={addFav}>
+                            <Favorite  style={{ margin: "auto" }} />
+                        </IconButton>
+                    }
                 />
                 <Link
                     color="textPrimary"
@@ -152,7 +164,8 @@ function PostCard(props) {
                     <CardMedia
                         image={props.entrie.fields.thumbnail ? props.entrie.fields.thumbnail.fields.file.url + '?w=1024' : 'https://via.placeholder.com/150'}
                         className={classes.cardMedia}
-                    />
+                    >
+                    </CardMedia>
                 </Link>
 
                 <CardContent>
@@ -163,13 +176,20 @@ function PostCard(props) {
                     <Typography color="textSecondary" align="right" variant="caption" display="block" gutterBottom>
                         {'Last update: ' + moment(props.entrie.sys.updatedAt).fromNow()}
                     </Typography>
-
+                    
 
                 </CardContent>
 
-                <Box display="flex" flexWrap="wrap" justifyContent="left" style={{ margin: "10px" }}>
+                <Box display="flex" flexWrap="wrap" justifyContent="left">
+
+                    
+                </Box>
+                <Box display="flex" flexWrap="wrap" justifyContent="left">
+                {props.entrie.fields.sizes.map(tag => (
+                        <Chip key={tag} label={tag} style={{ margin: "10px" }} />
+                    ))}
                     {props.entrie.fields.tags.map(tag => (
-                        <Chip key={tag} label={tag} style={{ margin: "3px" }} />
+                        <Chip key={tag} label={tag} style={{ margin: "10px" }} />
                     ))}
                 </Box>
 
@@ -212,7 +232,7 @@ export function PostGrid(props) {
     }
 
     return (
-        <Container maxWidth="lg">
+        <Container maxWidth="xl">
             <Grid container spacing={4} alignItems="stretch">
                 {props.entries.items.map(entrie => (
                     <PostCard entrie={entrie} key={entrie.fields.title} />

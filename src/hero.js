@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Children } from 'react';
 import Container from '@material-ui/core/Container';
 import {Typography} from '@material-ui/core';
 import {SocialLinks} from '../src/sociallinks'
@@ -22,6 +22,7 @@ export function Hero(props) {
     const classes = useStyles();
     return (
         <div>
+            {props.children}
             <div className={classes.heroContent}>
                 <Container maxWidth="xl" >
                     <Link color="textPrimary" underline='none' href="/">
@@ -34,7 +35,6 @@ export function Hero(props) {
                     </Container>
                 </Container>
             </div>
-            <SocialLinks search={props.search}/>
         </div>
     )
 
