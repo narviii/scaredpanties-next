@@ -20,7 +20,9 @@ import ReactGA from 'react-ga';
 import Chip from '@material-ui/core/Chip';
 import IconButton from '@material-ui/core/IconButton'
 import { useContext } from "react";
-import { FireContext } from '../pages/index'
+import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
+import { DbContext, UserContext, UserDocContext } from '../pages/index'
+import firebase from 'firebase'
 
 const axios = require('axios');
 
@@ -95,12 +97,58 @@ const useStyles = makeStyles(theme => ({
 
 function PostCard(props) {
 
-    function addFav(){
-        console.log(props.entrie.sys.id)
-    }
-    const firebase = useContext(FireContext);
+    function addFav() {
 
+        
+        db.collection('users').doc(user.uid).update({
+            favs: firebase.firestore.FieldValue.arrayUnion(props.entrie.sys.id)
+        }).then(function () {
+            console.log("Document successfully written!");
+        })
+            .catch(function (error) {
+                console.error("Error writing document: ", error);
+            });
+
+    }
+    function remFav() {
+
+        
+        db.collection('users').doc(user.uid).update({
+            favs: firebase.firestore.FieldValue.arrayRemove(props.entrie.sys.id)
+        }).then(function () {
+            console.log("Document successfully written!");
+        })
+            .catch(function (error) {
+                console.error("Error writing document: ", error);
+            });
+
+    }
+
+
+    const user = useContext(UserContext);
+    const db = useContext(DbContext);
+    const userDoc = useContext(UserDocContext);
+    let favButton
     const classes = useStyles();
+    if (userDoc) {
+        if (userDoc.data().favs.includes(props.entrie.sys.id)) {
+            favButton = (
+                <IconButton onClick={remFav}>
+                    <Favorite style={{ margin: "auto", fontSize: 30, color: "red" }} />
+                </IconButton>
+                   )
+        } else {
+            favButton = (
+                <IconButton onClick={addFav}>
+                    <FavoriteBorderIcon color='disabled' style={{ margin: "auto", fontSize: 30 }} />
+                </IconButton>
+            )
+        }
+    }
+
+
+
+
     return (
         <Grid item xs={12} sm={6} md={4} lg={3}>
 
@@ -143,11 +191,7 @@ function PostCard(props) {
                     </Box>
                     }
 
-                    action={
-                        <IconButton onClick={addFav}>
-                            <Favorite  style={{ margin: "auto" }} />
-                        </IconButton>
-                    }
+                    action={favButton}
                 />
                 <Link
                     color="textPrimary"
@@ -176,18 +220,18 @@ function PostCard(props) {
                     <Typography color="textSecondary" align="right" variant="caption" display="block" gutterBottom>
                         {'Last update: ' + moment(props.entrie.sys.updatedAt).fromNow()}
                     </Typography>
-                    
+
 
                 </CardContent>
 
                 <Box display="flex" flexWrap="wrap" justifyContent="left">
 
-                    
+
                 </Box>
                 <Box display="flex" flexWrap="wrap" justifyContent="left">
-                {props.entrie.fields.sizes.map(tag => (
+                    {props.entrie.fields.sizes?props.entrie.fields.sizes.map(tag => (
                         <Chip key={tag} label={tag} style={{ margin: "10px" }} />
-                    ))}
+                    )):null}
                     {props.entrie.fields.tags.map(tag => (
                         <Chip key={tag} label={tag} style={{ margin: "10px" }} />
                     ))}
@@ -206,6 +250,7 @@ function PostCard(props) {
 
 
 export function PostGrid(props) {
+
 
 
     const classes = useStyles();

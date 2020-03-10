@@ -5,7 +5,7 @@ import Toolbar from '@material-ui/core/Toolbar'
 import React from 'react'
 import { makeStyles } from '@material-ui/core/styles';
 import { useContext } from "react";
-import { FireContext } from '../pages/index'
+import { FireContext, UserContext } from '../pages/index'
 import { useState } from 'react'
 import { useAuthState } from 'react-firebase-hooks/auth';
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
@@ -29,7 +29,7 @@ const useStyles = makeStyles(theme => ({
 function LoginControl(props) {
     const classes = useStyles()
     if (props.user) {
-        return <Button style={{ alignSelf: "flex-end" }} size="large" color="inherit" onClick={props.logout}>Log out</Button>
+        return <Button  size="large" color="inherit" onClick={props.logout}>Log out</Button>
     } else {
         return <Button size="large" onClick={props.loginDialogOpen} color="inherit">Login</Button>
     }
@@ -38,19 +38,10 @@ function LoginControl(props) {
 
 
 export function Nav(props) {
-    const firebase = useContext(FireContext);
+    const firebase = props.firebase;
+    const user = useContext(UserContext);
     const classes = useStyles();
 
-    const uiConfig = {
-        signInFlow: 'popup',
-        credentialHelper: 'none',
-        signInOptions: [
-            firebase.auth.EmailAuthProvider.PROVIDER_ID
-        ],
-        callbacks: {
-            signInSuccessWithAuthResult: () => false
-        }
-    };
 
 
     const [open, setOpen] = useState(false)
@@ -64,7 +55,6 @@ export function Nav(props) {
     const loginDialogClose = () => {
         setOpen(false)
     }
-    const [user, initialising, error] = useAuthState(firebase.auth());
 
     return (
         <div>
@@ -77,7 +67,7 @@ export function Nav(props) {
                     <div className={classes.grow} />
                     <LoginControl user={user} loginDialogOpen={loginDialogOpen} logout={logout} />
                     <Dialog open={open} onClose={loginDialogClose} aria-labelledby="loginDialog">
-                        <StyledFirebaseAuth uiConfig={{ ...uiConfig, callbacks: { signInSuccess: loginDialogClose } }} firebaseAuth={firebase.auth()} />
+                        <StyledFirebaseAuth uiConfig={{ ...props.uiConfig, callbacks: { signInSuccess: loginDialogClose } }} firebaseAuth={firebase.auth()} />
                     </Dialog>
 
                 </Toolbar>

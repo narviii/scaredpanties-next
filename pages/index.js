@@ -23,12 +23,24 @@ import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 import Dialog from '@material-ui/core/Dialog';
 import Button from '@material-ui/core/Button'
 import {Nav} from '../src/nav'
+import { useDocument } from 'react-firebase-hooks/firestore';
+
 
 
 
 const url = "https://scaredpanties.us20.list-manage.com/subscribe/post?u=65173dffd9ab714c0d2d985ab&amp;id=ed2dc9ceb2";
 
 
+const uiConfig = {
+    signInFlow: 'popup',
+    credentialHelper: 'none',
+    signInOptions: [
+        firebase.auth.EmailAuthProvider.PROVIDER_ID
+    ],
+    callbacks: {
+        signInSuccessWithAuthResult: () => false
+    }
+};
 
 
 originList.sort()
@@ -274,7 +286,9 @@ function OrderSelector(props) {
     )
 }
 
-const FireContext = React.createContext();
+const UserContext = React.createContext();
+const DbContext = React.createContext();
+const UserDocContext = React.createContext();
 
 
 function MainPage(props) {
@@ -293,7 +307,17 @@ function MainPage(props) {
     if (!firebase.apps.length) {
         firebase.initializeApp(firebaseConfig);
     }
+    const [user, initialising, error] = useAuthState(firebase.auth());
+    const db = firebase.firestore();
+
+   
+    const [userDoc, loading, errorDoc] = useDocument(
+            user?db.collection('users').doc(user.uid):null)
+
     
+   
+
+
 
     ReactGA.pageview('/catalog');
 
@@ -303,20 +327,24 @@ function MainPage(props) {
 
         <React.Fragment>
             <CssBaseline />
-            <FireContext.Provider value={firebase}>
-                <Nav/>
-                <Hero search={true}/>
-                <Container maxWidth='lg' style={{ marginTop: "10px", marginBottom: "20px" }} >
-                    <Box justifyContent="center" alignContent="center" display="flex" flexWrap="wrap">
-                        <SelectOrigin />
-                        <SelectTags />
-                        <SelectSize />
-                        <OrderSelector />
-                    </Box>
-                </Container>
-                <PostGrid entries={props.entries} />
-                <Footer entries={props.stats} originList={originList} />
-            </FireContext.Provider>
+            <UserDocContext.Provider value={userDoc}>
+                <DbContext.Provider value={db}>
+                    <UserContext.Provider value={user}>
+                        <Nav uiConfig={uiConfig} firebase={firebase}/>
+                        <Hero search={true}/>
+                        <Container maxWidth='lg' style={{ marginTop: "10px", marginBottom: "20px" }} >
+                            <Box justifyContent="center" alignContent="center" display="flex" flexWrap="wrap">
+                                <SelectOrigin />
+                                <SelectTags />
+                                <SelectSize />
+                                <OrderSelector />
+                            </Box>
+                        </Container>
+                        <PostGrid entries={props.entries} />
+                        <Footer entries={props.stats} originList={originList} />
+                    </UserContext.Provider>
+                </DbContext.Provider>
+            </UserDocContext.Provider>
         </React.Fragment>
 
     );
@@ -344,4 +372,4 @@ MainPage.getInitialProps = async (context) => {
 
 
 export default MainPage;
-export {FireContext}
+export {UserContext,DbContext,UserDocContext}
