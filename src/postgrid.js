@@ -21,7 +21,7 @@ import Chip from '@material-ui/core/Chip';
 import IconButton from '@material-ui/core/IconButton'
 import { useContext } from "react";
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
-import { DbContext, UserContext, UserDocContext } from '../pages/index'
+import {UserContext,DbContext,UserDocContext} from '../src/context'
 import firebase from 'firebase'
 
 const axios = require('axios');

@@ -5,7 +5,7 @@ import Toolbar from '@material-ui/core/Toolbar'
 import React from 'react'
 import { makeStyles } from '@material-ui/core/styles';
 import { useContext } from "react";
-import { FireContext, UserContext } from '../pages/index'
+import {UserContext,DbContext,UserDocContext} from '../src/context'
 import { useState } from 'react'
 import { useAuthState } from 'react-firebase-hooks/auth';
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';

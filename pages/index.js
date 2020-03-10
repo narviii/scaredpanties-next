@@ -16,7 +16,7 @@ import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import { Hero } from '../src/hero'
 import { Footer } from '../src/footer';
 import { PostGrid } from '../src/postgrid'
-import firebase from 'firebase'
+import firebase from '../src/firebase'
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { originList, tagList, sizeList } from '../src/constants'
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
@@ -24,6 +24,7 @@ import Dialog from '@material-ui/core/Dialog';
 import Button from '@material-ui/core/Button'
 import { Nav } from '../src/nav'
 import { useDocument } from 'react-firebase-hooks/firestore';
+import {UserContext,DbContext,UserDocContext} from '../src/context'
 
 
 
@@ -286,9 +287,6 @@ function OrderSelector(props) {
     )
 }
 
-const UserContext = React.createContext();
-const DbContext = React.createContext();
-const UserDocContext = React.createContext();
 
 
 function MainPage(props) {
@@ -302,20 +300,7 @@ function MainPage(props) {
         setOpen(true)
     }
 
-    let firebaseConfig = {
-        apiKey: "AIzaSyC-XsQSxDu3ksJljGu1L4tdMAoWxw19BAA",
-        authDomain: "apploan-b02b0.firebaseapp.com",
-        databaseURL: "https://apploan-b02b0.firebaseio.com",
-        projectId: "apploan-b02b0",
-        storageBucket: "apploan-b02b0.appspot.com",
-        messagingSenderId: "89457067349",
-        appId: "1:89457067349:web:4ad8e01e27923828b1dbdc",
-        measurementId: "G-HBMD8TZ1WB"
-    };
 
-    if (!firebase.apps.length) {
-        firebase.initializeApp(firebaseConfig);
-    }
     const [user, initialising, error] = useAuthState(firebase.auth());
     const db = firebase.firestore();
 
@@ -384,4 +369,3 @@ MainPage.getInitialProps = async (context) => {
 
 
 export default MainPage;
-export { UserContext, DbContext, UserDocContext }

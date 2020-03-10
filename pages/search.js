@@ -13,9 +13,14 @@ import { useState } from 'react'
 import { useRouter } from 'next/router';
 import ReactGA from 'react-ga';
 import Grid from '@material-ui/core/Grid';
-import {originList} from '../src/constants'
-import {Nav} from '../src/nav'
-import firebase from 'firebase'
+import { originList } from '../src/constants'
+import { Nav } from '../src/nav'
+import firebase from '../src/firebase'
+import Dialog from '@material-ui/core/Dialog';
+import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
+import { useDocument } from 'react-firebase-hooks/firestore';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import {UserContext,DbContext,UserDocContext} from '../src/context'
 
 
 
@@ -87,7 +92,7 @@ function SearchBar(props) {
 
     }
     return (
-        <Container maxWidth='lg' style={{marginBottom:'20px'}} >
+        <Container maxWidth='lg' style={{ marginBottom: '20px' }} >
 
             <Grid container justify="center" alignItems="center" spacing={2}>
 
@@ -102,33 +107,49 @@ function SearchBar(props) {
     )
 }
 
+
+
 function Search(props) {
-    ReactGA.pageview('catalog/search');
+    
+    const [open, setOpen] = useState(false)
 
-    let firebaseConfig = {
-        apiKey: "AIzaSyC-XsQSxDu3ksJljGu1L4tdMAoWxw19BAA",
-        authDomain: "apploan-b02b0.firebaseapp.com",
-        databaseURL: "https://apploan-b02b0.firebaseio.com",
-        projectId: "apploan-b02b0",
-        storageBucket: "apploan-b02b0.appspot.com",
-        messagingSenderId: "89457067349",
-        appId: "1:89457067349:web:4ad8e01e27923828b1dbdc",
-        measurementId: "G-HBMD8TZ1WB"
-    };
-
-
-    if (!firebase.apps.length) {
-        firebase.initializeApp(firebaseConfig);
+    const loginDialogClose = () => {
+        setOpen(false)
     }
+
+    const loginDialogOpen = () => {
+        setOpen(true)
+    }
+
+    const [user, initialising, error] = useAuthState(firebase.auth());
+    const db = firebase.firestore();
+
+
+    const [userDoc, loading, errorDoc] = useDocument(
+        user ? db.collection('users').doc(user.uid) : null)
+
+
+
+    ReactGA.pageview('catalog/search');
 
     return (
         <React.Fragment>
             <CssBaseline />
-            <Nav uiConfig={uiConfig} firebase={firebase}/>
-            <Hero />
-            <SearchBar />
-            <PostGrid entries={props.entries} />
-            <Footer entries={props.stats} originList={originList} />
+            <UserDocContext.Provider value={userDoc}>
+                <DbContext.Provider value={db}>
+                    <UserContext.Provider value={user}>
+
+                        <Nav loginDialogOpen={loginDialogOpen} firebase={firebase} />
+                        <Dialog open={open} onClose={loginDialogClose} aria-labelledby="loginDialog">
+                            <StyledFirebaseAuth uiConfig={{ ...uiConfig, callbacks: { signInSuccess: loginDialogClose } }} firebaseAuth={firebase.auth()} />
+                        </Dialog>
+                        <Hero />
+                        <SearchBar />
+                        <PostGrid entries={props.entries} />
+                        <Footer entries={props.stats} originList={originList} />
+                    </UserContext.Provider>
+                </DbContext.Provider>
+            </UserDocContext.Provider>
 
         </React.Fragment>
 
