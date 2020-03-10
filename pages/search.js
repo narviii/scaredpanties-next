@@ -14,8 +14,21 @@ import { useRouter } from 'next/router';
 import ReactGA from 'react-ga';
 import Grid from '@material-ui/core/Grid';
 import {originList} from '../src/constants'
+import {Nav} from '../src/nav'
+import firebase from 'firebase'
 
 
+
+const uiConfig = {
+    signInFlow: 'popup',
+    credentialHelper: 'none',
+    signInOptions: [
+        firebase.auth.EmailAuthProvider.PROVIDER_ID
+    ],
+    callbacks: {
+        signInSuccessWithAuthResult: () => false
+    }
+};
 
 
 //UA-39274880-3 prod
@@ -92,9 +105,26 @@ function SearchBar(props) {
 function Search(props) {
     ReactGA.pageview('catalog/search');
 
+    let firebaseConfig = {
+        apiKey: "AIzaSyC-XsQSxDu3ksJljGu1L4tdMAoWxw19BAA",
+        authDomain: "apploan-b02b0.firebaseapp.com",
+        databaseURL: "https://apploan-b02b0.firebaseio.com",
+        projectId: "apploan-b02b0",
+        storageBucket: "apploan-b02b0.appspot.com",
+        messagingSenderId: "89457067349",
+        appId: "1:89457067349:web:4ad8e01e27923828b1dbdc",
+        measurementId: "G-HBMD8TZ1WB"
+    };
+
+
+    if (!firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
+    }
+
     return (
         <React.Fragment>
             <CssBaseline />
+            <Nav uiConfig={uiConfig} firebase={firebase}/>
             <Hero />
             <SearchBar />
             <PostGrid entries={props.entries} />

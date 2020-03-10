@@ -144,6 +144,13 @@ function PostCard(props) {
                 </IconButton>
             )
         }
+    }else{
+        favButton = (
+            <IconButton onClick={props.loginDialogOpen} >
+                <FavoriteBorderIcon color='disabled' style={{ margin: "auto", fontSize: 30 }} />
+            </IconButton>
+        )
+
     }
 
 
@@ -256,7 +263,6 @@ export function PostGrid(props) {
     const classes = useStyles();
     const router = useRouter();
     const theme = useTheme();
-    let currentTags = router.query.tags ? router.query.tags.split(',') : []
     const matches = useMediaQuery(theme.breakpoints.down('sm'));
 
     const handlePageClick = (offset) => {
@@ -280,7 +286,7 @@ export function PostGrid(props) {
         <Container maxWidth="xl">
             <Grid container spacing={4} alignItems="stretch">
                 {props.entries.items.map(entrie => (
-                    <PostCard entrie={entrie} key={entrie.fields.title} />
+                    <PostCard loginDialogOpen={props.loginDialogOpen} entrie={entrie} key={entrie.fields.title} />
                 ))}
             </Grid>
             <Pagination

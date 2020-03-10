@@ -22,7 +22,7 @@ import { originList, tagList, sizeList } from '../src/constants'
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 import Dialog from '@material-ui/core/Dialog';
 import Button from '@material-ui/core/Button'
-import {Nav} from '../src/nav'
+import { Nav } from '../src/nav'
 import { useDocument } from 'react-firebase-hooks/firestore';
 
 
@@ -292,6 +292,15 @@ const UserDocContext = React.createContext();
 
 
 function MainPage(props) {
+    const [open, setOpen] = useState(false)
+
+    const loginDialogClose = () => {
+        setOpen(false)
+    }
+
+    const loginDialogOpen = () => {
+        setOpen(true)
+    }
 
     let firebaseConfig = {
         apiKey: "AIzaSyC-XsQSxDu3ksJljGu1L4tdMAoWxw19BAA",
@@ -310,12 +319,12 @@ function MainPage(props) {
     const [user, initialising, error] = useAuthState(firebase.auth());
     const db = firebase.firestore();
 
-   
-    const [userDoc, loading, errorDoc] = useDocument(
-            user?db.collection('users').doc(user.uid):null)
 
-    
-   
+    const [userDoc, loading, errorDoc] = useDocument(
+        user ? db.collection('users').doc(user.uid) : null)
+
+
+
 
 
 
@@ -330,8 +339,11 @@ function MainPage(props) {
             <UserDocContext.Provider value={userDoc}>
                 <DbContext.Provider value={db}>
                     <UserContext.Provider value={user}>
-                        <Nav uiConfig={uiConfig} firebase={firebase}/>
-                        <Hero search={true}/>
+                        <Nav loginDialogOpen={loginDialogOpen} firebase={firebase} />
+                        <Dialog open={open} onClose={loginDialogClose} aria-labelledby="loginDialog">
+                            <StyledFirebaseAuth uiConfig={{ ...uiConfig, callbacks: { signInSuccess: loginDialogClose } }} firebaseAuth={firebase.auth()} />
+                        </Dialog>
+                        <Hero search={true} />
                         <Container maxWidth='lg' style={{ marginTop: "10px", marginBottom: "20px" }} >
                             <Box justifyContent="center" alignContent="center" display="flex" flexWrap="wrap">
                                 <SelectOrigin />
@@ -340,7 +352,7 @@ function MainPage(props) {
                                 <OrderSelector />
                             </Box>
                         </Container>
-                        <PostGrid entries={props.entries} />
+                        <PostGrid loginDialogOpen={loginDialogOpen} entries={props.entries} />
                         <Footer entries={props.stats} originList={originList} />
                     </UserContext.Provider>
                 </DbContext.Provider>
@@ -372,4 +384,4 @@ MainPage.getInitialProps = async (context) => {
 
 
 export default MainPage;
-export {UserContext,DbContext,UserDocContext}
+export { UserContext, DbContext, UserDocContext }

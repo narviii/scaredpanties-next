@@ -49,12 +49,6 @@ export function Nav(props) {
     const logout = () => {
         firebase.auth().signOut();
     };
-    const loginDialogOpen = () => {
-        setOpen(true)
-    }
-    const loginDialogClose = () => {
-        setOpen(false)
-    }
 
     return (
         <div>
@@ -65,10 +59,7 @@ export function Nav(props) {
                     <Subscribe />
                     <Button size="large" href="https://blog.scaredpanties.com" >  BLOG </Button>
                     <div className={classes.grow} />
-                    <LoginControl user={user} loginDialogOpen={loginDialogOpen} logout={logout} />
-                    <Dialog open={open} onClose={loginDialogClose} aria-labelledby="loginDialog">
-                        <StyledFirebaseAuth uiConfig={{ ...props.uiConfig, callbacks: { signInSuccess: loginDialogClose } }} firebaseAuth={firebase.auth()} />
-                    </Dialog>
+                    <LoginControl user={user} loginDialogOpen={props.loginDialogOpen} logout={logout} />
 
                 </Toolbar>
 
