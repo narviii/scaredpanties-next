@@ -1,6 +1,4 @@
-const contentful = require('contentful')
 import React, { useState } from 'react';
-
 import { useRouter } from 'next/router';
 import CssBaseline from '@material-ui/core/CssBaseline'
 import Container from '@material-ui/core/Container';
@@ -21,13 +19,13 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 import { originList, tagList, sizeList } from '../src/constants'
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 import Dialog from '@material-ui/core/Dialog';
-import Button from '@material-ui/core/Button'
 import { Nav } from '../src/nav'
 import { useDocument } from 'react-firebase-hooks/firestore';
 import { UserContext, DbContext, UserDocContext } from '../src/context'
 
 
 
+const contentful = require('contentful')
 
 const url = "https://scaredpanties.us20.list-manage.com/subscribe/post?u=65173dffd9ab714c0d2d985ab&amp;id=ed2dc9ceb2";
 
@@ -37,10 +35,8 @@ const uiConfig = {
     credentialHelper: 'none',
     signInOptions: [
         firebase.auth.EmailAuthProvider.PROVIDER_ID
-    ],
-    callbacks: {
-        signInSuccessWithAuthResult: () => false
-    }
+    ]
+
 };
 
 
@@ -296,7 +292,18 @@ function MainPage(props) {
 
     const [open, setOpen] = useState(false)
 
-    const loginDialogClose = () => {
+    const loginDialogClose = (authResult, redirectUrl) => {
+        if (authResult.user) {
+            const userRef = db.collection('users').doc(authResult.user.uid)
+            userRef.get().then((doc) => {
+                if (doc.exists) {
+                    //console.log('yes')
+                } else {
+                    userRef.set({ favs: [] })
+                    //console.log('no')
+                }
+            })
+        }
         setOpen(false)
     }
 
@@ -332,7 +339,7 @@ function MainPage(props) {
                     <UserContext.Provider value={user}>
                         <Nav loginDialogOpen={loginDialogOpen} firebase={firebase} />
                         <Dialog open={open} onClose={loginDialogClose} aria-labelledby="loginDialog">
-                            <StyledFirebaseAuth classes={{ 'mdl-card': { backgroundColor: 'red' } }} uiConfig={{ ...uiConfig, callbacks: { signInSuccess: loginDialogClose } }} firebaseAuth={firebase.auth()} />
+                            <StyledFirebaseAuth classes={{ 'mdl-card': { backgroundColor: 'red' } }} uiConfig={{ ...uiConfig, callbacks: { signInSuccessWithAuthResult: loginDialogClose } }} firebaseAuth={firebase.auth()} />
                         </Dialog>
                         <Hero search={true} />
                         <Container maxWidth='lg' style={{ marginTop: "10px", marginBottom: "20px" }} >

@@ -21,7 +21,7 @@ import Chip from '@material-ui/core/Chip';
 import IconButton from '@material-ui/core/IconButton'
 import { useContext } from "react";
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
-import {UserContext,DbContext,UserDocContext} from '../src/context'
+import { UserContext, DbContext, UserDocContext } from '../src/context'
 import firebase from 'firebase'
 
 const axios = require('axios');
@@ -98,8 +98,6 @@ const useStyles = makeStyles(theme => ({
 function PostCard(props) {
 
     function addFav() {
-
-        
         db.collection('users').doc(user.uid).update({
             favs: firebase.firestore.FieldValue.arrayUnion(props.entrie.sys.id)
         }).then(function () {
@@ -111,8 +109,6 @@ function PostCard(props) {
 
     }
     function remFav() {
-
-        
         db.collection('users').doc(user.uid).update({
             favs: firebase.firestore.FieldValue.arrayRemove(props.entrie.sys.id)
         }).then(function () {
@@ -131,12 +127,13 @@ function PostCard(props) {
     let favButton
     const classes = useStyles();
     if (userDoc) {
-        if (userDoc.data()&&userDoc.data().favs.includes(props.entrie.sys.id)) {
+        
+        if (userDoc.data() && userDoc.data().favs && userDoc.data().favs.includes(props.entrie.sys.id)) {
             favButton = (
                 <IconButton onClick={remFav}>
                     <Favorite style={{ margin: "auto", fontSize: 30, color: "red" }} />
                 </IconButton>
-                   )
+            )
         } else {
             favButton = (
                 <IconButton onClick={addFav}>
@@ -144,7 +141,7 @@ function PostCard(props) {
                 </IconButton>
             )
         }
-    }else{
+    } else {
         favButton = (
             <IconButton onClick={props.loginDialogOpen} >
                 <FavoriteBorderIcon color='disabled' style={{ margin: "auto", fontSize: 30 }} />
@@ -236,9 +233,9 @@ function PostCard(props) {
 
                 </Box>
                 <Box display="flex" flexWrap="wrap" justifyContent="left">
-                    {props.entrie.fields.sizes?props.entrie.fields.sizes.map(tag => (
+                    {props.entrie.fields.sizes ? props.entrie.fields.sizes.map(tag => (
                         <Chip key={tag} label={tag} style={{ margin: "10px" }} />
-                    )):null}
+                    )) : null}
                     {props.entrie.fields.tags.map(tag => (
                         <Chip key={tag} label={tag} style={{ margin: "10px" }} />
                     ))}

@@ -19,7 +19,7 @@ import Dialog from '@material-ui/core/Dialog';
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 import { useDocument } from 'react-firebase-hooks/firestore';
 import { useAuthState } from 'react-firebase-hooks/auth';
-import {UserContext,DbContext,UserDocContext} from '../src/context'
+import { UserContext, DbContext, UserDocContext } from '../src/context'
 
 
 
@@ -29,9 +29,6 @@ const uiConfig = {
     signInOptions: [
         firebase.auth.EmailAuthProvider.PROVIDER_ID
     ],
-    callbacks: {
-        signInSuccessWithAuthResult: () => false
-    }
 };
 
 
@@ -109,10 +106,21 @@ function SearchBar(props) {
 
 
 function Search(props) {
-    
+
     const [open, setOpen] = useState(false)
 
-    const loginDialogClose = () => {
+    const loginDialogClose = (authResult, redirectUrl) => {
+        if (authResult.user) {
+            const userRef = db.collection('users').doc(authResult.user.uid)
+            userRef.get().then((doc) => {
+                if (doc.exists) {
+                    //console.log('yes')
+                } else {
+                    userRef.set({ favs: [] })
+                    //console.log('no')
+                }
+            })
+        }
         setOpen(false)
     }
 
@@ -140,11 +148,11 @@ function Search(props) {
 
                         <Nav loginDialogOpen={loginDialogOpen} firebase={firebase} />
                         <Dialog open={open} onClose={loginDialogClose} aria-labelledby="loginDialog">
-                            <StyledFirebaseAuth uiConfig={{ ...uiConfig, callbacks: { signInSuccess: loginDialogClose } }} firebaseAuth={firebase.auth()} />
+                            <StyledFirebaseAuth classes={{ 'mdl-card': { backgroundColor: 'red' } }} uiConfig={{ ...uiConfig, callbacks: { signInSuccessWithAuthResult: loginDialogClose } }} firebaseAuth={firebase.auth()} />
                         </Dialog>
                         <Hero />
                         <SearchBar />
-                        <PostGrid entries={props.entries} />
+                        <PostGrid loginDialogOpen={loginDialogOpen} entries={props.entries} />
                         <Footer entries={props.stats} originList={originList} />
                     </UserContext.Provider>
                 </DbContext.Provider>
