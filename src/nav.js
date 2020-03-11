@@ -5,16 +5,16 @@ import Toolbar from '@material-ui/core/Toolbar'
 import React from 'react'
 import { makeStyles } from '@material-ui/core/styles';
 import { useContext } from "react";
-import {UserContext,DbContext,UserDocContext} from '../src/context'
+import { UserContext, DbContext, UserDocContext } from '../src/context'
 import { useState } from 'react'
 import { useAuthState } from 'react-firebase-hooks/auth';
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
-import IconButton from '@material-ui/core/IconButton';
-import MailIcon from '@material-ui/icons/Mail';
 import { Subscribe } from '../src/subscribe'
-import InstagramIcon from '@material-ui/icons/Instagram';
-import YouTubeIcon from '@material-ui/icons/YouTube'
-import TwitterIcon from '@material-ui/icons/Twitter';
+import MenuIcon from '@material-ui/icons/Menu';
+import IconButton from '@material-ui/core/IconButton'
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
+import Link from '@material-ui/core/Link';
 
 
 const useStyles = makeStyles(theme => ({
@@ -24,12 +24,25 @@ const useStyles = makeStyles(theme => ({
     grow: {
         flexGrow: 1,
     },
+    sectionDesktop: {
+        display: 'none',
+        [theme.breakpoints.up('sm')]: {
+            display: 'flex',
+        },
+    },
+    sectionMobile: {
+        display: 'flex',
+        [theme.breakpoints.up('sm')]: {
+            display: 'none',
+        },
+    },
+
 }));
 
 function LoginControl(props) {
     const classes = useStyles()
     if (props.user) {
-        return <Button  size="large" color="inherit" onClick={props.logout}>Log out</Button>
+        return <Button size="large" color="inherit" onClick={props.logout}>Log out</Button>
     } else {
         return <Button size="large" onClick={props.loginDialogOpen} color="inherit">Login</Button>
     }
@@ -38,6 +51,17 @@ function LoginControl(props) {
 
 
 export function Nav(props) {
+
+    const [anchorEl, setAnchorEl] = React.useState(null);
+
+    const handleClick = event => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
+
     const firebase = props.firebase;
     const user = useContext(UserContext);
     const classes = useStyles();
@@ -52,14 +76,36 @@ export function Nav(props) {
 
     return (
         <div>
-            <AppBar color ="inherit" position="static">
+            <AppBar color="inherit" position="static">
                 <Toolbar>
-                    <Button size="large" color="inherit" href="/" > HOME </Button>
-                    <Button size="large" color="inherit" href="/search" > SEARCH </Button>
-                    <Subscribe />
-                    <Button size="large" href="https://blog.scaredpanties.com" >  BLOG </Button>
+                    <div className={classes.sectionDesktop}>
+                        <Button size="large" color="inherit" href="/" > HOME </Button>
+                        <Button size="large" color="inherit" href="/search" > SEARCH </Button>
+                        <Subscribe />
+                        <Button size="large" href="https://blog.scaredpanties.com" >  BLOG </Button>
+                    </div>
+                    <div className={classes.sectionMobile}>
+                        <IconButton aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
+                            <MenuIcon />
+                        </IconButton>
+                        <Menu
+                            id="simple-menu"
+                            anchorEl={anchorEl}
+                            keepMounted
+                            open={Boolean(anchorEl)}
+                            onClose={handleClose}
+                        >
+                            <MenuItem>
+                                
+                            </MenuItem>
+                            <MenuItem onClick={handleClose}>
+                                <Subscribe />
+                            </MenuItem>
+                            <MenuItem onClick={handleClose}>Logout</MenuItem>
+                        </Menu>
+                    </div>
                     <div className={classes.grow} />
-                    {user?<Button size="large" color="inherit" href={'/favs/'+user.uid} > MY FAVORITES </Button>:null}
+                    {user ? <Button size="large" color="inherit" href={'/favs/' + user.uid} > MY FAVORITES </Button> : null}
 
                     <LoginControl user={user} loginDialogOpen={props.loginDialogOpen} logout={logout} />
 
