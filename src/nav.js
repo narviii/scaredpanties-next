@@ -52,13 +52,15 @@ export function Nav(props) {
 
     return (
         <div>
-            <AppBar position="static">
+            <AppBar color ="inherit" position="static">
                 <Toolbar>
                     <Button size="large" color="inherit" href="/" > HOME </Button>
                     <Button size="large" color="inherit" href="/search" > SEARCH </Button>
                     <Subscribe />
                     <Button size="large" href="https://blog.scaredpanties.com" >  BLOG </Button>
                     <div className={classes.grow} />
+                    {user?<Button size="large" color="inherit" href={'/favs/'+user.uid} > MY FAVORITES </Button>:null}
+
                     <LoginControl user={user} loginDialogOpen={props.loginDialogOpen} logout={logout} />
 
                 </Toolbar>

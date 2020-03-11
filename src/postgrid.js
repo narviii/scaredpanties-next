@@ -131,7 +131,7 @@ function PostCard(props) {
     let favButton
     const classes = useStyles();
     if (userDoc) {
-        if (userDoc.data().favs.includes(props.entrie.sys.id)) {
+        if (userDoc.data()&&userDoc.data().favs.includes(props.entrie.sys.id)) {
             favButton = (
                 <IconButton onClick={remFav}>
                     <Favorite style={{ margin: "auto", fontSize: 30, color: "red" }} />

@@ -24,7 +24,7 @@ import Dialog from '@material-ui/core/Dialog';
 import Button from '@material-ui/core/Button'
 import { Nav } from '../src/nav'
 import { useDocument } from 'react-firebase-hooks/firestore';
-import {UserContext,DbContext,UserDocContext} from '../src/context'
+import { UserContext, DbContext, UserDocContext } from '../src/context'
 
 
 
@@ -126,7 +126,9 @@ const useStyles = makeStyles(theme => ({
         },
 
     },
-
+    firebaseUI: {
+        backgroundColor: 'gray'
+    }
 
 
 
@@ -290,6 +292,8 @@ function OrderSelector(props) {
 
 
 function MainPage(props) {
+    const classes = useStyles();
+
     const [open, setOpen] = useState(false)
 
     const loginDialogClose = () => {
@@ -321,12 +325,14 @@ function MainPage(props) {
 
         <React.Fragment>
             <CssBaseline />
+            <style jsx global>{`
+            `}</style>
             <UserDocContext.Provider value={userDoc}>
                 <DbContext.Provider value={db}>
                     <UserContext.Provider value={user}>
                         <Nav loginDialogOpen={loginDialogOpen} firebase={firebase} />
                         <Dialog open={open} onClose={loginDialogClose} aria-labelledby="loginDialog">
-                            <StyledFirebaseAuth uiConfig={{ ...uiConfig, callbacks: { signInSuccess: loginDialogClose } }} firebaseAuth={firebase.auth()} />
+                            <StyledFirebaseAuth classes={{ 'mdl-card': { backgroundColor: 'red' } }} uiConfig={{ ...uiConfig, callbacks: { signInSuccess: loginDialogClose } }} firebaseAuth={firebase.auth()} />
                         </Dialog>
                         <Hero search={true} />
                         <Container maxWidth='lg' style={{ marginTop: "10px", marginBottom: "20px" }} >
