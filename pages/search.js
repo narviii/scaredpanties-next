@@ -36,7 +36,7 @@ const uiConfig = {
 //UA-39274880-4 dev
 
 function initializeReactGAmain() {
-    ReactGA.initialize('UA-39274880-4');
+    ReactGA.initialize('UA-39274880-3');
 
 }
 
