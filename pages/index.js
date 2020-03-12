@@ -1,8 +1,8 @@
-const contentful = require('contentful')
-import {useRouter} from 'next/router';
+import React, { useState } from 'react';
+import { useRouter } from 'next/router';
 import CssBaseline from '@material-ui/core/CssBaseline'
 import Container from '@material-ui/core/Container';
-import {makeStyles} from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
@@ -11,83 +11,34 @@ import Box from '@material-ui/core/Box';
 import ReactGA from 'react-ga';
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
-import {Hero} from '../src/hero'
-import {Footer} from '../src/footer';
-import {PostGrid} from '../src/postgrid'
-//import firebase from '../src/firebase'
-//import { useAuthState } from 'react-firebase-hooks/auth';
+import { Hero } from '../src/hero'
+import { Footer } from '../src/footer';
+import { PostGrid } from '../src/postgrid'
+import firebase from '../src/firebase'
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { originList, tagList, sizeList } from '../src/constants'
+import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
+import Dialog from '@material-ui/core/Dialog';
+import { Nav } from '../src/nav'
+import { useDocument } from 'react-firebase-hooks/firestore';
+import { UserContext, DbContext, UserDocContext } from '../src/context'
 
+
+
+const contentful = require('contentful')
 
 const url = "https://scaredpanties.us20.list-manage.com/subscribe/post?u=65173dffd9ab714c0d2d985ab&amp;id=ed2dc9ceb2";
 
 
-const originList = [
-    "All",
-    "France",
-    "USA",
-    "UK",
-    "Australia",
-    "Japan",
-    "Latvia",
-    "Spain",
-    "Germany",
-    "Thailand",
-    "Ukraine",
-    "Poland",
-    "Russia",
-    "New Zealand",
-    "Canada",
-    "Italy",
-    "Switzerland",
-    "Belgium",
-    "Portugal",
-    "Bulgaria",
-    "Turkey",
-    "Belarus",
-    "Denmark",
-    "Hungary",
-    "Austria",
-    "Estonia",
-    "Norway",
-    "Israel",
-    "Netherlands",
-    "Romania",
-    "Mexico",
-    "Slovenia",
-    "China",
-    "Sweden",
-    "Colombia",
-    "Chile"
-]
+const uiConfig = {
+    signInFlow: 'popup',
+    credentialHelper: 'none',
+    signInOptions: [
+        firebase.auth.EmailAuthProvider.PROVIDER_ID
+    ]
 
-const tagList = [
-    "Swimwear",
-    "Lingerie",
-    "Clothes",
-    "Lounge",
-    "Corsets",
-    "Accessories",
-    "Hosiery",
-    "BDSM",
-    "Men",
-    "Shapewear",
-    "Dress Up",
-    "Sport",
-    "Jewelry",
-    "Bridal",
-    "Leakproof",
-    "Maternity",
-    "Surgery",
-    "Thermal",
-    "Shoes"
-]
+};
 
-const sizeList = [
-    "All",
-    "Tailored",
-    "Small cup",
-    "Large cup"
-]
 
 originList.sort()
 tagList.sort()
@@ -107,6 +58,8 @@ function initializeReactGAmain() {
 }
 
 initializeReactGAmain()
+
+
 
 
 const useStyles = makeStyles(theme => ({
@@ -169,7 +122,9 @@ const useStyles = makeStyles(theme => ({
         },
 
     },
-
+    firebaseUI: {
+        backgroundColor: 'gray'
+    }
 
 
 
@@ -330,29 +285,76 @@ function OrderSelector(props) {
     )
 }
 
+
+
 function MainPage(props) {
-    //const [user, initialising, error] = useAuthState(firebase.auth());
+    const classes = useStyles();
+
+    const [open, setOpen] = useState(false)
+
+    const loginDialogClose = (authResult, redirectUrl) => {
+        if (authResult.user) {
+            const userRef = db.collection('users').doc(authResult.user.uid)
+            userRef.get().then((doc) => {
+                if (doc.exists) {
+                    //console.log('yes')
+                } else {
+                    userRef.set({ favs: [] })
+                    //console.log('no')
+                }
+            })
+        }
+        setOpen(false)
+    }
+
+    const loginDialogOpen = () => {
+        setOpen(true)
+    }
+
+
+    const [user, initialising, error] = useAuthState(firebase.auth());
+    const db = firebase.firestore();
+
+
+    const [userDoc, loading, errorDoc] = useDocument(
+        user ? db.collection('users').doc(user.uid) : null)
+
+
+
+
+
 
     ReactGA.pageview('/catalog');
+
+
 
     return (
 
         <React.Fragment>
             <CssBaseline />
-            <Hero search={true}/>
-            <Container maxWidth='lg' style={{ marginTop: "10px", marginBottom: "20px" }} >
-                <Box justifyContent="center" alignContent="center" display="flex" flexWrap="wrap">
-                    <SelectOrigin />
-                    <SelectTags />
-                    <SelectSize />
-                    <OrderSelector />
-                </Box>
-            </Container>
-
-            <PostGrid entries={props.entries} />
-
-            <Footer entries={props.stats} originList={originList}/>
-
+            <style jsx global>{`
+            `}</style>
+            <UserDocContext.Provider value={userDoc}>
+                <DbContext.Provider value={db}>
+                    <UserContext.Provider value={user}>
+                        <Nav loginDialogOpen={loginDialogOpen} firebase={firebase} />
+                        <Dialog open={open} onClose={loginDialogClose} aria-labelledby="loginDialog">
+                            <StyledFirebaseAuth classes={{ 'mdl-card': { backgroundColor: 'red' } }} uiConfig={{ ...uiConfig, callbacks: { signInSuccessWithAuthResult: loginDialogClose } }} firebaseAuth={firebase.auth()} />
+                        </Dialog>
+                        <Hero search={true} />
+                        <Container maxWidth='lg' style={{margin:'30px auto 30px '}} >
+                            <Box justifyContent="center" alignContent="center" display="flex" flexWrap="wrap">
+                                <SelectOrigin />
+                                <SelectTags />
+                                <SelectSize />
+                                <OrderSelector />
+                            </Box>
+                        </Container>
+                        <PostGrid loginDialogOpen={loginDialogOpen} entries={props.entries} />
+                        <Footer entries={props.stats} originList={originList} />
+                    </UserContext.Provider>
+                </DbContext.Provider>
+            </UserDocContext.Provider>
         </React.Fragment>
 
     );
@@ -372,10 +374,10 @@ MainPage.getInitialProps = async (context) => {
     })
 
     const stats = await client.getEntries({
-        limit:1
+        limit: 1
     })
 
-    return { entries: entries,stats:stats }
+    return { entries: entries, stats: stats }
 }
 
 

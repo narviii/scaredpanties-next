@@ -18,6 +18,12 @@ import * as moment from 'moment';
 import Favorite from '@material-ui/icons/Favorite';
 import ReactGA from 'react-ga';
 import Chip from '@material-ui/core/Chip';
+import IconButton from '@material-ui/core/IconButton'
+import { useContext } from "react";
+import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
+import { UserContext, DbContext, UserDocContext } from '../src/context'
+import firebase from 'firebase'
+
 const axios = require('axios');
 
 
@@ -29,8 +35,7 @@ const useStyles = makeStyles(theme => ({
 
     },
     pagination: {
-        marginLeft: "-50px",
-        marginRight: "-50px",
+        
         paddingTop: '3em',
         paddingBottom: '3em',
         textAlign: 'center'
@@ -44,7 +49,7 @@ const useStyles = makeStyles(theme => ({
     },
     pageRootStandard: {
         margin: "0.25em",
-        padding: "0.4em",
+        padding: "0.7em",
         backgroundColor: '#393942',
         '&:hover': {
             backgroundColor: 'rgba(255, 255, 255, 0.8)',
@@ -52,7 +57,7 @@ const useStyles = makeStyles(theme => ({
     },
     pageRootCurrent: {
         margin: "0.25em",
-        padding: "0.5em",
+        padding: "1em",
         backgroundColor: '#393942',
         '&:hover': {
             backgroundColor: 'rgba(255, 255, 255, 0.8)',
@@ -90,9 +95,65 @@ const useStyles = makeStyles(theme => ({
 
 
 function PostCard(props) {
+
+    function addFav() {
+        db.collection('users').doc(user.uid).update({
+            favs: firebase.firestore.FieldValue.arrayUnion(props.entrie.sys.id)
+        }).then(function () {
+            console.log("Document successfully written!");
+        })
+            .catch(function (error) {
+                console.error("Error writing document: ", error);
+            });
+
+    }
+    function remFav() {
+        db.collection('users').doc(user.uid).update({
+            favs: firebase.firestore.FieldValue.arrayRemove(props.entrie.sys.id)
+        }).then(function () {
+            console.log("Document successfully written!");
+        })
+            .catch(function (error) {
+                console.error("Error writing document: ", error);
+            });
+
+    }
+
+
+    const user = useContext(UserContext);
+    const db = useContext(DbContext);
+    const userDoc = useContext(UserDocContext);
+    let favButton
     const classes = useStyles();
+    if (userDoc) {
+        
+        if (userDoc.data() && userDoc.data().favs && userDoc.data().favs.includes(props.entrie.sys.id)) {
+            favButton = (
+                <IconButton onClick={remFav}>
+                    <Favorite style={{ margin: "auto", fontSize: 30, color: "red" }} />
+                </IconButton>
+            )
+        } else {
+            favButton = (
+                <IconButton onClick={addFav}>
+                    <FavoriteBorderIcon color='disabled' style={{ margin: "auto", fontSize: 30 }} />
+                </IconButton>
+            )
+        }
+    } else {
+        favButton = (
+            <IconButton onClick={props.loginDialogOpen} >
+                <FavoriteBorderIcon color='disabled' style={{ margin: "auto", fontSize: 30 }} />
+            </IconButton>
+        )
+
+    }
+
+
+
+
     return (
-        <Grid item xs={12} sm={6} md={4}>
+        <Grid item xs={12} sm={6} md={4} lg={3}>
 
             <Card >
                 <CardHeader
@@ -128,14 +189,12 @@ function PostCard(props) {
                         <Typography display="inline" variant="subtitle2" color="textSecondary">
                             {props.entrie.fields.origin}
                         </Typography>
-                        <Typography display="inline" style={{ float: "right" }} variant="subtitle2" color="textSecondary">
-                            {props.entrie.fields.sizes ? props.entrie.fields.sizes.toString() : ""}
-                        </Typography>
+
 
                     </Box>
                     }
 
-                    action={props.entrie.fields.fav === true ? <Favorite style={{ color: "red", margin: "auto" }} /> : null}
+                    action={favButton}
                 />
                 <Link
                     color="textPrimary"
@@ -152,7 +211,8 @@ function PostCard(props) {
                     <CardMedia
                         image={props.entrie.fields.thumbnail ? props.entrie.fields.thumbnail.fields.file.url + '?w=1024' : 'https://via.placeholder.com/150'}
                         className={classes.cardMedia}
-                    />
+                    >
+                    </CardMedia>
                 </Link>
 
                 <CardContent>
@@ -167,9 +227,16 @@ function PostCard(props) {
 
                 </CardContent>
 
-                <Box display="flex" flexWrap="wrap" justifyContent="left" style={{ margin: "10px" }}>
+                <Box display="flex" flexWrap="wrap" justifyContent="left">
+
+
+                </Box>
+                <Box display="flex" flexWrap="wrap" justifyContent="left">
+                    {props.entrie.fields.sizes ? props.entrie.fields.sizes.map(tag => (
+                        <Chip key={tag} label={tag} style={{ margin: "10px" }} />
+                    )) : null}
                     {props.entrie.fields.tags.map(tag => (
-                        <Chip key={tag} label={tag} style={{ margin: "3px" }} />
+                        <Chip key={tag} label={tag} style={{ margin: "10px" }} />
                     ))}
                 </Box>
 
@@ -188,11 +255,11 @@ function PostCard(props) {
 export function PostGrid(props) {
 
 
+
     const classes = useStyles();
     const router = useRouter();
     const theme = useTheme();
-    let currentTags = router.query.tags ? router.query.tags.split(',') : []
-    const matches = useMediaQuery(theme.breakpoints.down('sm'));
+    const matches = useMediaQuery(theme.breakpoints.down('xs'));
 
     const handlePageClick = (offset) => {
         ReactGA.event({
@@ -212,10 +279,11 @@ export function PostGrid(props) {
     }
 
     return (
-        <Container maxWidth="lg">
+        <Container maxWidth="xl">
+            {props.entries.items.length==0?<Typography align="center" color="textSecondary" style={{margin:"100px"}} variant="h2">such emtpy.... nothing to show!</Typography>:null}
             <Grid container spacing={4} alignItems="stretch">
                 {props.entries.items.map(entrie => (
-                    <PostCard entrie={entrie} key={entrie.fields.title} />
+                    <PostCard loginDialogOpen={props.loginDialogOpen} entrie={entrie} key={entrie.fields.title} />
                 ))}
             </Grid>
             <Pagination
@@ -224,12 +292,12 @@ export function PostGrid(props) {
                 total={props.entries.total}
                 onClick={(e, offset) => handlePageClick(offset)}
                 size="large"
-                innerButtonCount={matches ? 1 : 2}
-                outerButtonCount={matches ? 1 : 2}
+                innerButtonCount={matches ? 0 : 2}
+                outerButtonCount={matches ? 0 : 2}
                 className={classes.pagination}
                 currentPageColor='secondary'
                 classes={{
-                    rootEnd: classes.rootCurrent,
+                    
                     rootCurrent: classes.pageRootCurrent,
                     rootEllipsis: classes.pageRootStandard,
                     rootStandard: classes.pageRootStandard,

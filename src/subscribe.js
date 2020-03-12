@@ -6,6 +6,8 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import Typography from '@material-ui/core/Typography'
+
 const axios = require('axios');
 
 
@@ -13,7 +15,7 @@ const axios = require('axios');
 
 
 
-export function Subscribe() {
+export function Subscribe(props) {
   const [open, setOpen] = React.useState(false);
   const [email, setEmail] = React.useState('')
 
@@ -36,12 +38,10 @@ export function Subscribe() {
       })
     setOpen(false);
   };
-
+  
   return (
     <div style={{ display: "inline-block" }}>
-      <Button style={{ marginLeft: "30px" }} size="large" variant="outlined" color="primary" onClick={handleClickOpen}>
-        Subscribe
-      </Button>
+      {(props.butToggle)?<Button size="large"   onClick={handleClickOpen}>Subscribe</Button>:<Typography onClick={handleClickOpen}>SUBSCRIBE</Typography>}
       <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
         <DialogTitle id="form-dialog-title">Subscribe to catalog updates</DialogTitle>
         <DialogContent>

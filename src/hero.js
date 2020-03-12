@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Children } from 'react';
 import Container from '@material-ui/core/Container';
 import {Typography} from '@material-ui/core';
 import {SocialLinks} from '../src/sociallinks'
@@ -14,6 +14,7 @@ const useStyles=makeStyles(theme=>({
         backgroundPosition: 'center',
         backgroundSize: 'cover',
         padding: theme.spacing(10, 0, 10),
+        marginBottom:'0px'
     },
 
 }))
@@ -22,19 +23,19 @@ export function Hero(props) {
     const classes = useStyles();
     return (
         <div>
+            {props.children}
             <div className={classes.heroContent}>
                 <Container maxWidth="xl" >
                     <Link color="textPrimary" underline='none' href="/">
                         <Typography variant="h1" align="center"> scaredpanties</Typography>
                     </Link>
-                    <Container maxWidth="xs">
+                    <Container maxWidth="md">
                         <Typography variant="h6" align="center" color="textSecondary" className={classes.heroTypography} paragraph>
-                            a handpicked and lovely curated lingerie brands  catalog 
+                            a handpicked and lovely curated lingerie brands  catalog, where you can create and share your own favorite brands list. 
                 </Typography>
                     </Container>
                 </Container>
             </div>
-            <SocialLinks search={props.search}/>
         </div>
     )
 
