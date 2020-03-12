@@ -15,7 +15,7 @@ import IconButton from '@material-ui/core/IconButton'
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import Link from '@material-ui/core/Link';
-
+import Typography from '@material-ui/core/Typography'
 
 const useStyles = makeStyles(theme => ({
     menuButton: {
@@ -81,7 +81,7 @@ export function Nav(props) {
                     <div className={classes.sectionDesktop}>
                         <Button size="large" color="inherit" href="/" > HOME </Button>
                         <Button size="large" color="inherit" href="/search" > SEARCH </Button>
-                        <Subscribe />
+                        <Subscribe butToggle='true' />
                         <Button size="large" href="https://blog.scaredpanties.com" >  BLOG </Button>
                     </div>
                     <div className={classes.sectionMobile}>
@@ -95,13 +95,27 @@ export function Nav(props) {
                             open={Boolean(anchorEl)}
                             onClose={handleClose}
                         >
-                            <MenuItem>
-                                
-                            </MenuItem>
-                            <MenuItem onClick={handleClose}>
+                            <Link variant="body2" align="right" underline='none' color="textPrimary" href="/" >
+                                <MenuItem style={{ justifyContent: 'center' }}>
+
+                                    HOME
+                                    </MenuItem>
+                            </Link>
+                            <Link underline='none' color="textPrimary" href="/search" >
+                                <MenuItem style={{ justifyContent: 'center' }} >
+                                    SEARCH
+                                </MenuItem>
+                            </Link>
+                            <Link underline='none' color="textPrimary" href="https://blog.scaredpanties.com" >
+                                <MenuItem style={{ justifyContent: 'center' }}>
+                                    BLOG
+                                </MenuItem  >
+                            </Link>
+
+                            <MenuItem style={{ justifyContent: 'center' }} onClick={handleClose}>
                                 <Subscribe />
                             </MenuItem>
-                            <MenuItem onClick={handleClose}>Logout</MenuItem>
+
                         </Menu>
                     </div>
                     <div className={classes.grow} />
@@ -112,6 +126,6 @@ export function Nav(props) {
                 </Toolbar>
 
             </AppBar>
-        </div>
+        </div >
     )
 }

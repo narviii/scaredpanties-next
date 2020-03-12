@@ -113,6 +113,7 @@ function Search(props) {
                             <StyledFirebaseAuth classes={{ 'mdl-card': { backgroundColor: 'red' } }} uiConfig={{ ...uiConfig, callbacks: { signInSuccessWithAuthResult: loginDialogClose } }} firebaseAuth={firebase.auth()} />
                         </Dialog>
                         <Hero />
+                        <div style={{ padding: '30px' }} />
                         <PostGrid loginDialogOpen={loginDialogOpen} entries={props.entries} />
                         <Footer entries={props.stats} originList={originList} />
                     </UserContext.Provider>
@@ -129,20 +130,26 @@ Search.getInitialProps = async (context) => {
     const userDocRef = db.collection("users").doc(context.query.myfavs)
 
     const docData = await userDocRef.get()
+    let entries
+    if (docData.exists) {
+            entries = await client.getEntries({
+            include: 1,
+            order: 'fields.title',
+            'sys.id[in]': docData.data().favs.toString(),
+            'content_type': 'post',
+            limit: 12,
+            skip: parseInt(context.query.offset) ? parseInt(context.query.offset) : 0})
+    }else{
+        entries = await client.getEntries({
+            include: 1,
+            order: 'fields.title',
+            'sys.id[in]': '',
+            'content_type': 'post',
+            limit: 12,
+            skip: parseInt(context.query.offset) ? parseInt(context.query.offset) : 0})
+    }
+    const stats = await client.getEntries({ limit: 1 })
 
-
-    const entries = await client.getEntries({
-        include: 1,
-        order: 'fields.title',
-        'sys.id[in]': docData.data().favs.toString(),
-        'content_type': 'post',
-        limit: 12,
-        skip: parseInt(context.query.offset) ? parseInt(context.query.offset) : 0
-    })
-
-    const stats = await client.getEntries({
-        limit: 1
-    })
     return { entries: entries, stats: stats }
 }
 

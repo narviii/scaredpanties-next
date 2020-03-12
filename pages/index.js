@@ -342,7 +342,7 @@ function MainPage(props) {
                             <StyledFirebaseAuth classes={{ 'mdl-card': { backgroundColor: 'red' } }} uiConfig={{ ...uiConfig, callbacks: { signInSuccessWithAuthResult: loginDialogClose } }} firebaseAuth={firebase.auth()} />
                         </Dialog>
                         <Hero search={true} />
-                        <Container maxWidth='lg' style={{ marginTop: "10px", marginBottom: "20px" }} >
+                        <Container maxWidth='lg' style={{margin:'30px auto 30px '}} >
                             <Box justifyContent="center" alignContent="center" display="flex" flexWrap="wrap">
                                 <SelectOrigin />
                                 <SelectTags />

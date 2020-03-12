@@ -35,8 +35,7 @@ const useStyles = makeStyles(theme => ({
 
     },
     pagination: {
-        marginLeft: "-50px",
-        marginRight: "-50px",
+        
         paddingTop: '3em',
         paddingBottom: '3em',
         textAlign: 'center'
@@ -50,7 +49,7 @@ const useStyles = makeStyles(theme => ({
     },
     pageRootStandard: {
         margin: "0.25em",
-        padding: "0.4em",
+        padding: "0.7em",
         backgroundColor: '#393942',
         '&:hover': {
             backgroundColor: 'rgba(255, 255, 255, 0.8)',
@@ -58,7 +57,7 @@ const useStyles = makeStyles(theme => ({
     },
     pageRootCurrent: {
         margin: "0.25em",
-        padding: "0.5em",
+        padding: "1em",
         backgroundColor: '#393942',
         '&:hover': {
             backgroundColor: 'rgba(255, 255, 255, 0.8)',
@@ -260,7 +259,7 @@ export function PostGrid(props) {
     const classes = useStyles();
     const router = useRouter();
     const theme = useTheme();
-    const matches = useMediaQuery(theme.breakpoints.down('sm'));
+    const matches = useMediaQuery(theme.breakpoints.down('xs'));
 
     const handlePageClick = (offset) => {
         ReactGA.event({
@@ -281,6 +280,7 @@ export function PostGrid(props) {
 
     return (
         <Container maxWidth="xl">
+            {props.entries.items.length==0?<Typography align="center" color="textSecondary" style={{margin:"100px"}} variant="h2">such emtpy.... nothing to show!</Typography>:null}
             <Grid container spacing={4} alignItems="stretch">
                 {props.entries.items.map(entrie => (
                     <PostCard loginDialogOpen={props.loginDialogOpen} entrie={entrie} key={entrie.fields.title} />
@@ -292,12 +292,12 @@ export function PostGrid(props) {
                 total={props.entries.total}
                 onClick={(e, offset) => handlePageClick(offset)}
                 size="large"
-                innerButtonCount={matches ? 1 : 2}
-                outerButtonCount={matches ? 1 : 2}
+                innerButtonCount={matches ? 0 : 2}
+                outerButtonCount={matches ? 0 : 2}
                 className={classes.pagination}
                 currentPageColor='secondary'
                 classes={{
-                    rootEnd: classes.rootCurrent,
+                    
                     rootCurrent: classes.pageRootCurrent,
                     rootEllipsis: classes.pageRootStandard,
                     rootStandard: classes.pageRootStandard,

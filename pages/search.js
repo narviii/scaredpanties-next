@@ -88,12 +88,12 @@ function SearchBar(props) {
 
     }
     return (
-        <Container maxWidth='lg' style={{ marginBottom: '20px' }} >
+        <Container maxWidth='lg' style={{padding:'15px  15px '}} >
 
             <Grid container justify="center" alignItems="center" spacing={2}>
 
                 <Grid item>
-                    <TextField onKeyDown={enterPress} value={input} onChange={(e) => setInput(e.target.value)} className={classes.searchBar} id="brand-search" label="Search for a brand" variant="outlined" />
+                    <TextField onKeyDown={enterPress}  value={input} onChange={(e) => setInput(e.target.value)} className={classes.searchBar} id="brand-search" label="Search for a brand" variant="outlined" />
                 </Grid>
                 <Grid item>
                     <Button onClick={handleSearch} fullWidth size="large" variant="outlined" color="inherit"> SEARCH</Button>
