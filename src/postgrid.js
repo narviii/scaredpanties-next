@@ -209,7 +209,7 @@ function PostCard(props) {
 
                 >
                     <CardMedia
-                        image={props.entrie.fields.thumbnail ? props.entrie.fields.thumbnail.fields.file.url + '?w=1024' : 'https://via.placeholder.com/150'}
+                        image={props.entrie.fields.thumbnail ? props.entrie.fields.thumbnail.fields.file.url + '?w=1024' +'&fm=webp' : 'https://via.placeholder.com/150'}
                         className={classes.cardMedia}
                     >
                     </CardMedia>
