@@ -120,7 +120,6 @@ function Search(props) {
                         <Container maxWidth='md' style={{ display:"flex",margin: '30px auto 10px auto' }}>
                             <Favorite style={{ margin: "auto", fontSize: 30, color: "red" }} />
                             <TextField style={{margin:'0 10px 0 10px'}}fullWidth variant='outlined' value={'https://catalog.scaredpanties.com' + router.asPath} />
-                            <Favorite style={{ margin: "auto", fontSize: 30, color: "red" }} />
                         </Container>
                         <Container style={{marginBottom:'30px'}}>
                             <Typography gutterBottom variant = "body2" align="center">Grab this adress and send to anybody to share your list of favorite brands</Typography>
