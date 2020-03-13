@@ -1,5 +1,5 @@
 import React from 'react';
-import { CssBaseline } from '@material-ui/core';
+import { CssBaseline, Typography } from '@material-ui/core';
 import { Hero } from '../../src/hero'
 import { Footer } from '../../src/footer'
 const contentful = require('contentful')
@@ -20,6 +20,8 @@ import { useDocument } from 'react-firebase-hooks/firestore';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { UserContext, DbContext, UserDocContext } from '../../src/context'
 import { originList } from '../../src/constants'
+import Favorite from '@material-ui/icons/Favorite';
+
 
 
 
@@ -56,10 +58,10 @@ const useStyles = makeStyles(theme => ({
         [theme.breakpoints.down('sm')]: {
             width: "20em"
         },
-
-
-
-    }
+    },
+    addressBar: {
+        width: 200,
+    },
 }))
 
 
@@ -68,7 +70,8 @@ const useStyles = makeStyles(theme => ({
 
 
 function Search(props) {
-
+    const router = useRouter();
+    const classes = useStyles();
     const [open, setOpen] = useState(false)
 
     const loginDialogClose = (authResult, redirectUrl) => {
@@ -113,7 +116,16 @@ function Search(props) {
                             <StyledFirebaseAuth classes={{ 'mdl-card': { backgroundColor: 'red' } }} uiConfig={{ ...uiConfig, callbacks: { signInSuccessWithAuthResult: loginDialogClose } }} firebaseAuth={firebase.auth()} />
                         </Dialog>
                         <Hero />
-                        <div style={{ padding: '30px' }} />
+
+                        <Container maxWidth='md' style={{ display:"flex",margin: '30px auto 10px auto' }}>
+                            <Favorite style={{ margin: "auto", fontSize: 30, color: "red" }} />
+                            <TextField style={{margin:'0 10px 0 10px'}}fullWidth variant='outlined' value={'https://catalog.scaredpanties.com' + router.asPath} />
+                            <Favorite style={{ margin: "auto", fontSize: 30, color: "red" }} />
+                        </Container>
+                        <Container style={{marginBottom:'30px'}}>
+                            <Typography gutterBottom variant = "body2" align="center">Grab this adress and send to anybody to share your list of favorite brands</Typography>
+                        </Container>
+
                         <PostGrid loginDialogOpen={loginDialogOpen} entries={props.entries} />
                         <Footer entries={props.stats} originList={originList} />
                     </UserContext.Provider>
@@ -132,21 +144,23 @@ Search.getInitialProps = async (context) => {
     const docData = await userDocRef.get()
     let entries
     if (docData.exists) {
-            entries = await client.getEntries({
+        entries = await client.getEntries({
             include: 1,
             order: 'fields.title',
             'sys.id[in]': docData.data().favs.toString(),
             'content_type': 'post',
             limit: 12,
-            skip: parseInt(context.query.offset) ? parseInt(context.query.offset) : 0})
-    }else{
+            skip: parseInt(context.query.offset) ? parseInt(context.query.offset) : 0
+        })
+    } else {
         entries = await client.getEntries({
             include: 1,
             order: 'fields.title',
             'sys.id[in]': '',
             'content_type': 'post',
             limit: 12,
-            skip: parseInt(context.query.offset) ? parseInt(context.query.offset) : 0})
+            skip: parseInt(context.query.offset) ? parseInt(context.query.offset) : 0
+        })
     }
     const stats = await client.getEntries({ limit: 1 })
 
