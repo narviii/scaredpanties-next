@@ -44,7 +44,7 @@ function LoginControl(props) {
     if (props.user) {
         return <Button size="large" color="inherit" onClick={props.logout}>Log out</Button>
     } else {
-        return <Button size="large" onClick={props.loginDialogOpen} color="inherit">Login</Button>
+        return <Button size="large" onClick={props.loginDialogOpen} color="inherit">Login/Sign up</Button>
     }
 
 }
