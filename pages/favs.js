@@ -1,9 +1,9 @@
 import React from 'react';
 import { CssBaseline, Typography } from '@material-ui/core';
-import { Hero } from '../../src/hero'
-import { Footer } from '../../src/footer'
+import { Hero } from '../src/hero'
+import { Footer } from '../src/footer'
 const contentful = require('contentful')
-import { PostGrid } from '../../src/postgrid'
+import { PostGrid } from '../src/postgrid'
 import TextField from '@material-ui/core/TextField';
 import { Container } from '@material-ui/core'
 import { Button } from '@material-ui/core'
@@ -12,14 +12,14 @@ import { useState } from 'react'
 import { useRouter } from 'next/router';
 import ReactGA from 'react-ga';
 import Grid from '@material-ui/core/Grid';
-import { Nav } from '../../src/nav'
-import firebase from '../../src/firebase'
+import { Nav } from '../src/nav'
+import firebase from '../src/firebase'
 import Dialog from '@material-ui/core/Dialog';
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 import { useDocument } from 'react-firebase-hooks/firestore';
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { UserContext, DbContext, UserDocContext } from '../../src/context'
-import { originList } from '../../src/constants'
+import { UserContext, DbContext, UserDocContext } from '../src/context'
+import { originList } from '../src/constants'
 import Favorite from '@material-ui/icons/Favorite';
 
 
@@ -99,8 +99,32 @@ function Search(props) {
 
     const [userDoc, loading, errorDoc] = useDocument(
         user ? db.collection('users').doc(user.uid) : null)
+    let displayLink
+    if (user) {
+        if (user.uid == props.currentFav) {
+            displayLink = (
+                <div>
+                    <Container maxWidth='md' style={{ display: "flex", margin: '30px auto 10px auto' }}>
+                        <Favorite style={{ margin: "auto", fontSize: 30, color: "red" }} />
+                        <TextField style={{ margin: '0 10px 0 10px' }} fullWidth size='small' variant='outlined' value={'https://catalog.scaredpanties.com/favs?myfavs=' + user.uid} />
+                    </Container>
+                    <Container style={{ marginBottom: '30px' }}>
+                        <Typography gutterBottom variant="body2" align="center">Grab this adress and send to anybody to share your list of favorite brands</Typography>
+                    </Container>
 
+                </div>
 
+            )
+        } else {
+            displayLink = (
+                <div style={{ margin: '40px' }}></div>
+            )
+        }
+    } else {
+        displayLink = (
+            <div style={{ margin: '40px' }}></div>
+        )
+    }
 
     ReactGA.pageview('catalog/favs');
 
@@ -115,15 +139,9 @@ function Search(props) {
                         <Dialog open={open} onClose={loginDialogClose} aria-labelledby="loginDialog">
                             <StyledFirebaseAuth classes={{ 'mdl-card': { backgroundColor: 'red' } }} uiConfig={{ ...uiConfig, callbacks: { signInSuccessWithAuthResult: loginDialogClose } }} firebaseAuth={firebase.auth()} />
                         </Dialog>
-                        <Hero />
+                        
 
-                        <Container maxWidth='md' style={{ display:"flex",margin: '30px auto 10px auto' }}>
-                            <Favorite style={{ margin: "auto", fontSize: 30, color: "red" }} />
-                            <TextField style={{margin:'0 10px 0 10px'}}fullWidth variant='outlined' value={'https://catalog.scaredpanties.com' + router.asPath} />
-                        </Container>
-                        <Container style={{marginBottom:'30px'}}>
-                            <Typography gutterBottom variant = "body2" align="center">Grab this adress and send to anybody to share your list of favorite brands</Typography>
-                        </Container>
+                        {displayLink}
 
                         <PostGrid loginDialogOpen={loginDialogOpen} entries={props.entries} />
                         <Footer entries={props.stats} originList={originList} />
@@ -163,7 +181,7 @@ Search.getInitialProps = async (context) => {
     }
     const stats = await client.getEntries({ limit: 1 })
 
-    return { entries: entries, stats: stats }
+    return { entries: entries, stats: stats, currentFav: context.query.myfavs }
 }
 
 export default Search

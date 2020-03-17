@@ -119,7 +119,7 @@ export function Nav(props) {
                         </Menu>
                     </div>
                     <div className={classes.grow} />
-                    {user ? <Button size="large" color="inherit" href={'/favs/' + user.uid} > MY FAVORITES </Button> : null}
+                    {user ? <Button size="large" color="inherit" href={'/favs?myfavs=' + user.uid} > MY FAVORITES </Button> : null}
 
                     <LoginControl user={user} loginDialogOpen={props.loginDialogOpen} logout={logout} />
 
