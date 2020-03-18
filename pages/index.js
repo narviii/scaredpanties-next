@@ -34,7 +34,8 @@ const uiConfig = {
     signInFlow: 'popup',
     credentialHelper: 'none',
     signInOptions: [
-        firebase.auth.EmailAuthProvider.PROVIDER_ID
+        firebase.auth.EmailAuthProvider.PROVIDER_ID,
+        firebase.auth.FacebookAuthProvider.PROVIDER_ID
     ]
 
 };
@@ -53,7 +54,7 @@ const client = contentful.createClient({
 //UA-39274880-4 dev
 
 function initializeReactGAmain() {
-    ReactGA.initialize('UA-39274880-3');
+    ReactGA.initialize('UA-39274880-4');
 
 }
 
@@ -339,7 +340,7 @@ function MainPage(props) {
                     <UserContext.Provider value={user}>
                         <Nav loginDialogOpen={loginDialogOpen} firebase={firebase} />
                         <Dialog open={open} onClose={loginDialogClose} aria-labelledby="loginDialog">
-                            <StyledFirebaseAuth classes={{ 'mdl-card': { backgroundColor: 'red' } }} uiConfig={{ ...uiConfig, callbacks: { signInSuccessWithAuthResult: loginDialogClose } }} firebaseAuth={firebase.auth()} />
+                            <StyledFirebaseAuth  uiConfig={{ ...uiConfig, callbacks: { signInSuccessWithAuthResult: loginDialogClose } }} firebaseAuth={firebase.auth()} />
                         </Dialog>
                         <Hero search={true} />
                         <Container maxWidth='lg' style={{margin:'30px auto 30px '}} >
