@@ -9,6 +9,8 @@ import YouTubeIcon from '@material-ui/icons/YouTube'
 import TwitterIcon from '@material-ui/icons/Twitter';
 import IconButton from '@material-ui/core/IconButton';
 import MailIcon from '@material-ui/icons/Mail';
+import ReactGA from '../src/reactga'
+
 
 
 const useStyles = makeStyles(theme => ({
@@ -21,6 +23,31 @@ const useStyles = makeStyles(theme => ({
 
 export function Footer(props) {
     const classes = useStyles();
+
+    const instagramEvent=()=>{
+        ReactGA.event({
+            category: 'socialLinks',
+            action: 'outbound',
+            label:'instagram'
+        })
+
+    }
+
+    const youTubeEvent=()=>{
+        ReactGA.event({
+            category: 'socialLinks',
+            action: 'outbound',
+            label: 'youtube'
+        })
+    }
+    const twiterEvent=()=>{
+        ReactGA.event({
+            category: 'socialLinks',
+            action: 'outbound',
+            label:'twitter'
+        })
+    }
+
     const fav = <Favorite style={{ color: "red" }} />
 
     return (
@@ -28,16 +55,16 @@ export function Footer(props) {
 
             <Container maxWidth="sm" style={{ textAlign: "center" }}>
                 <div>
-                    <IconButton aria-label="Mail to scaredpanties" href="mailto:scaredpanties@gmail.com">
+                    <IconButton  aria-label="Mail to scaredpanties" href="mailto:scaredpanties@gmail.com">
                         <MailIcon />
                     </IconButton>
-                    <IconButton aria-label="Instagramm" href="https://www.instagram.com/scaredpanties/">
+                    <IconButton onClick={instagramEvent} aria-label="Instagramm" href="https://www.instagram.com/scaredpanties/">
                         <InstagramIcon />
                     </IconButton>
-                    <IconButton aria-label="Youtube" href="https://www.youtube.com/channel/UCge0-VKn4mfJfGt1ZCMbcpQ?view_as=subscriber">
+                    <IconButton onClick={youTubeEvent} aria-label="Youtube" href="https://www.youtube.com/channel/UCge0-VKn4mfJfGt1ZCMbcpQ?view_as=subscriber">
                         <YouTubeIcon />
                     </IconButton>
-                    <IconButton aria-label="Twitter" href="https://twitter.com/scaredpanties">
+                    <IconButton onClick={twiterEvent} aria-label="Twitter" href="https://twitter.com/scaredpanties">
                         <TwitterIcon />
                     </IconButton>
                 </div>

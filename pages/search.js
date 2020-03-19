@@ -10,7 +10,6 @@ import { Button } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles';
 import { useState } from 'react'
 import { useRouter } from 'next/router';
-import ReactGA from 'react-ga';
 import Grid from '@material-ui/core/Grid';
 import { originList } from '../src/constants'
 import { Nav } from '../src/nav'
@@ -20,6 +19,7 @@ import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 import { useDocument } from 'react-firebase-hooks/firestore';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { UserContext, DbContext, UserDocContext } from '../src/context'
+import ReactGA from '../src/reactga'
 
 
 
@@ -33,16 +33,6 @@ const uiConfig = {
     ],
 };
 
-
-//UA-39274880-3 prod
-//UA-39274880-4 dev
-
-function initializeReactGAmain() {
-    ReactGA.initialize('UA-39274880-3');
-
-}
-
-initializeReactGAmain()
 
 
 const client = contentful.createClient({

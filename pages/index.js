@@ -8,13 +8,13 @@ import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import Box from '@material-ui/core/Box';
-import ReactGA from 'react-ga';
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import { Hero } from '../src/hero'
 import { Footer } from '../src/footer';
 import { PostGrid } from '../src/postgrid'
 import firebase from '../src/firebase'
+import ReactGA from '../src/reactga'
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { originList, tagList, sizeList } from '../src/constants'
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
@@ -51,15 +51,6 @@ const client = contentful.createClient({
     accessToken: 'cQFcNJC5X35eWPkZ1ybown-nRQG4QOmxkwMZKootKeE'
 })
 
-//UA-39274880-3 prod
-//UA-39274880-4 dev
-
-function initializeReactGAmain() {
-    ReactGA.initialize('UA-39274880-3');
-
-}
-
-initializeReactGAmain()
 
 
 
@@ -310,6 +301,7 @@ function MainPage(props) {
     }
 
     const loginDialogOpen = () => {
+        ReactGA.event({ category: 'user', action: 'auth', label: 'loginDialog'})
         setOpen(true)
     }
 

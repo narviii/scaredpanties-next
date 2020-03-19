@@ -1,17 +1,13 @@
 import React from 'react';
 import { CssBaseline, Typography } from '@material-ui/core';
-import { Hero } from '../src/hero'
 import { Footer } from '../src/footer'
 const contentful = require('contentful')
 import { PostGrid } from '../src/postgrid'
 import TextField from '@material-ui/core/TextField';
 import { Container } from '@material-ui/core'
-import { Button } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles';
 import { useState } from 'react'
 import { useRouter } from 'next/router';
-import ReactGA from 'react-ga';
-import Grid from '@material-ui/core/Grid';
 import { Nav } from '../src/nav'
 import firebase from '../src/firebase'
 import Dialog from '@material-ui/core/Dialog';
@@ -21,6 +17,7 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 import { UserContext, DbContext, UserDocContext } from '../src/context'
 import { originList } from '../src/constants'
 import Favorite from '@material-ui/icons/Favorite';
+import ReactGA from '../src/reactga'
 
 
 
@@ -37,15 +34,6 @@ const uiConfig = {
 };
 
 
-//UA-39274880-3 prod
-//UA-39274880-4 dev
-
-function initializeReactGAmain() {
-    ReactGA.initialize('UA-39274880-3');
-
-}
-
-initializeReactGAmain()
 
 
 const client = contentful.createClient({
