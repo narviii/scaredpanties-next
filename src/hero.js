@@ -29,9 +29,9 @@ export function Hero(props) {
                     <Link color="textPrimary" underline='none' href="/">
                         <Typography variant="h1" align="center"> scaredpanties</Typography>
                     </Link>
-                    <Container maxWidth="md">
+                    <Container maxWidth="sm">
                         <Typography variant="h6" align="center" color="textSecondary" className={classes.heroTypography} paragraph>
-                            a handpicked and lovely curated lingerie brands  catalog, where you can create and share your own favorite brands list. 
+                        A handpicked and lovely curated catalogue: lingerie companies and brands. Like and share favourites with friends.
                 </Typography>
                     </Container>
                 </Container>
