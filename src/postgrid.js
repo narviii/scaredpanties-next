@@ -1,11 +1,11 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useRouter } from 'next/router';
 import { useTheme } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import Pagination from "material-ui-flat-pagination";
-import CardActionArea from '@material-ui/core/CardActionArea';
+import CardActions from '@material-ui/core/CardActions';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
@@ -23,6 +23,10 @@ import { useContext } from "react";
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import { UserContext, DbContext, UserDocContext } from '../src/context'
 import firebase from 'firebase'
+import { client } from '../src/contentful'
+import { useState, userEffect } from 'react'
+import Button from '@material-ui/core/Button'
+import Collapse from '@material-ui/core/Collapse'
 
 const axios = require('axios');
 
@@ -35,7 +39,7 @@ const useStyles = makeStyles(theme => ({
 
     },
     pagination: {
-        
+
         paddingTop: '3em',
         paddingBottom: '3em',
         textAlign: 'center'
@@ -94,7 +98,25 @@ const useStyles = makeStyles(theme => ({
 }))
 
 
+
 function PostCard(props) {
+
+
+
+    const [stockists, setStockists] = useState([])
+
+    useEffect(() => {
+        async function fetchData() {
+            const stockists = await client.getEntries({
+
+                links_to_entry: props.entrie.sys.id,
+                include: 0
+            })
+
+            setStockists(stockists.items)
+        }
+        fetchData()
+    }, [])
 
     function addFav() {
         db.collection('users').doc(user.uid).update({
@@ -125,8 +147,10 @@ function PostCard(props) {
     const userDoc = useContext(UserDocContext);
     let favButton
     const classes = useStyles();
+
+    console.log(stockists)
     if (userDoc) {
-        
+
         if (userDoc.data() && userDoc.data().favs && userDoc.data().favs.includes(props.entrie.sys.id)) {
             favButton = (
                 <IconButton onClick={remFav}>
@@ -209,7 +233,7 @@ function PostCard(props) {
 
                 >
                     <CardMedia
-                        image={props.entrie.fields.thumbnail ? props.entrie.fields.thumbnail.fields.file.url + '?w=1024' +'&fm=jpg' : 'https://via.placeholder.com/150'}
+                        image={props.entrie.fields.thumbnail ? props.entrie.fields.thumbnail.fields.file.url + '?w=1024' + '&fm=jpg' : 'https://via.placeholder.com/150'}
                         className={classes.cardMedia}
                     >
                     </CardMedia>
@@ -238,9 +262,10 @@ function PostCard(props) {
                     {props.entrie.fields.tags.map(tag => (
                         <Chip key={tag} label={tag} style={{ margin: "10px" }} />
                     ))}
+
                 </Box>
 
-
+                    <Typography>{stockists.map(item => item.fields.name)}</Typography>
 
 
 
@@ -280,7 +305,7 @@ export function PostGrid(props) {
 
     return (
         <Container maxWidth="xl">
-            {props.entries.items.length==0?<Typography align="center" color="textSecondary" style={{margin:"100px"}} variant="h2">such emtpy.... nothing to show!</Typography>:null}
+            {props.entries.items.length == 0 ? <Typography align="center" color="textSecondary" style={{ margin: "100px" }} variant="h2">such emtpy.... nothing to show!</Typography> : null}
             <Grid container spacing={4} alignItems="stretch">
                 {props.entries.items.map(entrie => (
                     <PostCard loginDialogOpen={props.loginDialogOpen} entrie={entrie} key={entrie.fields.title} />
@@ -297,7 +322,7 @@ export function PostGrid(props) {
                 className={classes.pagination}
                 currentPageColor='secondary'
                 classes={{
-                    
+
                     rootCurrent: classes.pageRootCurrent,
                     rootEllipsis: classes.pageRootStandard,
                     rootStandard: classes.pageRootStandard,

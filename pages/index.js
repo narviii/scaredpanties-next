@@ -22,10 +22,10 @@ import Dialog from '@material-ui/core/Dialog';
 import { Nav } from '../src/nav'
 import { useDocument } from 'react-firebase-hooks/firestore';
 import { UserContext, DbContext, UserDocContext } from '../src/context'
+import {client} from '../src/contentful'
 
 
 
-const contentful = require('contentful')
 
 const url = "https://scaredpanties.us20.list-manage.com/subscribe/post?u=65173dffd9ab714c0d2d985ab&amp;id=ed2dc9ceb2";
 
@@ -46,10 +46,6 @@ originList.sort()
 tagList.sort()
 tagList.unshift("All")
 
-const client = contentful.createClient({
-    space: 'y1tpc6gwyz3g',
-    accessToken: 'cQFcNJC5X35eWPkZ1ybown-nRQG4QOmxkwMZKootKeE'
-})
 
 
 
