@@ -23,7 +23,7 @@ import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import { UserContext, DbContext, UserDocContext } from '../src/context'
 import firebase from 'firebase'
 import Divider from '@material-ui/core/Divider';
-import Badge from '@material-ui/core/Badge';
+import Tooltip from '@material-ui/core/Tooltip';
 const axios = require('axios');
 
 
@@ -96,14 +96,16 @@ const useStyles = makeStyles(theme => ({
 
 function Stockists(props) {
     //console.log(props.stockists.items)
-    const stockists = props.stockists.items.map(item => <Link style={{marginRight:'5px'}}key={item.fields.name} color="textPrimary" href={item.fields.link}>{item.fields.name}</Link>)
+    const stockists = props.stockists.items.map(item => (
+            <Link style={{ margin: '0 1em 0 1em' }} key={item.fields.name} color="textPrimary" href={item.fields.link}>{item.fields.name}</Link>
+    ))
     return (
         <div>
             <Divider style={{ margin: '10px' }} variant="middle" />
             <Box style={{ margin: '10px' }}>
                 <Typography variant="body2" color="textSecondary">You can buy it at these stockists:</Typography>
 
-                <div style={{display:'flex', margin: '10px' }}>
+                <div style={{ display: 'flex', margin: '10px' }}>
                     {stockists}
                 </div>
             </Box>
@@ -184,6 +186,7 @@ function PostCard(props) {
                     }}
                     title={
                         <Link
+                            underline='none'
                             color="textPrimary"
                             href={props.entrie.fields.link}
                             onClick={() => {
