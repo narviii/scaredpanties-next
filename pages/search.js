@@ -168,6 +168,16 @@ Search.getInitialProps = async (context) => {
     const stats = await client.getEntries({
         limit: 1
     })
+
+    entries.items = await Promise.all(entries.items.map(async (entry) => {
+        entry.stockists = await client.getEntries({
+            links_to_entry: entry.sys.id,
+            include: 0
+        })
+        return entry
+    }))
+
+
     return { entries: entries, stats: stats }
 }
 

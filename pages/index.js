@@ -22,7 +22,7 @@ import Dialog from '@material-ui/core/Dialog';
 import { Nav } from '../src/nav'
 import { useDocument } from 'react-firebase-hooks/firestore';
 import { UserContext, DbContext, UserDocContext } from '../src/context'
-import {client} from '../src/contentful'
+import { client } from '../src/contentful'
 
 
 
@@ -297,7 +297,7 @@ function MainPage(props) {
     }
 
     const loginDialogOpen = () => {
-        ReactGA.event({ category: 'user', action: 'auth', label: 'loginDialog'})
+        ReactGA.event({ category: 'user', action: 'auth', label: 'loginDialog' })
         setOpen(true)
     }
 
@@ -329,10 +329,10 @@ function MainPage(props) {
                     <UserContext.Provider value={user}>
                         <Nav loginDialogOpen={loginDialogOpen} firebase={firebase} />
                         <Dialog open={open} onClose={loginDialogClose} aria-labelledby="loginDialog">
-                            <StyledFirebaseAuth  uiConfig={{ ...uiConfig, callbacks: { signInSuccessWithAuthResult: loginDialogClose } }} firebaseAuth={firebase.auth()} />
+                            <StyledFirebaseAuth uiConfig={{ ...uiConfig, callbacks: { signInSuccessWithAuthResult: loginDialogClose } }} firebaseAuth={firebase.auth()} />
                         </Dialog>
                         <Hero search={true} />
-                        <Container maxWidth='lg' style={{margin:'30px auto 30px '}} >
+                        <Container maxWidth='lg' style={{ margin: '30px auto 30px ' }} >
                             <Box justifyContent="center" alignContent="center" display="flex" flexWrap="wrap">
                                 <SelectOrigin />
                                 <SelectTags />
@@ -352,7 +352,7 @@ function MainPage(props) {
 }
 
 MainPage.getInitialProps = async (context) => {
-    const entries = await client.getEntries({
+    let entries = await client.getEntries({
         include: 1,
         order: (context.query.order == 'alphabet' ? 'fields.title' : '-sys.updatedAt'),
         'fields.tags[all]': (context.query.tags == 'All' || context.query.tags === '') ? undefined : context.query.tags,
@@ -362,6 +362,17 @@ MainPage.getInitialProps = async (context) => {
         limit: 12,
         skip: parseInt(context.query.offset) ? parseInt(context.query.offset) : 0
     })
+
+    
+
+    entries.items = await Promise.all(entries.items.map(async (entry) => {
+        entry.stockists = await client.getEntries({
+            links_to_entry: entry.sys.id,
+            include: 0
+        })
+        return entry
+    }))
+    
 
     const stats = await client.getEntries({
         limit: 1

@@ -1,11 +1,10 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { useRouter } from 'next/router';
 import { useTheme } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import Pagination from "material-ui-flat-pagination";
-import CardActions from '@material-ui/core/CardActions';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
@@ -23,11 +22,8 @@ import { useContext } from "react";
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import { UserContext, DbContext, UserDocContext } from '../src/context'
 import firebase from 'firebase'
-import { client } from '../src/contentful'
-import { useState, userEffect } from 'react'
-import Button from '@material-ui/core/Button'
-import Collapse from '@material-ui/core/Collapse'
-
+import Divider from '@material-ui/core/Divider';
+import Badge from '@material-ui/core/Badge';
 const axios = require('axios');
 
 
@@ -98,25 +94,26 @@ const useStyles = makeStyles(theme => ({
 }))
 
 
+function Stockists(props) {
+    //console.log(props.stockists.items)
+    const stockists = props.stockists.items.map(item => <Link style={{marginRight:'5px'}}key={item.fields.name} color="textPrimary" href={item.fields.link}>{item.fields.name}</Link>)
+    return (
+        <div>
+            <Divider style={{ margin: '10px' }} variant="middle" />
+            <Box style={{ margin: '10px' }}>
+                <Typography variant="body2" color="textSecondary">You can buy it at these stockists:</Typography>
+
+                <div style={{display:'flex', margin: '10px' }}>
+                    {stockists}
+                </div>
+            </Box>
+            <Divider style={{ margin: '10px' }} variant="middle" />
+        </div>
+    )
+}
+
 
 function PostCard(props) {
-
-
-
-    const [stockists, setStockists] = useState([])
-
-    useEffect(() => {
-        async function fetchData() {
-            const stockists = await client.getEntries({
-
-                links_to_entry: props.entrie.sys.id,
-                include: 0
-            })
-
-            setStockists(stockists.items)
-        }
-        fetchData()
-    }, [])
 
     function addFav() {
         db.collection('users').doc(user.uid).update({
@@ -148,7 +145,8 @@ function PostCard(props) {
     let favButton
     const classes = useStyles();
 
-    console.log(stockists)
+    //console.log(stockists)
+    //console.log(props.entrie)
     if (userDoc) {
 
         if (userDoc.data() && userDoc.data().favs && userDoc.data().favs.includes(props.entrie.sys.id)) {
@@ -248,24 +246,21 @@ function PostCard(props) {
                         {'Last update: ' + moment(props.entrie.sys.updatedAt).fromNow()}
                     </Typography>
 
+                    {(props.entrie.stockists.items.length > 0) ? <Stockists stockists={props.entrie.stockists} /> : <Divider style={{ margin: '10px' }} variant="middle" />}
+
+                    <Box display="flex" flexWrap="wrap" justifyContent="left">
+                        {props.entrie.fields.sizes ? props.entrie.fields.sizes.map(tag => (
+                            <Chip key={tag} label={tag} style={{ margin: "10px" }} />
+                        )) : null}
+                        {props.entrie.fields.tags.map(tag => (
+                            <Chip key={tag} label={tag} style={{ margin: "10px" }} />
+                        ))}
+
+                    </Box>
 
                 </CardContent>
 
-                <Box display="flex" flexWrap="wrap" justifyContent="left">
 
-
-                </Box>
-                <Box display="flex" flexWrap="wrap" justifyContent="left">
-                    {props.entrie.fields.sizes ? props.entrie.fields.sizes.map(tag => (
-                        <Chip key={tag} label={tag} style={{ margin: "10px" }} />
-                    )) : null}
-                    {props.entrie.fields.tags.map(tag => (
-                        <Chip key={tag} label={tag} style={{ margin: "10px" }} />
-                    ))}
-
-                </Box>
-
-                    <Typography>{stockists.map(item => item.fields.name)}</Typography>
 
 
 
