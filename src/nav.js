@@ -16,6 +16,7 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import Link from '@material-ui/core/Link';
 import Typography from '@material-ui/core/Typography'
+import LocalCafeIcon from '@material-ui/icons/LocalCafe';
 
 const useStyles = makeStyles(theme => ({
     menuButton: {
@@ -26,13 +27,13 @@ const useStyles = makeStyles(theme => ({
     },
     sectionDesktop: {
         display: 'none',
-        [theme.breakpoints.up('sm')]: {
+        [theme.breakpoints.up('md')]: {
             display: 'flex',
         },
     },
     sectionMobile: {
         display: 'flex',
-        [theme.breakpoints.up('sm')]: {
+        [theme.breakpoints.up('md')]: {
             display: 'none',
         },
     },
@@ -79,10 +80,15 @@ export function Nav(props) {
             <AppBar color="inherit" position="static">
                 <Toolbar>
                     <div className={classes.sectionDesktop}>
+
                         <Button size="large" color="inherit" href="/" > HOME </Button>
                         <Button size="large" color="inherit" href="/search" > SEARCH </Button>
                         <Subscribe butToggle='true' />
                         <Button size="large" href="https://blog.scaredpanties.com" >  BLOG </Button>
+                        <Button href="https://www.buymeacoffee.com/scaredpanties" startIcon={<LocalCafeIcon />}>
+                            Buy me a Coffee
+                         </Button>
+
                     </div>
                     <div className={classes.sectionMobile}>
                         <IconButton aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
@@ -116,9 +122,18 @@ export function Nav(props) {
                                 <Subscribe />
                             </MenuItem>
 
+
+                            <Link underline='none' color='textPrimary' href="https://www.buymeacoffee.com/scaredpanties">
+                                <MenuItem>
+                                <LocalCafeIcon style={{marginRight:'5px'}} />
+                                BUY ME A COFFEE
+                                </MenuItem>
+                            </Link>
+
                         </Menu>
                     </div>
                     <div className={classes.grow} />
+
                     {user ? <Button size="large" color="inherit" href={'/favs?myfavs=' + user.uid} > MY FAVORITES </Button> : null}
 
                     <LoginControl user={user} loginDialogOpen={props.loginDialogOpen} logout={logout} />
