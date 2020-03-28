@@ -95,7 +95,6 @@ const useStyles = makeStyles(theme => ({
 
 
 function Stockists(props) {
-    //console.log(props.stockists.items)
     const stockists = props.stockists.items.map(item => (
             <Link style={{ margin: '0 1em 0 1em' }} key={item.fields.name} color="textPrimary" href={item.fields.link}>{item.fields.name}</Link>
     ))
@@ -103,11 +102,11 @@ function Stockists(props) {
         <div>
             <Divider style={{ margin: '10px' }} variant="middle" />
             <Box style={{ margin: '10px' }}>
-                <Typography variant="body2" color="textSecondary">You can buy it at these stockists:</Typography>
+                <Typography variant="body2" color="textSecondary">You can buy it from these stockists:</Typography>
 
-                <div style={{ display: 'flex', margin: '10px' }}>
+                <Box style={{ display: 'flex',flexDirection:'column',flexWrap:'wrap',maxHeight:'100px', margin: '10px' }}>
                     {stockists}
-                </div>
+                </Box>
             </Box>
             <Divider style={{ margin: '10px' }} variant="middle" />
         </div>
