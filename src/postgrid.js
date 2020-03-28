@@ -42,22 +42,28 @@ const useStyles = makeStyles(theme => ({
     },
     pageLabel: {
 
-        paddingLeft: '0.5em',
-        paddingRight: '0.5em'
+        [theme.breakpoints.up('md')]: {
+            paddingLeft: '1em',
+            paddingRight: '1em'
+    
+        },
+        paddingLeft: '0.15em',
+        paddingRight: '0.15em'
 
 
     },
     pageRootStandard: {
-        margin: "0.25em",
-        padding: "0.7em",
+        
+        margin: "0.2em",
+        padding: "0.6em",
         backgroundColor: '#393942',
         '&:hover': {
             backgroundColor: 'rgba(255, 255, 255, 0.8)',
         },
     },
     pageRootCurrent: {
-        margin: "0.25em",
-        padding: "1em",
+        margin: "0.15em",
+        padding: "0.6em",
         backgroundColor: '#393942',
         '&:hover': {
             backgroundColor: 'rgba(255, 255, 255, 0.8)',
