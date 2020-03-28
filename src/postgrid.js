@@ -188,6 +188,7 @@ function PostCard(props) {
                             underline='none'
                             color="textPrimary"
                             href={props.entrie.fields.link}
+                            target="_blank"
                             onClick={() => {
                                 axios.get('/api/viewcount', {
                                     params: {
@@ -222,6 +223,7 @@ function PostCard(props) {
                 />
                 <Link
                     color="textPrimary"
+                    target="_blank"
                     href={props.entrie.fields.link}
                     onClick={() => {
                         ReactGA.event({
