@@ -23,7 +23,7 @@ import { Nav } from '../src/nav'
 import { useDocument } from 'react-firebase-hooks/firestore';
 import { UserContext, DbContext, UserDocContext } from '../src/context'
 import { client } from '../src/contentful'
-
+import Typography from '@material-ui/core/Typography'
 
 
 

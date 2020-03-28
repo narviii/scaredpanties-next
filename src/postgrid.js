@@ -45,7 +45,7 @@ const useStyles = makeStyles(theme => ({
         [theme.breakpoints.up('md')]: {
             paddingLeft: '1em',
             paddingRight: '1em'
-    
+
         },
         paddingLeft: '0.15em',
         paddingRight: '0.15em'
@@ -53,7 +53,7 @@ const useStyles = makeStyles(theme => ({
 
     },
     pageRootStandard: {
-        
+
         margin: "0.2em",
         padding: "0.6em",
         backgroundColor: '#393942',
@@ -102,15 +102,21 @@ const useStyles = makeStyles(theme => ({
 
 function Stockists(props) {
     const stockists = props.stockists.items.map(item => (
-            <Link style={{ margin: '0 1em 0 1em' }} key={item.fields.name} color="textPrimary" href={item.fields.link}>{item.fields.name}</Link>
+        <Link target="_blank" onClick={() => {
+            ReactGA.event({
+                category: 'user',
+                action: 'outbound:stockist',
+                label: item.fields.name
+            })
+        }} style={{ margin: 'auto' }} key={item.fields.name} color="textPrimary" href={item.fields.link}>{item.fields.name}</Link>
     ))
     return (
         <div>
             <Divider style={{ margin: '10px' }} variant="middle" />
-            <Box style={{ margin: '10px' }}>
+            <Box style={{}}>
                 <Typography variant="body2" color="textSecondary">You can buy it from these stockists:</Typography>
 
-                <Box style={{ display: 'flex',flexDirection:'column',flexWrap:'wrap',maxHeight:'100px', margin: '10px' }}>
+                <Box style={{ display: 'flex', flexDirection: 'column', flexWrap: 'wrap', maxHeight: '90px', margin: '10px auto' }}>
                     {stockists}
                 </Box>
             </Box>
