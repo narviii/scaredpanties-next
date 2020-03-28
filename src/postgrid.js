@@ -5,7 +5,6 @@ import useMediaQuery from '@material-ui/core/useMediaQuery';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import Pagination from "material-ui-flat-pagination";
-import CardActionArea from '@material-ui/core/CardActionArea';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
@@ -23,7 +22,8 @@ import { useContext } from "react";
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import { UserContext, DbContext, UserDocContext } from '../src/context'
 import firebase from 'firebase'
-
+import Divider from '@material-ui/core/Divider';
+import Tooltip from '@material-ui/core/Tooltip';
 const axios = require('axios');
 
 
@@ -35,7 +35,7 @@ const useStyles = makeStyles(theme => ({
 
     },
     pagination: {
-        
+
         paddingTop: '3em',
         paddingBottom: '3em',
         textAlign: 'center'
@@ -94,6 +94,26 @@ const useStyles = makeStyles(theme => ({
 }))
 
 
+function Stockists(props) {
+    const stockists = props.stockists.items.map(item => (
+            <Link style={{ margin: '0 1em 0 1em' }} key={item.fields.name} color="textPrimary" href={item.fields.link}>{item.fields.name}</Link>
+    ))
+    return (
+        <div>
+            <Divider style={{ margin: '10px' }} variant="middle" />
+            <Box style={{ margin: '10px' }}>
+                <Typography variant="body2" color="textSecondary">You can buy it from these stockists:</Typography>
+
+                <Box style={{ display: 'flex',flexDirection:'column',flexWrap:'wrap',maxHeight:'100px', margin: '10px' }}>
+                    {stockists}
+                </Box>
+            </Box>
+            <Divider style={{ margin: '10px' }} variant="middle" />
+        </div>
+    )
+}
+
+
 function PostCard(props) {
 
     function addFav() {
@@ -125,8 +145,11 @@ function PostCard(props) {
     const userDoc = useContext(UserDocContext);
     let favButton
     const classes = useStyles();
+
+    //console.log(stockists)
+    //console.log(props.entrie)
     if (userDoc) {
-        
+
         if (userDoc.data() && userDoc.data().favs && userDoc.data().favs.includes(props.entrie.sys.id)) {
             favButton = (
                 <IconButton onClick={remFav}>
@@ -162,6 +185,7 @@ function PostCard(props) {
                     }}
                     title={
                         <Link
+                            underline='none'
                             color="textPrimary"
                             href={props.entrie.fields.link}
                             onClick={() => {
@@ -209,7 +233,7 @@ function PostCard(props) {
 
                 >
                     <CardMedia
-                        image={props.entrie.fields.thumbnail ? props.entrie.fields.thumbnail.fields.file.url + '?w=1024' +'&fm=jpg' : 'https://via.placeholder.com/150'}
+                        image={props.entrie.fields.thumbnail ? props.entrie.fields.thumbnail.fields.file.url + '?w=1024' + '&fm=jpg' : 'https://via.placeholder.com/150'}
                         className={classes.cardMedia}
                     >
                     </CardMedia>
@@ -224,21 +248,19 @@ function PostCard(props) {
                         {'Last update: ' + moment(props.entrie.sys.updatedAt).fromNow()}
                     </Typography>
 
+                    {(props.entrie.stockists.items.length > 0) ? <Stockists stockists={props.entrie.stockists} /> : <Divider style={{ margin: '10px' }} variant="middle" />}
+
+                    <Box display="flex" flexWrap="wrap" justifyContent="left">
+                        {props.entrie.fields.sizes ? props.entrie.fields.sizes.map(tag => (
+                            <Chip key={tag} label={tag} style={{ margin: "10px" }} />
+                        )) : null}
+                        {props.entrie.fields.tags.map(tag => (
+                            <Chip key={tag} label={tag} style={{ margin: "10px" }} />
+                        ))}
+
+                    </Box>
 
                 </CardContent>
-
-                <Box display="flex" flexWrap="wrap" justifyContent="left">
-
-
-                </Box>
-                <Box display="flex" flexWrap="wrap" justifyContent="left">
-                    {props.entrie.fields.sizes ? props.entrie.fields.sizes.map(tag => (
-                        <Chip key={tag} label={tag} style={{ margin: "10px" }} />
-                    )) : null}
-                    {props.entrie.fields.tags.map(tag => (
-                        <Chip key={tag} label={tag} style={{ margin: "10px" }} />
-                    ))}
-                </Box>
 
 
 
@@ -280,7 +302,7 @@ export function PostGrid(props) {
 
     return (
         <Container maxWidth="xl">
-            {props.entries.items.length==0?<Typography align="center" color="textSecondary" style={{margin:"100px"}} variant="h2">such emtpy.... nothing to show!</Typography>:null}
+            {props.entries.items.length == 0 ? <Typography align="center" color="textSecondary" style={{ margin: "100px" }} variant="h2">such emtpy.... nothing to show!</Typography> : null}
             <Grid container spacing={4} alignItems="stretch">
                 {props.entries.items.map(entrie => (
                     <PostCard loginDialogOpen={props.loginDialogOpen} entrie={entrie} key={entrie.fields.title} />
@@ -297,7 +319,7 @@ export function PostGrid(props) {
                 className={classes.pagination}
                 currentPageColor='secondary'
                 classes={{
-                    
+
                     rootCurrent: classes.pageRootCurrent,
                     rootEllipsis: classes.pageRootStandard,
                     rootStandard: classes.pageRootStandard,

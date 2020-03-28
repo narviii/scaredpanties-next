@@ -169,6 +169,15 @@ Search.getInitialProps = async (context) => {
             skip: parseInt(context.query.offset) ? parseInt(context.query.offset) : 0
         })
     }
+
+    entries.items = await Promise.all(entries.items.map(async (entry) => {
+        entry.stockists = await client.getEntries({
+            links_to_entry: entry.sys.id,
+            include: 0
+        })
+        return entry
+    }))
+
     const stats = await client.getEntries({ limit: 1 })
 
     return { entries: entries, stats: stats, currentFav: context.query.myfavs }
