@@ -12,7 +12,95 @@ import Box from '@material-ui/core/Box'
 import Chip from '@material-ui/core/Chip'
 import Avatar from '@material-ui/core/Avatar'
 import Divider from '@material-ui/core/Divider'
+import { makeStyles } from '@material-ui/core/styles';
+import GridList from '@material-ui/core/GridList';
+import GridListTile from '@material-ui/core/GridListTile';
+import GridListTileBar from '@material-ui/core/GridListTileBar';
+import ListSubheader from '@material-ui/core/ListSubheader';
+import IconButton from '@material-ui/core/IconButton';
+import InfoIcon from '@material-ui/icons/Info';
+import axios from 'axios'
+import useSWR from 'swr'
+import fetch from 'unfetch'
+import Grid from '@material-ui/core/Grid'
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
+import CardMedia from '@material-ui/core/CardMedia';
+import CardHeader from '@material-ui/core/CardHeader';
 
+
+const fetcher = url => fetch(url).then(r => r.json())
+
+
+const useStyles = makeStyles((theme) => ({
+    cardMedia: {
+
+        paddingTop: '75%', // 16:9
+
+
+    },
+    root: {
+        display: 'flex',
+        flexWrap: 'wrap',
+        justifyContent: 'space-around',
+        overflow: 'hidden',
+        padding:'10px',
+        backgroundColor: theme.palette.background.paper,
+    },
+    gridList: {
+        width: 500,
+        height: 450,
+    },
+    icon: {
+        color: 'rgba(255, 255, 255, 0.54)',
+    },
+}));
+
+
+function GrdTile(props) {
+    const classes = useStyles();
+
+    const { data, error } = useSWR(`https://api.instagram.com/oembed?url=` + props.link, fetcher)
+    if (data) console.log(data)
+    //    <img src={data.thumbnail_url} alt={data.title} />
+
+    if (!data) return null
+    if (data) return (
+        <Grid item xs={6} sm={6} md={4} lg={3} key={data.thumbnail_url}>
+            <Card>
+                <Link
+                    color="textPrimary"
+                    target="_blank"
+                    href={props.link}
+
+                >
+                    <CardMedia image={data.thumbnail_url} className={classes.cardMedia} />
+                </Link>
+            </Card>
+
+        </Grid>
+    )
+}
+
+function IgGallery(props) {
+    const classes = useStyles();
+
+
+
+
+    return (
+        <div>
+            <Typography variant='subtitle2'>Spotted on Instagram</Typography>
+            <Box className={classes.root}>
+
+                <Grid container spacing={0} alignItems="stretch">
+                    {props.instalinks.map(link => (<GrdTile link={link} />))}
+                </Grid>
+
+            </Box>
+        </div>
+    )
+}
 
 
 function Brand(props) {
@@ -50,7 +138,9 @@ function Brand(props) {
                         </Typography>
 
                     </Box>
+                    <Divider style={{ margin: '10px' }} variant="middle" />
 
+                    <IgGallery instalinks={props.entrie.fields.instalinks} />
                 </Paper>
             </Container>
         </React.Fragment>
@@ -59,7 +149,7 @@ function Brand(props) {
 
 
 export async function getServerSideProps(context) {
-    console.log(context.params.brand)
+    //console.log(context.params)
     let entries = await client.getEntries({
         include: 1,
         'fields.slug': context.params.brand,
@@ -67,8 +157,14 @@ export async function getServerSideProps(context) {
         limit: 1,
 
     })
-    console.log(entries)
-    return { props: { entrie: entries.items[0] } }
+    const entrie = entries.items[0] ? entries.items[0] : null
+
+
+    // let links = await axios.all(entrie.fields.instalinks.map(link=>axios.get(`https://api.instagram.com/oembed?url=`+ link)))
+
+    //entrie.links=links.map(links=>links.data)
+
+    return { props: { entrie: entrie } }
 }
 
 export default Brand
