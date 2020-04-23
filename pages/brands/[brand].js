@@ -35,7 +35,7 @@ const fetcher = url => fetch(url).then(r => r.json())
 const useStyles = makeStyles((theme) => ({
     cardMedia: {
 
-        paddingTop: '75%', // 16:9
+       paddingTop:'75%'
 
 
     },
