@@ -27,6 +27,11 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import CardHeader from '@material-ui/core/CardHeader';
+import { Stockists } from '../../src/stockists'
+import ModalImage from "react-modal-image";
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+import { useTheme } from '@material-ui/core/styles';
+import Favorite from '@material-ui/icons/Favorite';
 
 
 const fetcher = url => fetch(url).then(r => r.json())
@@ -35,7 +40,7 @@ const fetcher = url => fetch(url).then(r => r.json())
 const useStyles = makeStyles((theme) => ({
     cardMedia: {
 
-       paddingTop:'75%'
+        paddingTop: '100%'
 
 
     },
@@ -43,9 +48,14 @@ const useStyles = makeStyles((theme) => ({
         display: 'flex',
         flexWrap: 'wrap',
         justifyContent: 'space-around',
-        overflow: 'hidden',
-        padding:'10px',
+
+        padding: '10px',
         backgroundColor: theme.palette.background.paper,
+    },
+    modal: {
+
+
+        width: '100%'
     },
     gridList: {
         width: 500,
@@ -61,8 +71,6 @@ function GrdTile(props) {
     const classes = useStyles();
 
     const { data, error } = useSWR(`https://api.instagram.com/oembed?url=` + props.link, fetcher)
-    if (data) console.log(data)
-    //    <img src={data.thumbnail_url} alt={data.title} />
 
     if (!data) return null
     if (data) return (
@@ -89,8 +97,8 @@ function IgGallery(props) {
 
 
     return (
-        <div>
-            <Typography variant='subtitle2'>Spotted on Instagram</Typography>
+        <div style={{ margin: '30px 0 30px 0' }}>
+            <Typography color="textSecondary" align="center" variant='h5'>Spotted on Instagram</Typography>
             <Box className={classes.root}>
 
                 <Grid container spacing={0} alignItems="stretch">
@@ -102,20 +110,54 @@ function IgGallery(props) {
     )
 }
 
+function BrandGallery(props) {
+    const classes = useStyles();
+    const theme = useTheme();
+    const matches = useMediaQuery(theme.breakpoints.down('xs'));
+    return (
+
+        <div style={{ margin: '30px 0 30px 0' }}>
+            <Typography color="textSecondary" align="center" variant='h5'>Brand gallery</Typography>
+            <Box className={classes.root}>
+                <GridList cellHeight={matches ? 'auto' : 400} cols={matches ? 1 : 2}>
+                    {props.pics.map(pic => (
+                        <GridListTile cols={pic.fields.file.details.image.width / pic.fields.file.details.image.height > 1 ? 2 : 1}>
+                            <ModalImage className={classes.modal}
+                                hideDownload
+                                small={pic.fields.file.url + '?w=800'}
+                                large={pic.fields.file.url}
+                                alt={pic.fields.title}
+                            />;
+
+                            <GridListTileBar title={pic.fields.title} />
+                        </GridListTile>
+                    ))}
+                </GridList>
+            </Box>
+        </div>
+    )
+}
+
 
 function Brand(props) {
+    console.log(props)
+    const avatarStyleBig = { width: '50px', marginRight: '20px', height: '50px' }
+    const avatarStyleSmall = { width: '50px', margin: 'auto', height: '50px' }
+    const theme = useTheme();
+    const matches = useMediaQuery('(min-width:350px)');
     return (
         <React.Fragment>
             <CssBaseline />
             <Container style={{ margin: '30px auto' }} maxWidth='md'>
                 <Paper style={{ padding: '20px' }}>
-                    <Box style={{ display: 'flex' }}>
-                        <Avatar style={{ width: '50px', height: '50px' }} alt={props.entrie.fields.title} src={props.entrie.fields.thumbnail ? props.entrie.fields.thumbnail.fields.file.url + '?w=1024' + '&fm=jpg' : 'https://via.placeholder.com/150'} />
-                        <Box style={{ margin: '0px 20px 0px 20px' }}>
-                            <Typography variant='h6'>
+                    <Box style={{ display: 'flex', flexWrap: 'wrap' }}>
+                        <Avatar style={matches ? avatarStyleBig : avatarStyleSmall} alt={props.entrie.fields.title} src={props.entrie.fields.thumbnail ? props.entrie.fields.thumbnail.fields.file.url + '?w=1024' + '&fm=jpg' : 'https://via.placeholder.com/150'} />
+                        <Box style={{ margin: 'auto' }}>
+                            <Typography align={matches ? 'left' : 'center'} variant='h4'>
                                 {props.entrie.fields.title}
                             </Typography>
-                            <Typography variant='subtitle2'>{props.entrie.fields.origin}</Typography>
+                            
+                            <Typography align={matches ? 'left' : 'center'} variant='subtitle2'>{props.entrie.fields.origin}</Typography>
                         </Box>
 
                         <Box style={{ margin: '0px 20px' }}>
@@ -128,19 +170,21 @@ function Brand(props) {
                                 ))}
 
                             </Box>
-
                         </Box>
                     </Box>
+
                     <Divider style={{ margin: '10px' }} variant="middle" />
-                    <Box>
+                    <Box style={{ padding: '10px' }}>
                         <Typography variant="body2" color="textSecondary" gutterBottom component="p">
                             {props.entrie.fields.desc}
                         </Typography>
 
                     </Box>
+                    {(props.entrie.stockists.items.length > 0) ? <Stockists stockists={props.entrie.stockists} /> : <Divider style={{ margin: '10px' }} variant="middle" />}
+                    <BrandGallery pics={props.entrie.fields.gallery} />
                     <Divider style={{ margin: '10px' }} variant="middle" />
-
                     <IgGallery instalinks={props.entrie.fields.instalinks} />
+
                 </Paper>
             </Container>
         </React.Fragment>
@@ -160,9 +204,15 @@ export async function getServerSideProps(context) {
     const entrie = entries.items[0] ? entries.items[0] : null
 
 
-    // let links = await axios.all(entrie.fields.instalinks.map(link=>axios.get(`https://api.instagram.com/oembed?url=`+ link)))
+    entries.items = await Promise.all(entries.items.map(async (entry) => {
+        entry.stockists = await client.getEntries({
+            links_to_entry: entry.sys.id,
+            include: 0
+        })
+        return entry
+    }))
 
-    //entrie.links=links.map(links=>links.data)
+
 
     return { props: { entrie: entrie } }
 }

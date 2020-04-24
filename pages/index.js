@@ -351,6 +351,8 @@ function MainPage(props) {
 
 }
 
+
+
 MainPage.getInitialProps = async (context) => {
     let entries = await client.getEntries({
         include: 1,

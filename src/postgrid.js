@@ -21,6 +21,8 @@ import IconButton from '@material-ui/core/IconButton'
 import { useContext } from "react";
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import { UserContext, DbContext, UserDocContext } from '../src/context'
+import { Stockists } from '../src/stockists'
+ 
 import firebase from 'firebase'
 import Divider from '@material-ui/core/Divider';
 import Tooltip from '@material-ui/core/Tooltip';
@@ -100,30 +102,6 @@ const useStyles = makeStyles(theme => ({
 }))
 
 
-function Stockists(props) {
-    const stockists = props.stockists.items.map(item => (
-        <Link target="_blank" onClick={() => {
-            ReactGA.event({
-                category: 'user',
-                action: 'outbound:stockist',
-                label: item.fields.name
-            })
-        }} style={{ margin: 'auto' }} key={item.fields.name} color="textPrimary" href={item.fields.link}>{item.fields.name}</Link>
-    ))
-    return (
-        <div>
-            <Divider style={{ margin: '10px' }} variant="middle" />
-            <Box style={{}}>
-                <Typography variant="body2" color="textSecondary">You can buy it from these stockists:</Typography>
-
-                <Box style={{ display: 'flex', flexDirection: 'column', flexWrap: 'wrap', maxHeight: '90px', margin: '10px auto' }}>
-                    {stockists}
-                </Box>
-            </Box>
-            <Divider style={{ margin: '10px' }} variant="middle" />
-        </div>
-    )
-}
 
 
 function PostCard(props) {
