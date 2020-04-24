@@ -141,23 +141,23 @@ function BrandGallery(props) {
 
 function Brand(props) {
     console.log(props)
-    const avatarStyleBig = { width: '50px', marginRight: '20px', height: '50px' }
+    const avatarStyleBig = { width: '50px',marginRight:"30px", height: '50px' }
     const avatarStyleSmall = { width: '50px', margin: 'auto', height: '50px' }
     const theme = useTheme();
-    const matches = useMediaQuery('(min-width:350px)');
+    const matches = useMediaQuery('(max-width:600px)');
     return (
         <React.Fragment>
             <CssBaseline />
             <Container style={{ margin: '30px auto' }} maxWidth='md'>
-                <Paper style={{ padding: '20px' }}>
-                    <Box style={{ display: 'flex', flexWrap: 'wrap' }}>
-                        <Avatar style={matches ? avatarStyleBig : avatarStyleSmall} alt={props.entrie.fields.title} src={props.entrie.fields.thumbnail ? props.entrie.fields.thumbnail.fields.file.url + '?w=1024' + '&fm=jpg' : 'https://via.placeholder.com/150'} />
-                        <Box style={{ margin: 'auto' }}>
-                            <Typography align={matches ? 'left' : 'center'} variant='h4'>
+                <Paper style={matches?{ padding: '30px 0px 30px 0px' }:{padding:'30px'}}>
+                    <Box style={matches?{display:"block"}:{display:"flex"}}>
+                        <Avatar style={matches ? avatarStyleSmall : avatarStyleBig} alt={props.entrie.fields.title} src={props.entrie.fields.thumbnail ? props.entrie.fields.thumbnail.fields.file.url + '?w=1024' + '&fm=jpg' : 'https://via.placeholder.com/150'} />
+                        <Box >
+                            <Typography  align={matches?"center":"left"} variant='h4'>
                                 {props.entrie.fields.title}
                             </Typography>
                             
-                            <Typography align={matches ? 'left' : 'center'} variant='subtitle2'>{props.entrie.fields.origin}</Typography>
+                            <Typography  align={matches?"center":"left"} variant='subtitle2'>{props.entrie.fields.origin}</Typography>
                         </Box>
 
                         <Box style={{ margin: '0px 20px' }}>
