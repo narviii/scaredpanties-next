@@ -102,7 +102,7 @@ function IgGallery(props) {
             <Box className={classes.root}>
 
                 <Grid container spacing={0} alignItems="stretch">
-                    {props.instalinks.map(link => (<GrdTile link={link} />))}
+                    {props.instalinks.map(link => (<GrdTile key={link} link={link} />))}
                 </Grid>
 
             </Box>
@@ -121,7 +121,7 @@ function BrandGallery(props) {
             <Box className={classes.root}>
                 <GridList cellHeight={matches ? 'auto' : 400} cols={matches ? 1 : 2}>
                     {props.pics.map(pic => (
-                        <GridListTile cols={pic.fields.file.details.image.width / pic.fields.file.details.image.height > 1 ? 2 : 1}>
+                        <GridListTile key={pic.fields.title} cols={pic.fields.file.details.image.width / pic.fields.file.details.image.height > 1 ? 2 : 1}>
                             <ModalImage className={classes.modal}
                                 hideDownload
                                 small={pic.fields.file.url + '?w=800'}
@@ -138,10 +138,24 @@ function BrandGallery(props) {
     )
 }
 
+function Reviews(props) {
+    return (
+        <div>
+            <Typography align="center" variant="h5" color="textSecondary">Reviews about the brand products:</Typography>
+            <Box style={{padding:'5px'}}>
+                {props.reviews.map(review => <Link style={{ padding: '5px',display:"block" }} color="textPrimary" target="_blank" href={review.url}>
+                    {review.title}
+                </Link>)}
+            </Box>
+        </div>
+
+    )
+}
+
 
 function Brand(props) {
     console.log(props)
-    const avatarStyleBig = { width: '50px',marginRight:"30px", height: '50px' }
+    const avatarStyleBig = { width: '50px', marginRight: "30px", height: '50px' }
     const avatarStyleSmall = { width: '50px', margin: 'auto', height: '50px' }
     const theme = useTheme();
     const matches = useMediaQuery('(max-width:600px)');
@@ -149,15 +163,15 @@ function Brand(props) {
         <React.Fragment>
             <CssBaseline />
             <Container style={{ margin: '30px auto' }} maxWidth='md'>
-                <Paper style={matches?{ padding: '30px 0px 30px 0px' }:{padding:'30px'}}>
-                    <Box style={matches?{display:"block"}:{display:"flex"}}>
+                <Paper style={matches ? { padding: '30px 0px 30px 0px' } : { padding: '30px' }}>
+                    <Box style={matches ? { display: "block" } : { display: "flex" }}>
                         <Avatar style={matches ? avatarStyleSmall : avatarStyleBig} alt={props.entrie.fields.title} src={props.entrie.fields.thumbnail ? props.entrie.fields.thumbnail.fields.file.url + '?w=1024' + '&fm=jpg' : 'https://via.placeholder.com/150'} />
                         <Box >
-                            <Typography  align={matches?"center":"left"} variant='h4'>
+                            <Typography align={matches ? "center" : "left"} variant='h4'>
                                 {props.entrie.fields.title}
                             </Typography>
-                            
-                            <Typography  align={matches?"center":"left"} variant='subtitle2'>{props.entrie.fields.origin}</Typography>
+
+                            <Typography align={matches ? "center" : "left"} variant='subtitle2'>{props.entrie.fields.origin}</Typography>
                         </Box>
 
                         <Box style={{ margin: '0px 20px' }}>
@@ -180,12 +194,21 @@ function Brand(props) {
                         </Typography>
 
                     </Box>
+                    <Divider style={{ margin: '10px' }} variant="middle" />
+
+                    <Reviews reviews={props.entrie.fields.reviews} />
+                    <Divider style={{ margin: '10px' }} variant="middle" />
+
                     {(props.entrie.stockists.items.length > 0) ? <Stockists stockists={props.entrie.stockists} /> : <Divider style={{ margin: '10px' }} variant="middle" />}
+                    <Divider style={{ margin: '10px' }} variant="middle" />
+
                     <BrandGallery pics={props.entrie.fields.gallery} />
                     <Divider style={{ margin: '10px' }} variant="middle" />
                     <IgGallery instalinks={props.entrie.fields.instalinks} />
 
                 </Paper>
+                <Footer entries={props.stats} originList={originList} />
+
             </Container>
         </React.Fragment>
     )
@@ -212,9 +235,12 @@ export async function getServerSideProps(context) {
         return entry
     }))
 
+    const stats = await client.getEntries({
+        limit: 1
+    })
 
 
-    return { props: { entrie: entrie } }
+    return { props: { entrie: entrie,stats:stats } }
 }
 
 export default Brand

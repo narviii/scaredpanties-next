@@ -3,6 +3,8 @@ import { Typography } from '@material-ui/core';
 import Link from '@material-ui/core/Link';
 import Box from '@material-ui/core/Box';
 import React from 'react'
+import ReactGA from '../src/reactga'
+
 
 
 
@@ -14,19 +16,19 @@ export function Stockists(props) {
                 action: 'outbound:stockist',
                 label: item.fields.name
             })
-        }} style={{ margin: 'auto' }} key={item.fields.name} color="textPrimary" href={item.fields.link}>{item.fields.name}</Link>
+        }}  key={item.fields.name} color="textPrimary" href={item.fields.link}>{item.fields.name}</Link>
     ))
     return (
         <div style={{margin:'30px 0px 30px 0px'}}>
-            <Divider style={{ margin: '10px' }} variant="middle" />
+            
             <Box style={{}}>
-                <Typography align ="center" variant="h5" color="textSecondary">You can buy it from these stockists</Typography>
+                <Typography align ="center" variant="h5" color="textSecondary">You can buy it from these stockists:</Typography>
 
-                <Box style={{ display: 'flex', flexDirection: 'column', flexWrap: 'wrap', maxHeight: '90px', margin: '30px auto' }}>
+                <Box style={{padding:'5px'}}>
                     {stockists}
                 </Box>
             </Box>
-            <Divider style={{ margin: '10px' }} variant="middle" />
+           
         </div>
     )
 }
