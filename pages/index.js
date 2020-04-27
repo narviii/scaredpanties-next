@@ -13,33 +13,19 @@ import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import { Hero } from '../src/hero'
 import { Footer } from '../src/footer';
 import { PostGrid } from '../src/postgrid'
-import firebase from '../src/firebase'
 import ReactGA from '../src/reactga'
-import { useAuthState } from 'react-firebase-hooks/auth';
 import { originList, tagList, sizeList } from '../src/constants'
-import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
-import Dialog from '@material-ui/core/Dialog';
 import { Nav } from '../src/nav'
-import { useDocument } from 'react-firebase-hooks/firestore';
-import { UserContext, DbContext, UserDocContext } from '../src/context'
+import { FirebaseContext,UserContext, DbContext, UserDocContext,LoginDialogContext } from '../src/context'
 import { client } from '../src/contentful'
-import Typography from '@material-ui/core/Typography'
+import { useContext } from "react";
+
 
 
 
 const url = "https://scaredpanties.us20.list-manage.com/subscribe/post?u=65173dffd9ab714c0d2d985ab&amp;id=ed2dc9ceb2";
 
 
-const uiConfig = {
-    signInFlow: 'popup',
-    credentialHelper: 'none',
-    signInOptions: [
-        firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-        firebase.auth.EmailAuthProvider.PROVIDER_ID,
-        firebase.auth.FacebookAuthProvider.PROVIDER_ID
-    ]
-
-};
 
 
 originList.sort()
@@ -277,46 +263,10 @@ function OrderSelector(props) {
 
 
 function MainPage(props) {
-    const classes = useStyles();
-
-    const [open, setOpen] = useState(false)
-
-    const loginDialogClose = (authResult, redirectUrl) => {
-        if (authResult.user) {
-            const userRef = db.collection('users').doc(authResult.user.uid)
-            userRef.get().then((doc) => {
-                if (doc.exists) {
-                    //console.log('yes')
-                } else {
-                    userRef.set({ favs: [] })
-                    //console.log('no')
-                }
-            })
-        }
-        setOpen(false)
-    }
-
-    const loginDialogOpen = () => {
-        ReactGA.event({ category: 'user', action: 'auth', label: 'loginDialog' })
-        setOpen(true)
-    }
-
-
-    const [user, initialising, error] = useAuthState(firebase.auth());
-    const db = firebase.firestore();
-
-
-    const [userDoc, loading, errorDoc] = useDocument(
-        user ? db.collection('users').doc(user.uid) : null)
-
-
-
-
-
-
     ReactGA.pageview('/catalog');
 
-
+    const classes = useStyles();
+    const firebase = useContext(FirebaseContext);
 
     return (
 
@@ -324,14 +274,8 @@ function MainPage(props) {
             <CssBaseline />
             <style jsx global>{`
             `}</style>
-            <UserDocContext.Provider value={userDoc}>
-                <DbContext.Provider value={db}>
-                    <UserContext.Provider value={user}>
-                        <Nav loginDialogOpen={loginDialogOpen} firebase={firebase} />
-                        <Dialog open={open} onClose={loginDialogClose} aria-labelledby="loginDialog">
-                            <StyledFirebaseAuth uiConfig={{ ...uiConfig, callbacks: { signInSuccessWithAuthResult: loginDialogClose } }} firebaseAuth={firebase.auth()} />
-                        </Dialog>
-                        <Hero search={true} />
+                        <Nav/>
+                        <Hero />
                         <Container maxWidth='lg' style={{ margin: '30px auto 30px ' }} >
                             <Box justifyContent="center" alignContent="center" display="flex" flexWrap="wrap">
                                 <SelectOrigin />
@@ -340,11 +284,8 @@ function MainPage(props) {
                                 <OrderSelector />
                             </Box>
                         </Container>
-                        <PostGrid loginDialogOpen={loginDialogOpen} entries={props.entries} />
+                        <PostGrid entries={props.entries} />
                         <Footer entries={props.stats} originList={originList} />
-                    </UserContext.Provider>
-                </DbContext.Provider>
-            </UserDocContext.Provider>
         </React.Fragment>
 
     );

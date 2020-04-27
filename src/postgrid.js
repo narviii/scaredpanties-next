@@ -20,13 +20,9 @@ import Chip from '@material-ui/core/Chip';
 import IconButton from '@material-ui/core/IconButton'
 import { useContext } from "react";
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
-import { UserContext, DbContext, UserDocContext } from '../src/context'
-import { Stockists } from '../src/stockists'
- 
+import { UserContext, DbContext, UserDocContext, LoginDialogContext } from '../src/context'
+import LaunchIcon from '@material-ui/icons/Launch';
 import firebase from 'firebase'
-import Divider from '@material-ui/core/Divider';
-import Tooltip from '@material-ui/core/Tooltip';
-const axios = require('axios');
 
 
 const useStyles = makeStyles(theme => ({
@@ -136,8 +132,17 @@ function PostCard(props) {
     let favButton
     const classes = useStyles();
 
-    //console.log(stockists)
-    //console.log(props.entrie)
+    const test = useContext(LoginDialogContext);
+    const open = test.loginDialogOpen
+    const setOpen = test.setLoginDialogOpen
+
+    const loginDialogOpen = () => {
+        ReactGA.event({ category: 'user', action: 'auth', label: 'loginDialog' })
+        setOpen(true)
+    }
+
+
+
     if (userDoc) {
 
         if (userDoc.data() && userDoc.data().favs && userDoc.data().favs.includes(props.entrie.sys.id)) {
@@ -155,7 +160,7 @@ function PostCard(props) {
         }
     } else {
         favButton = (
-            <IconButton onClick={props.loginDialogOpen} >
+            <IconButton onClick={loginDialogOpen} >
                 <FavoriteBorderIcon color='disabled' style={{ margin: "auto", fontSize: 30 }} />
             </IconButton>
         )
@@ -174,31 +179,26 @@ function PostCard(props) {
                         action: classes.cardAction
                     }}
                     title={
-                        <Link
-                            underline='none'
-                            color="textPrimary"
-                            href={props.entrie.fields.link}
-                            target="_blank"
-                            onClick={() => {
-                                axios.get('/api/viewcount', {
-                                    params: {
-                                        brandname: props.entrie.fields.title
-                                    }
-                                })
-                                    .catch(function (error) {
-                                        console.log(error);
-                                    })
-                                ReactGA.event({
-                                    category: 'user',
-                                    action: 'outbound',
-                                    label: props.entrie.fields.title
-                                })
-                            }}
+                        <div style={{ display: "inline" }}>
+                            <Link
+                                underline='none'
+                                color="textPrimary"
+                                href={'brands/' + props.entrie.fields.slug}
 
-                        >
+                            >
 
-                            {props.entrie.fields.title}
-                        </Link>
+                                {props.entrie.fields.title}
+                            </Link>
+                            <Link
+                                style={{marginLeft:"5px"}}
+                                underline='none'
+                                color="textPrimary"
+                                href={'brands/' + props.entrie.fields.slug}
+                                target="_blank"
+                                href={props.entrie.fields.link} >
+                                <LaunchIcon fontSize="small" />
+                            </Link>
+                        </div>
                     }
                     subheader={<Box >
                         <Typography display="inline" variant="subtitle2" color="textSecondary">
@@ -214,7 +214,7 @@ function PostCard(props) {
                 <Link
                     color="textPrimary"
                     target="_blank"
-                    href={props.entrie.fields.link}
+                    href={'brands/' + props.entrie.fields.slug}
                     onClick={() => {
                         ReactGA.event({
                             category: 'user',
@@ -240,7 +240,6 @@ function PostCard(props) {
                         {'Last update: ' + moment(props.entrie.sys.updatedAt).fromNow()}
                     </Typography>
 
-                    {(props.entrie.stockists.items.length > 0) ? <Stockists stockists={props.entrie.stockists} /> : <Divider style={{ margin: '10px' }} variant="middle" />}
 
                     <Box display="flex" flexWrap="wrap" justifyContent="left">
                         {props.entrie.fields.sizes ? props.entrie.fields.sizes.map(tag => (

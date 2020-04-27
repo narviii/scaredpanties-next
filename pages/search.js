@@ -18,20 +18,9 @@ import Dialog from '@material-ui/core/Dialog';
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 import { useDocument } from 'react-firebase-hooks/firestore';
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { UserContext, DbContext, UserDocContext } from '../src/context'
+import { FirebaseContext,UserContext, DbContext, UserDocContext,LoginDialogContext } from '../src/context'
 import ReactGA from '../src/reactga'
 
-
-
-const uiConfig = {
-    signInFlow: 'popup',
-    credentialHelper: 'none',
-    signInOptions: [
-        firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-        firebase.auth.EmailAuthProvider.PROVIDER_ID,
-        firebase.auth.FacebookAuthProvider.PROVIDER_ID
-    ],
-};
 
 
 
@@ -99,34 +88,6 @@ function SearchBar(props) {
 
 function Search(props) {
 
-    const [open, setOpen] = useState(false)
-
-    const loginDialogClose = (authResult, redirectUrl) => {
-        if (authResult.user) {
-            const userRef = db.collection('users').doc(authResult.user.uid)
-            userRef.get().then((doc) => {
-                if (doc.exists) {
-                    //console.log('yes')
-                } else {
-                    userRef.set({ favs: [] })
-                    //console.log('no')
-                }
-            })
-        }
-        setOpen(false)
-    }
-
-    const loginDialogOpen = () => {
-        setOpen(true)
-    }
-
-    const [user, initialising, error] = useAuthState(firebase.auth());
-    const db = firebase.firestore();
-
-
-    const [userDoc, loading, errorDoc] = useDocument(
-        user ? db.collection('users').doc(user.uid) : null)
-
 
 
     ReactGA.pageview('catalog/search');
@@ -134,21 +95,12 @@ function Search(props) {
     return (
         <React.Fragment>
             <CssBaseline />
-            <UserDocContext.Provider value={userDoc}>
-                <DbContext.Provider value={db}>
-                    <UserContext.Provider value={user}>
 
-                        <Nav loginDialogOpen={loginDialogOpen} firebase={firebase} />
-                        <Dialog open={open} onClose={loginDialogClose} aria-labelledby="loginDialog">
-                            <StyledFirebaseAuth classes={{ 'mdl-card': { backgroundColor: 'red' } }} uiConfig={{ ...uiConfig, callbacks: { signInSuccessWithAuthResult: loginDialogClose } }} firebaseAuth={firebase.auth()} />
-                        </Dialog>
+                        <Nav/>
                         <Hero />
                         <SearchBar />
-                        <PostGrid loginDialogOpen={loginDialogOpen} entries={props.entries} />
+                        <PostGrid entries={props.entries} />
                         <Footer entries={props.stats} originList={originList} />
-                    </UserContext.Provider>
-                </DbContext.Provider>
-            </UserDocContext.Provider>
 
         </React.Fragment>
 

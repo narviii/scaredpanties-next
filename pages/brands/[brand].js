@@ -16,10 +16,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
 import GridListTileBar from '@material-ui/core/GridListTileBar';
-import ListSubheader from '@material-ui/core/ListSubheader';
-import IconButton from '@material-ui/core/IconButton';
-import InfoIcon from '@material-ui/icons/Info';
-import axios from 'axios'
 import useSWR from 'swr'
 import fetch from 'unfetch'
 import Grid from '@material-ui/core/Grid'
@@ -32,6 +28,8 @@ import ModalImage from "react-modal-image";
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useTheme } from '@material-ui/core/styles';
 import Favorite from '@material-ui/icons/Favorite';
+import { Nav } from '../../src/nav'
+
 
 
 const fetcher = url => fetch(url).then(r => r.json())
@@ -154,15 +152,16 @@ function Reviews(props) {
 
 
 function Brand(props) {
-    console.log(props)
     const avatarStyleBig = { width: '50px', marginRight: "30px", height: '50px' }
     const avatarStyleSmall = { width: '50px', margin: 'auto', height: '50px' }
     const theme = useTheme();
     const matches = useMediaQuery('(max-width:600px)');
     return (
         <React.Fragment>
-            <CssBaseline />
+            <Nav/>
+
             <Container style={{ margin: '30px auto' }} maxWidth='md'>
+
                 <Paper style={matches ? { padding: '30px 0px 30px 0px' } : { padding: '30px' }}>
                     <Box style={matches ? { display: "block" } : { display: "flex" }}>
                         <Avatar style={matches ? avatarStyleSmall : avatarStyleBig} alt={props.entrie.fields.title} src={props.entrie.fields.thumbnail ? props.entrie.fields.thumbnail.fields.file.url + '?w=1024' + '&fm=jpg' : 'https://via.placeholder.com/150'} />

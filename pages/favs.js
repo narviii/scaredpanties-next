@@ -14,7 +14,7 @@ import Dialog from '@material-ui/core/Dialog';
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 import { useDocument } from 'react-firebase-hooks/firestore';
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { UserContext, DbContext, UserDocContext } from '../src/context'
+import { FirebaseContext,UserContext, DbContext, UserDocContext,LoginDialogContext } from '../src/context'
 import { originList } from '../src/constants'
 import Favorite from '@material-ui/icons/Favorite';
 import ReactGA from '../src/reactga'
@@ -121,11 +121,8 @@ function Search(props) {
     return (
         <React.Fragment>
             <CssBaseline />
-            <UserDocContext.Provider value={userDoc}>
-                <DbContext.Provider value={db}>
-                    <UserContext.Provider value={user}>
 
-                        <Nav loginDialogOpen={loginDialogOpen} firebase={firebase} />
+                        <Nav />
                         <Dialog open={open} onClose={loginDialogClose} aria-labelledby="loginDialog">
                             <StyledFirebaseAuth classes={{ 'mdl-card': { backgroundColor: 'red' } }} uiConfig={{ ...uiConfig, callbacks: { signInSuccessWithAuthResult: loginDialogClose } }} firebaseAuth={firebase.auth()} />
                         </Dialog>
@@ -135,9 +132,6 @@ function Search(props) {
 
                         <PostGrid loginDialogOpen={loginDialogOpen} entries={props.entries} />
                         <Footer entries={props.stats} originList={originList} />
-                    </UserContext.Provider>
-                </DbContext.Provider>
-            </UserDocContext.Provider>
 
         </React.Fragment>
 
