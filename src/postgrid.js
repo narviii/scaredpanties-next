@@ -190,7 +190,7 @@ function PostCard(props) {
                                 {props.entrie.fields.title}
                             </Link>
                             <Link
-                                style={{marginLeft:"5px"}}
+                                style={{marginLeft:"10px"}}
                                 underline='none'
                                 color="textPrimary"
                                 href={'brands/' + props.entrie.fields.slug}

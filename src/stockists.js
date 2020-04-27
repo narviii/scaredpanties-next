@@ -28,7 +28,8 @@ export function Stockists(props) {
                     {stockists}
                 </Box>
             </Box>
-           
+            <Divider style={{ margin: '10px' }} variant="middle" />
+
         </div>
     )
 }

@@ -132,6 +132,8 @@ function BrandGallery(props) {
                     ))}
                 </GridList>
             </Box>
+            <Divider style={{ margin: '10px' }} variant="middle" />
+
         </div>
     )
 }
@@ -145,6 +147,8 @@ function Reviews(props) {
                     {review.title}
                 </Link>)}
             </Box>
+            <Divider style={{ margin: '10px' }} variant="middle" />
+
         </div>
 
     )
@@ -165,8 +169,8 @@ function Brand(props) {
                 <Paper style={matches ? { padding: '30px 0px 30px 0px' } : { padding: '30px' }}>
                     <Box style={matches ? { display: "block" } : { display: "flex" }}>
                         <Avatar style={matches ? avatarStyleSmall : avatarStyleBig} alt={props.entrie.fields.title} src={props.entrie.fields.thumbnail ? props.entrie.fields.thumbnail.fields.file.url + '?w=1024' + '&fm=jpg' : 'https://via.placeholder.com/150'} />
-                        <Box >
-                            <Typography align={matches ? "center" : "left"} variant='h4'>
+                        <Box style={{width:"100%"}}>
+                            <Typography  align={matches ? "center" : "left"} variant='h4'>
                                 {props.entrie.fields.title}
                             </Typography>
 
@@ -195,15 +199,12 @@ function Brand(props) {
                     </Box>
                     <Divider style={{ margin: '10px' }} variant="middle" />
 
-                    <Reviews reviews={props.entrie.fields.reviews} />
-                    <Divider style={{ margin: '10px' }} variant="middle" />
+                    {props.entrie.fields.reviews?<Reviews reviews={props.entrie.fields.reviews} />:null}
 
                     {(props.entrie.stockists.items.length > 0) ? <Stockists stockists={props.entrie.stockists} /> : <Divider style={{ margin: '10px' }} variant="middle" />}
-                    <Divider style={{ margin: '10px' }} variant="middle" />
 
-                    <BrandGallery pics={props.entrie.fields.gallery} />
-                    <Divider style={{ margin: '10px' }} variant="middle" />
-                    <IgGallery instalinks={props.entrie.fields.instalinks} />
+                    {props.entrie.fields.gallery?<BrandGallery pics={props.entrie.fields.gallery} />:null}
+                    {props.entrie.fields.instalinks?<IgGallery instalinks={props.entrie.fields.instalinks} />:null}
 
                 </Paper>
                 <Footer entries={props.stats} originList={originList} />
