@@ -190,13 +190,22 @@ function PostCard(props) {
                                 {props.entrie.fields.title}
                             </Link>
                             <Link
-                                style={{marginLeft:"10px"}}
+                                style={{ marginLeft: "10px" }}
                                 underline='none'
                                 color="textPrimary"
                                 href={'brands/' + props.entrie.fields.slug}
                                 target="_blank"
                                 href={props.entrie.fields.link} >
-                                <LaunchIcon fontSize="small" />
+                                <LaunchIcon
+                                    onClick={() => {
+                                        ReactGA.event({
+                                            category: 'user',
+                                            action: 'outbound',
+                                            label: props.entrie.fields.title
+                                        })
+                                    }}
+
+                                    fontSize="small" />
                             </Link>
                         </div>
                     }
@@ -296,7 +305,7 @@ export function PostGrid(props) {
             {props.entries.items.length == 0 ? <Typography align="center" color="textSecondary" style={{ margin: "100px" }} variant="h2">such emtpy.... nothing to show!</Typography> : null}
             <Grid container spacing={4} alignItems="stretch">
                 {props.entries.items.map(entrie => (
-                    <PostCard loginDialogOpen={props.loginDialogOpen} entrie={entrie} key={entrie.fields.title} />
+                    <PostCard entrie={entrie} key={entrie.fields.title} />
                 ))}
             </Grid>
             <Pagination

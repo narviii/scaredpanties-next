@@ -16,6 +16,12 @@ import Paper from '@material-ui/core/Paper'
 import { Typography } from '@material-ui/core';
 import Box from '@material-ui/core/Box'
 import Chip from '@material-ui/core/Chip'
+import LaunchIcon from '@material-ui/icons/Launch';
+
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+import { Nav } from '../src/nav'
+
+
 
 
 
@@ -23,12 +29,15 @@ import Chip from '@material-ui/core/Chip'
 
 function StockCard(props) {
     console.log(props.entrie)
+    const matches = useMediaQuery('(max-width:600px)');
 
-    const brands = props.entrie.fields.brands.map(item => (
-        <Chip style={{ margin: '10px 20px' }}
-            
-            label={item.fields.title}/>
-        
+
+    const brands = props.entrie.fields.brands.map(value => (
+
+        <Grid item xs={12} sm={6} md={4} lg={3}>
+            <Typography>{value.fields.title}</Typography>
+        </Grid>
+
     ))
 
 
@@ -36,20 +45,67 @@ function StockCard(props) {
     return (
         <Grid item xs={12}>
 
-            <Card style={{height:'100%'}}>
-                <CardHeader
-                    title={props.entrie.fields.name}
-                    subheader={props.entrie.fields.country}
-                    action={props.entrie.fields.format}
-                />
+            <Paper style={{ padding: '30px', height: '100%' }}>
 
-                <CardContent>
-                    <Box style={{ display: 'flex', flexDirection: 'row',flexWrap: 'wrap', margin: '10px auto' }}>
-                        {brands}
+                <Box style={matches ? { display: "block" } : { display: "flex" }}>
+                    <Box style={{ width: '100%' }}>
+                        <div style={matches ? { display: 'flex', justifyContent: 'center' } : { display: 'flex' }}>
+                            <Typography align={matches ? "center" : "left"} variant='h4'>
+                                {props.entrie.fields.name}
+                            </Typography>
+                            <Link
+                                onClick={() => {
+                                    ReactGA.event({
+                                        category: 'user',
+                                        action: 'outbound',
+                                        label: props.entrie.fields.name
+                                    })
+                                }}
+
+                                style={{ marginLeft: "10px" }}
+                                underline='none'
+                                color="textPrimary"
+
+                                target="_blank"
+                                href={props.entrie.fields.link} >
+                                <LaunchIcon fontSize="small" />
+                            </Link>
+                        </div>
+
+                        <Typography align={matches ? "center" : "left"} variant='subtitle2'>
+                            {props.entrie.fields.country}
+                        </Typography>
                     </Box>
+                    <Box style={matches ? { justifyContent: 'center',flexDirection:'row', display: 'flex', marginTop: '20px' } : {display:'flex',flexDirection:'row'}}>
+                        {props.entrie.fields.format.map(item => <Chip style={{ margin: '0px 10px 0px 10px' }} label={item} />)}
+                    </Box>
+                </Box>
 
-                </CardContent>
-            </Card>
+
+                <Grid style={{ marginTop: "30px" }} container spacing={4} alignItems="stretch">
+                    {props.entrie.fields.brands.map(brand => (
+                        <Grid item xs={12} sm={6} md={4} lg={3}>
+                            <Link
+                                href={brand.fields.link}
+                                underline='none'
+                                color="textPrimary"
+                                target="_blank"
+                                onClick={
+                                    ReactGA.event({
+                                        category: 'user',
+                                        action: 'outbound',
+                                        label: brand.fields.title
+                                    })
+
+                                }
+                            >
+                                <Typography>{brand.fields.title}</Typography>
+                            </Link>
+                        </Grid>
+                    ))}
+                </Grid>
+
+            </Paper>
 
 
         </Grid>
@@ -57,10 +113,12 @@ function StockCard(props) {
 }
 
 function Stockists(props) {
+    ReactGA.pageview('/stockists');
+
     return (
         <React.Fragment>
-            <CssBaseline />
-            <Hero search={false} />
+            <Nav />
+            <Hero />
             <Container style={{ margin: '30px auto' }} maxWidth='lg'>
                 <Grid direction="row" container spacing={4}>
                     {props.entries.items.map(entrie => (
@@ -88,7 +146,7 @@ export async function getServerSideProps(context) {
         limit: 1
     })
 
-    
+
 
 
     return { props: { entries: entries, stats: stats } }

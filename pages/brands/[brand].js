@@ -29,6 +29,8 @@ import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useTheme } from '@material-ui/core/styles';
 import Favorite from '@material-ui/icons/Favorite';
 import { Nav } from '../../src/nav'
+import LaunchIcon from '@material-ui/icons/Launch';
+
 
 
 
@@ -142,8 +144,8 @@ function Reviews(props) {
     return (
         <div>
             <Typography align="center" variant="h5" color="textSecondary">Reviews about the brand products:</Typography>
-            <Box style={{padding:'5px'}}>
-                {props.reviews.map(review => <Link style={{ padding: '5px',display:"block" }} color="textPrimary" target="_blank" href={review.url}>
+            <Box style={{ padding: '5px' }}>
+                {props.reviews.map(review => <Link style={{ padding: '5px', display: "block" }} color="textPrimary" target="_blank" href={review.url}>
                     {review.title}
                 </Link>)}
             </Box>
@@ -158,21 +160,42 @@ function Reviews(props) {
 function Brand(props) {
     const avatarStyleBig = { width: '50px', marginRight: "30px", height: '50px' }
     const avatarStyleSmall = { width: '50px', margin: 'auto', height: '50px' }
-    const theme = useTheme();
     const matches = useMediaQuery('(max-width:600px)');
+    ReactGA.pageview('/catalog/brands/' + props.entrie.fields.slug);
     return (
         <React.Fragment>
-            <Nav/>
+            <Nav />
 
             <Container style={{ margin: '30px auto' }} maxWidth='md'>
 
                 <Paper style={matches ? { padding: '30px 0px 30px 0px' } : { padding: '30px' }}>
                     <Box style={matches ? { display: "block" } : { display: "flex" }}>
                         <Avatar style={matches ? avatarStyleSmall : avatarStyleBig} alt={props.entrie.fields.title} src={props.entrie.fields.thumbnail ? props.entrie.fields.thumbnail.fields.file.url + '?w=1024' + '&fm=jpg' : 'https://via.placeholder.com/150'} />
-                        <Box style={{width:"100%"}}>
-                            <Typography  align={matches ? "center" : "left"} variant='h4'>
-                                {props.entrie.fields.title}
-                            </Typography>
+                        <Box style={{ width: "100%" }}>
+
+                            <div style={{ display: "flex" }}>
+                                <Typography align={matches ? "center" : "left"} variant='h4'>
+                                    {props.entrie.fields.title}
+                                </Typography>
+                                <Link
+                                    onClick={() => {
+                                        ReactGA.event({
+                                            category: 'user',
+                                            action: 'outbound',
+                                            label: props.entrie.fields.title
+                                        })
+                                    }}
+
+                                    style={{ marginLeft: "10px" }}
+                                    underline='none'
+                                    color="textPrimary"
+                                    
+                                    target="_blank"
+                                    href={props.entrie.fields.link} >
+                                    <LaunchIcon fontSize="small" />
+                                </Link>
+
+                            </div>
 
                             <Typography align={matches ? "center" : "left"} variant='subtitle2'>{props.entrie.fields.origin}</Typography>
                         </Box>
@@ -199,12 +222,12 @@ function Brand(props) {
                     </Box>
                     <Divider style={{ margin: '10px' }} variant="middle" />
 
-                    {props.entrie.fields.reviews?<Reviews reviews={props.entrie.fields.reviews} />:null}
+                    {props.entrie.fields.reviews ? <Reviews reviews={props.entrie.fields.reviews} /> : null}
 
                     {(props.entrie.stockists.items.length > 0) ? <Stockists stockists={props.entrie.stockists} /> : <Divider style={{ margin: '10px' }} variant="middle" />}
 
-                    {props.entrie.fields.gallery?<BrandGallery pics={props.entrie.fields.gallery} />:null}
-                    {props.entrie.fields.instalinks?<IgGallery instalinks={props.entrie.fields.instalinks} />:null}
+                    {props.entrie.fields.gallery ? <BrandGallery pics={props.entrie.fields.gallery} /> : null}
+                    {props.entrie.fields.instalinks ? <IgGallery instalinks={props.entrie.fields.instalinks} /> : null}
 
                 </Paper>
                 <Footer entries={props.stats} originList={originList} />
@@ -240,7 +263,7 @@ export async function getServerSideProps(context) {
     })
 
 
-    return { props: { entrie: entrie,stats:stats } }
+    return { props: { entrie: entrie, stats: stats } }
 }
 
 export default Brand
