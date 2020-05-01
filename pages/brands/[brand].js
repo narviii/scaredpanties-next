@@ -30,7 +30,7 @@ import { useTheme } from '@material-ui/core/styles';
 import Favorite from '@material-ui/icons/Favorite';
 import { Nav } from '../../src/nav'
 import LaunchIcon from '@material-ui/icons/Launch';
-
+const url = require('url'); // built-in utility
 
 
 
@@ -70,11 +70,8 @@ const useStyles = makeStyles((theme) => ({
 function GrdTile(props) {
     const classes = useStyles();
 
-    const { data, error } = useSWR(`https://api.instagram.com/oembed?url=` + props.link, fetcher)
-
-    if (!data) return null
-    if (data) return (
-        <Grid item xs={6} sm={6} md={4} lg={3} key={data.thumbnail_url}>
+     return (
+        <Grid item xs={6} sm={6} md={4} lg={3} key={props.link}>
             <Card>
                 <Link
                     color="textPrimary"
@@ -82,7 +79,7 @@ function GrdTile(props) {
                     href={props.link}
 
                 >
-                    <CardMedia image={data.thumbnail_url} className={classes.cardMedia} />
+                    <CardMedia image={'https://'+ url.parse(props.link).hostname+url.parse(props.link).pathname+'media'} className={classes.cardMedia} />
                 </Link>
             </Card>
 
@@ -160,7 +157,7 @@ function Reviews(props) {
 function Brand(props) {
     const avatarStyleBig = { width: '50px', marginRight: "30px", height: '50px' }
     const avatarStyleSmall = { width: '50px', margin: 'auto', height: '50px' }
-    const matches = useMediaQuery('(max-width:600px)');
+    const matches = useMediaQuery('(max-width:700px)');
     ReactGA.pageview('/catalog/brands/' + props.entrie.fields.slug);
     return (
         <React.Fragment>
