@@ -21,6 +21,8 @@ import LaunchIcon from '@material-ui/icons/Launch';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { Nav } from '../src/nav'
 
+import Head from 'next/head'
+import { HeadContent } from '../src/headcontent'
 
 
 
@@ -76,7 +78,7 @@ function StockCard(props) {
                             {props.entrie.fields.country}
                         </Typography>
                     </Box>
-                    <Box style={matches ? { justifyContent: 'center',flexDirection:'row', display: 'flex', marginTop: '20px' } : {display:'flex',flexDirection:'row'}}>
+                    <Box style={matches ? { justifyContent: 'center', flexDirection: 'row', display: 'flex', marginTop: '20px' } : { display: 'flex', flexDirection: 'row' }}>
                         {props.entrie.fields.format.map(item => <Chip style={{ margin: '0px 10px 0px 10px' }} label={item} />)}
                     </Box>
                 </Box>
@@ -117,6 +119,16 @@ function Stockists(props) {
 
     return (
         <React.Fragment>
+            <Head>
+                <HeadContent
+                    description="A list and catalog of lingerie brands assembled and lovely currated by scaredpanties."
+                    title="Lingerie brands catalog."
+                    image="https://blog.scaredpanties.com/content/images/2020/01/fb_preview.jpg"
+                    url="https://catalog.scaredpanties.com"
+
+                />
+            </Head>
+
             <Nav />
             <Hero />
             <Container style={{ margin: '30px auto' }} maxWidth='lg'>

@@ -31,6 +31,9 @@ import Favorite from '@material-ui/icons/Favorite';
 import { Nav } from '../../src/nav'
 import LaunchIcon from '@material-ui/icons/Launch';
 const url = require('url'); // built-in utility
+import Head from 'next/head'
+import { HeadContent } from '../../src/headcontent'
+import { useRouter } from 'next/router'
 
 
 
@@ -70,7 +73,7 @@ const useStyles = makeStyles((theme) => ({
 function GrdTile(props) {
     const classes = useStyles();
 
-     return (
+    return (
         <Grid item xs={6} sm={6} md={4} lg={3} key={props.link}>
             <Card>
                 <Link
@@ -79,7 +82,7 @@ function GrdTile(props) {
                     href={props.link}
 
                 >
-                    <CardMedia image={'https://'+ url.parse(props.link).hostname+url.parse(props.link).pathname+'media'} className={classes.cardMedia} />
+                    <CardMedia image={'https://' + url.parse(props.link).hostname + url.parse(props.link).pathname + 'media'} className={classes.cardMedia} />
                 </Link>
             </Card>
 
@@ -139,7 +142,7 @@ function BrandGallery(props) {
 
 function Reviews(props) {
     return (
-        <div style={{padding:'10px'}}>
+        <div style={{ padding: '10px' }}>
             <Typography align="center" variant="h5" color="textSecondary">Reviews about the brand products:</Typography>
             <Box style={{ padding: '5px' }}>
                 {props.reviews.map(review => <Link style={{ padding: '5px', display: "block" }} color="textPrimary" target="_blank" href={review.url}>
@@ -159,8 +162,20 @@ function Brand(props) {
     const avatarStyleSmall = { width: '50px', margin: 'auto', height: '50px' }
     const matches = useMediaQuery('(max-width:800px)');
     ReactGA.pageview('/catalog/brands/' + props.entrie.fields.slug);
+    const router = useRouter()
     return (
         <React.Fragment>
+
+            <Head>
+                <HeadContent
+                    description={"Read more about it at lingerie brands catalog assembled and lovely currated by scaredpantie's."}
+                    title={props.entrie.fields.title + " at lingerie brands catalog."}
+                    image={'https:'+props.entrie.fields.thumbnail.fields.file.url+ '?w=1024'+'&fm=jpg'}
+                    url={router.asPath}
+
+                />
+            </Head>
+
             <Nav />
 
             <Container style={{ margin: '30px auto' }} maxWidth='md'>
@@ -170,7 +185,7 @@ function Brand(props) {
                         <Avatar style={matches ? avatarStyleSmall : avatarStyleBig} alt={props.entrie.fields.title} src={props.entrie.fields.thumbnail ? props.entrie.fields.thumbnail.fields.file.url + '?w=1024' + '&fm=jpg' : 'https://via.placeholder.com/150'} />
                         <Box style={{ width: "100%" }}>
 
-                            <Box style={matches ? { display: 'flex', justifyContent: 'center',flexWrap:'wrap' } : { display: 'flex' }}>
+                            <Box style={matches ? { display: 'flex', justifyContent: 'center', flexWrap: 'wrap' } : { display: 'flex' }}>
                                 <Typography align="center" variant='h4'>
                                     {props.entrie.fields.title}
                                 </Typography>
@@ -183,10 +198,10 @@ function Brand(props) {
                                         })
                                     }}
 
-                                    style={matches?{marginLeft:'5px'}:{ marginLeft: "10px" }}
+                                    style={matches ? { marginLeft: '5px' } : { marginLeft: "10px" }}
                                     underline='none'
                                     color="textPrimary"
-                                    
+
                                     target="_blank"
                                     href={props.entrie.fields.link} >
                                     <LaunchIcon fontSize="small" />

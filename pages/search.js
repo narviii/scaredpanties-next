@@ -18,8 +18,10 @@ import Dialog from '@material-ui/core/Dialog';
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 import { useDocument } from 'react-firebase-hooks/firestore';
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { FirebaseContext,UserContext, DbContext, UserDocContext,LoginDialogContext } from '../src/context'
+import { FirebaseContext, UserContext, DbContext, UserDocContext, LoginDialogContext } from '../src/context'
 import ReactGA from '../src/reactga'
+import Head from 'next/head'
+import { HeadContent } from '../src/headcontent'
 
 
 
@@ -69,12 +71,12 @@ function SearchBar(props) {
 
     }
     return (
-        <Container maxWidth='lg' style={{padding:'15px  15px '}} >
+        <Container maxWidth='lg' style={{ padding: '15px  15px ' }} >
 
             <Grid container justify="center" alignItems="center" spacing={2}>
 
                 <Grid item>
-                    <TextField onKeyDown={enterPress}  value={input} onChange={(e) => setInput(e.target.value)} className={classes.searchBar} id="brand-search" label="Search for a brand" variant="outlined" />
+                    <TextField onKeyDown={enterPress} value={input} onChange={(e) => setInput(e.target.value)} className={classes.searchBar} id="brand-search" label="Search for a brand" variant="outlined" />
                 </Grid>
                 <Grid item>
                     <Button onClick={handleSearch} fullWidth size="large" variant="outlined" color="inherit"> SEARCH</Button>
@@ -94,13 +96,21 @@ function Search(props) {
 
     return (
         <React.Fragment>
-            <CssBaseline />
+            <Head>
+                <HeadContent
+                    description="A list and catalog of lingerie brands assembled and lovely currated by scaredpanties."
+                    title="Lingerie brands catalog."
+                    image="https://blog.scaredpanties.com/content/images/2020/01/fb_preview.jpg"
+                    url="https://catalog.scaredpanties.com"
 
-                        <Nav/>
-                        <Hero />
-                        <SearchBar />
-                        <PostGrid entries={props.entries} />
-                        <Footer entries={props.stats} originList={originList} />
+                />
+            </Head>
+
+            <Nav />
+            <Hero />
+            <SearchBar />
+            <PostGrid entries={props.entries} />
+            <Footer entries={props.stats} originList={originList} />
 
         </React.Fragment>
 

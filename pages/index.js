@@ -16,10 +16,11 @@ import { PostGrid } from '../src/postgrid'
 import ReactGA from '../src/reactga'
 import { originList, tagList, sizeList } from '../src/constants'
 import { Nav } from '../src/nav'
-import { FirebaseContext,UserContext, DbContext, UserDocContext,LoginDialogContext } from '../src/context'
+import { FirebaseContext, UserContext, DbContext, UserDocContext, LoginDialogContext } from '../src/context'
 import { client } from '../src/contentful'
 import { useContext } from "react";
-
+import Head from 'next/head'
+import {HeadContent } from '../src/headcontent'
 
 
 
@@ -271,21 +272,28 @@ function MainPage(props) {
     return (
 
         <React.Fragment>
+            <Head>
+                <HeadContent
+                    description="A list and catalog of lingerie brands assembled and lovely currated by scaredpanties."
+                    title="Lingerie brands catalog."
+                    image="https://blog.scaredpanties.com/content/images/2020/01/fb_preview.jpg"
+                    url="https://catalog.scaredpanties.com"
+
+                />
+            </Head>
             <CssBaseline />
-            <style jsx global>{`
-            `}</style>
-                        <Nav/>
-                        <Hero />
-                        <Container maxWidth='lg' style={{ margin: '30px auto 30px ' }} >
-                            <Box justifyContent="center" alignContent="center" display="flex" flexWrap="wrap">
-                                <SelectOrigin />
-                                <SelectTags />
-                                <SelectSize />
-                                <OrderSelector />
-                            </Box>
-                        </Container>
-                        <PostGrid entries={props.entries} />
-                        <Footer entries={props.stats} originList={originList} />
+            <Nav />
+            <Hero />
+            <Container maxWidth='lg' style={{ margin: '30px auto 30px ' }} >
+                <Box justifyContent="center" alignContent="center" display="flex" flexWrap="wrap">
+                    <SelectOrigin />
+                    <SelectTags />
+                    <SelectSize />
+                    <OrderSelector />
+                </Box>
+            </Container>
+            <PostGrid entries={props.entries} />
+            <Footer entries={props.stats} originList={originList} />
         </React.Fragment>
 
     );
@@ -306,7 +314,7 @@ MainPage.getInitialProps = async (context) => {
         skip: parseInt(context.query.offset) ? parseInt(context.query.offset) : 0
     })
 
-    
+
 
     entries.items = await Promise.all(entries.items.map(async (entry) => {
         entry.stockists = await client.getEntries({
@@ -315,7 +323,7 @@ MainPage.getInitialProps = async (context) => {
         })
         return entry
     }))
-    
+
 
     const stats = await client.getEntries({
         limit: 1
