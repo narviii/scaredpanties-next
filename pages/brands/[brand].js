@@ -157,7 +157,7 @@ function Reviews(props) {
 function Brand(props) {
     const avatarStyleBig = { width: '50px', marginRight: "30px", height: '50px' }
     const avatarStyleSmall = { width: '50px', margin: 'auto', height: '50px' }
-    const matches = useMediaQuery('(max-width:700px)');
+    const matches = useMediaQuery('(max-width:800px)');
     ReactGA.pageview('/catalog/brands/' + props.entrie.fields.slug);
     return (
         <React.Fragment>
