@@ -162,6 +162,7 @@ function Brand(props) {
     const avatarStyleSmall = { width: '50px', margin: 'auto', height: '50px' }
     const matches = useMediaQuery('(max-width:800px)');
     ReactGA.pageview('/catalog/brands/' + props.entrie.fields.slug);
+    //console.log(props.pathname)
     const router = useRouter()
     return (
         <React.Fragment>
@@ -171,7 +172,7 @@ function Brand(props) {
                     description={"Read more about it at lingerie brands catalog assembled and lovely currated by scaredpantie's."}
                     title={props.entrie.fields.title + " at lingerie brands catalog."}
                     image={'https:'+props.entrie.fields.thumbnail.fields.file.url+ '?w=1024'+'&fm=jpg'}
-                    url="https://catalog.scaredpanties.com"
+                   
 
                 />
             </Head>
@@ -251,7 +252,7 @@ function Brand(props) {
 
 
 export async function getServerSideProps(context) {
-    //console.log(context.params)
+    console.log(context.req)
     let entries = await client.getEntries({
         include: 1,
         'fields.slug': context.params.brand,
