@@ -9,15 +9,17 @@ export default async function sitemap(req,res) {
     let i=0
 
     const entries = await client.getEntries({
-        limit:1
+        limit:500,
+        include:0
     })
-    
     
     const pages = ~~(entries.total/12)
 
     const smStream = new SitemapStream({ hostname: 'https://catalog.scaredpanties.com' });
-    smStream.write({ url: ``, changefreq: 'weekly'})
-    smStream.write({ url: `/search`, changefreq: 'weekly'})
+    smStream.write({ url: ``, changefreq: 'weekly',priority: 0.9, })
+    smStream.write({ url: `/search`, changefreq: 'weekly',priority: 0.3})
+    smStream.write({ url: `/stockists`, changefreq: 'weekly',priority: 0.5})
+    entries.items.forEach(item=>item.fields.slug?smStream.write({url:"brands/"+item.fields.slug,changefreq: 'weekly',priority: 0.9,lastmod:item.sys.updatedAt}):null)
     for(i=0;i<=pages;i++){
         smStream.write({ url: `?sizes=&origin=&tags=&offset=${i*12}`, changefreq: 'weekly'})
     }
