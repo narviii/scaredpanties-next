@@ -11,7 +11,7 @@ import Grid from '@material-ui/core/Grid'
 
 export function Stockists(props) {
     const stockists = props.stockists.items.map(item => (
-        <Grid item item xs={6} sm={6} md={4} lg={3}>
+        <Grid item key={item.fields.name} item xs={6} sm={6} md={4} lg={3}>
             <Link target="_blank" onClick={() => {
                 ReactGA.event({
                     category: 'user',
@@ -27,7 +27,7 @@ export function Stockists(props) {
             <Box style={{}}>
                 <Typography align="center" variant="h5" color="textSecondary">You can buy it from these stockists:</Typography>
 
-                <Grid container style={{ padding: '15px' }}>
+                <Grid container alignItems="stretch"  spacing={1} style={{ padding: '15px' }}>
                     {stockists}
                 </Grid>
             </Box>

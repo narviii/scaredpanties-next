@@ -139,7 +139,7 @@ function BrandGallery(props) {
 
 function Reviews(props) {
     return (
-        <div>
+        <div style={{padding:'10px'}}>
             <Typography align="center" variant="h5" color="textSecondary">Reviews about the brand products:</Typography>
             <Box style={{ padding: '5px' }}>
                 {props.reviews.map(review => <Link style={{ padding: '5px', display: "block" }} color="textPrimary" target="_blank" href={review.url}>
@@ -170,8 +170,8 @@ function Brand(props) {
                         <Avatar style={matches ? avatarStyleSmall : avatarStyleBig} alt={props.entrie.fields.title} src={props.entrie.fields.thumbnail ? props.entrie.fields.thumbnail.fields.file.url + '?w=1024' + '&fm=jpg' : 'https://via.placeholder.com/150'} />
                         <Box style={{ width: "100%" }}>
 
-                            <div style={{ display: "flex" }}>
-                                <Typography align={matches ? "center" : "left"} variant='h4'>
+                            <Box style={matches ? { display: 'flex', justifyContent: 'center',flexWrap:'wrap' } : { display: 'flex' }}>
+                                <Typography align="center" variant='h4'>
                                     {props.entrie.fields.title}
                                 </Typography>
                                 <Link
@@ -183,7 +183,7 @@ function Brand(props) {
                                         })
                                     }}
 
-                                    style={{ marginLeft: "10px" }}
+                                    style={matches?{marginLeft:'5px'}:{ marginLeft: "10px" }}
                                     underline='none'
                                     color="textPrimary"
                                     
@@ -192,13 +192,13 @@ function Brand(props) {
                                     <LaunchIcon fontSize="small" />
                                 </Link>
 
-                            </div>
+                            </Box>
 
                             <Typography align={matches ? "center" : "left"} variant='subtitle2'>{props.entrie.fields.origin}</Typography>
                         </Box>
 
                         <Box style={{ margin: '0px 20px' }}>
-                            <Box display="flex" flexWrap="wrap" justifyContent="left">
+                            <Box display="flex" flexWrap="wrap" justifyContent="space-around">
                                 {props.entrie.fields.sizes ? props.entrie.fields.sizes.map(tag => (
                                     <Chip key={tag} label={tag} style={{ margin: "10px" }} />
                                 )) : null}
@@ -211,7 +211,7 @@ function Brand(props) {
                     </Box>
 
                     <Divider style={{ margin: '10px' }} variant="middle" />
-                    <Box style={{ padding: '10px' }}>
+                    <Box style={{ padding: '15px' }}>
                         <Typography variant="body2" color="textSecondary" gutterBottom component="p">
                             {props.entrie.fields.desc}
                         </Typography>
