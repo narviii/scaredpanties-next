@@ -73,7 +73,6 @@ const useStyles = makeStyles((theme) => ({
 function GrdTile(props) {
     const classes = useStyles();
     const { data, error } = useSWR(`https://api.instagram.com/oembed?url=` + props.link, fetcher)
-    console.log(data)
     return (
         <Grid item xs={6} sm={6} md={4} lg={3} key={props.link}>
             <Card>
@@ -84,7 +83,7 @@ function GrdTile(props) {
 
                 >
                     <CardMedia
-                        title={data.author_name+' wearing '+ props.brand}
+                        title={data?data.author_name+' wearing '+ props.brand:null}
                         image={'https://' + url.parse(props.link).hostname + url.parse(props.link).pathname + 'media'}
                         className={classes.cardMedia} />
                 </Link>
