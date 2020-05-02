@@ -78,12 +78,15 @@ function StockCard(props) {
                             {props.entrie.fields.country}
                         </Typography>
                     </Box>
+                    
+
                     <Box style={matches ? { justifyContent: 'center', flexDirection: 'row', display: 'flex', marginTop: '20px' } : { display: 'flex', flexDirection: 'row' }}>
+
                         {props.entrie.fields.format.map(item => <Chip style={{ margin: '0px 10px 0px 10px' }} label={item} />)}
                     </Box>
                 </Box>
 
-
+                <Typography style={{margin:'30px'}}variant="h5" align="center">Brands</Typography>
                 <Grid style={{ marginTop: "30px" }} container spacing={4} alignItems="stretch">
                     {props.entrie.fields.brands.map(brand => (
                         <Grid item xs={12} sm={6} md={4} lg={3}>
@@ -121,8 +124,8 @@ function Stockists(props) {
         <React.Fragment>
             <Head>
                 <HeadContent
-                    description="A list and catalog of lingerie brands assembled and lovely currated by scaredpanties."
-                    title="Lingerie brands catalog."
+                    description="A list of stockists and brands they carry assembled by scaredpantie's"
+                    title="List of stockists at scaredpantie's lingerie brand catalog."
                     image="https://blog.scaredpanties.com/content/images/2020/01/fb_preview.jpg"
                     url="https://catalog.scaredpanties.com"
 

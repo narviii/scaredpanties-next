@@ -5,7 +5,7 @@ import Toolbar from '@material-ui/core/Toolbar'
 import React from 'react'
 import { makeStyles } from '@material-ui/core/styles';
 import { useContext } from "react";
-import { UserContext, DbContext, UserDocContext,LoginDialogContext, FirebaseContext } from '../src/context'
+import { UserContext, DbContext, UserDocContext, LoginDialogContext, FirebaseContext } from '../src/context'
 import { useState } from 'react'
 import { useAuthState } from 'react-firebase-hooks/auth';
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
@@ -56,17 +56,17 @@ function LoginControl(props) {
             firebase.auth.EmailAuthProvider.PROVIDER_ID,
             firebase.auth.FacebookAuthProvider.PROVIDER_ID
         ]
-    
+
     };
-    
+
 
     const db = firebase.firestore();
     const [user, initialising, error] = useAuthState(firebase.auth());
 
     const test = useContext(LoginDialogContext);
-    const open=test.loginDialogOpen
-    const setOpen=test.setLoginDialogOpen
-    
+    const open = test.loginDialogOpen
+    const setOpen = test.setLoginDialogOpen
+
 
     const loginDialogClose = (authResult, redirectUrl) => {
         if (authResult.user) {
@@ -142,6 +142,8 @@ export function Nav(props) {
 
                         <Button size="large" color="inherit" href="/" > HOME </Button>
                         <Button size="large" color="inherit" href="/search" > SEARCH </Button>
+                        <Button size="large" color="inherit" href="/stockists" > STOCKISTS </Button>
+
                         <Subscribe butToggle='true' />
                         <Button size="large" href="https://blog.scaredpanties.com" >  BLOG </Button>
                         <Button href="https://www.buymeacoffee.com/scaredpanties" startIcon={<LocalCafeIcon />}>
@@ -170,7 +172,15 @@ export function Nav(props) {
                                 <MenuItem style={{ justifyContent: 'center' }} >
                                     SEARCH
                                 </MenuItem>
+
                             </Link>
+                            <Link underline='none' color="textPrimary" href="/stockists" >
+                                <MenuItem style={{ justifyContent: 'center' }} >
+                                    STOCKISTS
+                                </MenuItem>
+
+                            </Link>
+
                             <Link underline='none' color="textPrimary" href="https://blog.scaredpanties.com" >
                                 <MenuItem style={{ justifyContent: 'center' }}>
                                     BLOG
@@ -195,7 +205,7 @@ export function Nav(props) {
 
                     {user ? <Button size="large" color="inherit" href={'/favs?myfavs=' + user.uid} > MY FAVORITES </Button> : null}
 
-                    <LoginControl/>
+                    <LoginControl />
 
                 </Toolbar>
 

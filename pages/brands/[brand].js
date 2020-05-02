@@ -72,7 +72,8 @@ const useStyles = makeStyles((theme) => ({
 
 function GrdTile(props) {
     const classes = useStyles();
-
+    const { data, error } = useSWR(`https://api.instagram.com/oembed?url=` + props.link, fetcher)
+    console.log(data)
     return (
         <Grid item xs={6} sm={6} md={4} lg={3} key={props.link}>
             <Card>
@@ -82,7 +83,10 @@ function GrdTile(props) {
                     href={props.link}
 
                 >
-                    <CardMedia image={'https://' + url.parse(props.link).hostname + url.parse(props.link).pathname + 'media'} className={classes.cardMedia} />
+                    <CardMedia
+                        title={data.author_name+' wearing '+ props.brand}
+                        image={'https://' + url.parse(props.link).hostname + url.parse(props.link).pathname + 'media'}
+                        className={classes.cardMedia} />
                 </Link>
             </Card>
 
@@ -102,7 +106,7 @@ function IgGallery(props) {
             <Box className={classes.root}>
 
                 <Grid container spacing={0} alignItems="stretch">
-                    {props.instalinks.map(link => (<GrdTile key={link} link={link} />))}
+                    {props.instalinks.map(link => (<GrdTile brand={props.brand} key={link} link={link} />))}
                 </Grid>
 
             </Box>
@@ -171,8 +175,8 @@ function Brand(props) {
                 <HeadContent
                     description={"Read more about it at lingerie brands catalog assembled and lovely currated by scaredpantie's."}
                     title={props.entrie.fields.title + " at lingerie brands catalog."}
-                    image={'https:'+props.entrie.fields.thumbnail.fields.file.url+ '?w=1024'+'&fm=jpg'}
-                   
+                    image={'https:' + props.entrie.fields.thumbnail.fields.file.url + '?w=1024' + '&fm=jpg'}
+
 
                 />
             </Head>
@@ -240,7 +244,7 @@ function Brand(props) {
                     {(props.entrie.stockists.items.length > 0) ? <Stockists stockists={props.entrie.stockists} /> : <Divider style={{ margin: '10px' }} variant="middle" />}
 
                     {props.entrie.fields.gallery ? <BrandGallery pics={props.entrie.fields.gallery} /> : null}
-                    {props.entrie.fields.instalinks ? <IgGallery instalinks={props.entrie.fields.instalinks} /> : null}
+                    {props.entrie.fields.instalinks ? <IgGallery brand={props.entrie.fields.title} instalinks={props.entrie.fields.instalinks} /> : null}
 
                 </Paper>
                 <Footer entries={props.stats} originList={originList} />
