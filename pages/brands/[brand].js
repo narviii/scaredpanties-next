@@ -166,7 +166,7 @@ function Brand(props) {
 
             <Head>
                 <HeadContent
-                    description={"Read more about it at lingerie brands catalog assembled and lovely currated by scaredpantie's."}
+                    description={props.entrie.fields.desc}
                     title={props.entrie.fields.title + " at lingerie brands catalog."}
                     image={'https:' + props.entrie.fields.thumbnail.fields.file.url + '?w=1024' + '&fm=jpg'}
 
