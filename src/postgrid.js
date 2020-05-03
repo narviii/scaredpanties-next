@@ -209,13 +209,15 @@ function PostCard(props) {
                             </Link>
                         </div>
                     }
-                    subheader={<Box >
-                        <Typography display="inline" variant="subtitle2" color="textSecondary">
-                            {props.entrie.fields.origin}
-                        </Typography>
-
-
-                    </Box>
+                    subheader={
+                        <Link
+                            href={'/?origin=' + props.entrie.fields.origin}
+                            underline='none'
+                        >
+                            <Typography  variant="subtitle2" >
+                                {props.entrie.fields.origin}
+                            </Typography>
+                        </Link>
                     }
 
                     action={favButton}
@@ -236,7 +238,7 @@ function PostCard(props) {
                     <CardMedia
                         image={props.entrie.fields.thumbnail ? props.entrie.fields.thumbnail.fields.file.url + '?w=1024' + '&fm=jpg' : 'https://via.placeholder.com/150'}
                         className={classes.cardMedia}
-                        title={props.entrie.fields.title+' lingerie'}
+                        title={props.entrie.fields.title + ' lingerie'}
                     >
                     </CardMedia>
                 </Link>
@@ -253,10 +255,22 @@ function PostCard(props) {
 
                     <Box display="flex" flexWrap="wrap" justifyContent="left">
                         {props.entrie.fields.sizes ? props.entrie.fields.sizes.map(tag => (
-                            <Chip key={tag} label={tag} style={{ margin: "10px" }} />
+                            <Chip
+                                clickable
+                                component="a"
+                                href={'/?sizes=' + tag}
+                                key={tag}
+                                label={tag}
+                                style={{ margin: "10px" }} />
                         )) : null}
                         {props.entrie.fields.tags.map(tag => (
-                            <Chip key={tag} label={tag} style={{ margin: "10px" }} />
+                            <Chip
+                                clickable
+                                component="a"
+                                href={'/?tags=' + tag}
+                                key={tag}
+                                label={tag}
+                                style={{ margin: "10px" }} />
                         ))}
 
                     </Box>

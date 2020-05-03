@@ -20,9 +20,7 @@ import useSWR from 'swr'
 import fetch from 'unfetch'
 import Grid from '@material-ui/core/Grid'
 import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
-import CardHeader from '@material-ui/core/CardHeader';
 import { Stockists } from '../../src/stockists'
 import ModalImage from "react-modal-image";
 import useMediaQuery from '@material-ui/core/useMediaQuery';
@@ -34,8 +32,6 @@ const url = require('url'); // built-in utility
 import Head from 'next/head'
 import { HeadContent } from '../../src/headcontent'
 import { useRouter } from 'next/router'
-
-
 
 const fetcher = url => fetch(url).then(r => r.json())
 
@@ -83,7 +79,7 @@ function GrdTile(props) {
 
                 >
                     <CardMedia
-                        title={data?data.author_name+' wearing '+ props.brand:null}
+                        title={data ? data.author_name + ' wearing ' + props.brand : null}
                         image={'https://' + url.parse(props.link).hostname + url.parse(props.link).pathname + 'media'}
                         className={classes.cardMedia} />
                 </Link>
@@ -165,8 +161,6 @@ function Brand(props) {
     const avatarStyleSmall = { width: '50px', margin: 'auto', height: '50px' }
     const matches = useMediaQuery('(max-width:800px)');
     ReactGA.pageview('/catalog/brands/' + props.entrie.fields.slug);
-    //console.log(props.pathname)
-    const router = useRouter()
     return (
         <React.Fragment>
 
@@ -213,16 +207,35 @@ function Brand(props) {
 
                             </Box>
 
-                            <Typography align={matches ? "center" : "left"} variant='subtitle2'>{props.entrie.fields.origin}</Typography>
+                            <Link 
+                            href={'/?origin='+props.entrie.fields.origin}
+                            
+                            underline='none'
+                            >
+                                <Typography align={matches ? "center" : "left"} variant='subtitle2'>{props.entrie.fields.origin}</Typography>
+                            </Link>
                         </Box>
 
                         <Box style={{ margin: '0px 20px' }}>
                             <Box display="flex" flexWrap="wrap" justifyContent="space-around">
                                 {props.entrie.fields.sizes ? props.entrie.fields.sizes.map(tag => (
-                                    <Chip key={tag} label={tag} style={{ margin: "10px" }} />
+                                    <Chip
+                                        clickable
+                                        component="a"
+                                        href={'/?sizes=' + tag}
+                                        key={tag}
+                                        label={tag}
+                                        style={{ margin: "10px" }}
+                                    />
                                 )) : null}
                                 {props.entrie.fields.tags.map(tag => (
-                                    <Chip key={tag} label={tag} style={{ margin: "10px" }} />
+                                    <Chip
+                                        clickable
+                                        component="a"
+                                        href={'/?tags=' + tag}
+                                        key={tag}
+                                        label={tag}
+                                        style={{ margin: "10px" }} />
                                 ))}
 
                             </Box>
@@ -255,7 +268,6 @@ function Brand(props) {
 
 
 export async function getServerSideProps(context) {
-    console.log(context.req)
     let entries = await client.getEntries({
         include: 1,
         'fields.slug': context.params.brand,
