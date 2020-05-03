@@ -225,6 +225,7 @@ function Brand(props) {
                                         href={'/?sizes=' + tag}
                                         key={tag}
                                         label={tag}
+                                        variant="subtitle2"
                                         style={{ margin: "10px" }}
                                     />
                                 )) : null}
@@ -232,6 +233,7 @@ function Brand(props) {
                                     <Chip
                                         clickable
                                         component="a"
+                                        variant="subtitle2"
                                         href={'/?tags=' + tag}
                                         key={tag}
                                         label={tag}

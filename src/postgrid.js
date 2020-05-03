@@ -23,6 +23,7 @@ import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import { UserContext, DbContext, UserDocContext, LoginDialogContext } from '../src/context'
 import LaunchIcon from '@material-ui/icons/Launch';
 import firebase from 'firebase'
+import Button from '@material-ui/core/Button'
 
 
 const useStyles = makeStyles(theme => ({
@@ -210,14 +211,18 @@ function PostCard(props) {
                         </div>
                     }
                     subheader={
-                        <Link
+
+                        <Chip
+                            style={{marginTop:'5px'}}
+                            clickable
+                            size="small"
+                            component="a"
                             href={'/?origin=' + props.entrie.fields.origin}
-                            underline='none'
-                        >
-                            <Typography  variant="subtitle2" >
-                                {props.entrie.fields.origin}
-                            </Typography>
-                        </Link>
+                            variant="subtitle2" 
+                            label={props.entrie.fields.origin}
+                            />
+                            
+
                     }
 
                     action={favButton}
@@ -253,7 +258,7 @@ function PostCard(props) {
                     </Typography>
 
 
-                    <Box display="flex" flexWrap="wrap" justifyContent="left">
+                    <Box display="flex" flexWrap="wrap" justifyContent="center">
                         {props.entrie.fields.sizes ? props.entrie.fields.sizes.map(tag => (
                             <Chip
                                 clickable
@@ -261,7 +266,8 @@ function PostCard(props) {
                                 href={'/?sizes=' + tag}
                                 key={tag}
                                 label={tag}
-                                style={{ margin: "10px" }} />
+                                variant="subtitle2"
+                                style={{ margin: "5px" }} />
                         )) : null}
                         {props.entrie.fields.tags.map(tag => (
                             <Chip
@@ -270,7 +276,8 @@ function PostCard(props) {
                                 href={'/?tags=' + tag}
                                 key={tag}
                                 label={tag}
-                                style={{ margin: "10px" }} />
+                                variant="subtitle2"
+                                style={{ margin: "5px" }} />
                         ))}
 
                     </Box>
