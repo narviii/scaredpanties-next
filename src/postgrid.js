@@ -270,7 +270,7 @@ function PostCard(props) {
                                 href={'/?sizes=' + tag}
                                 key={tag}
                                 label={tag}
-                                variant="subtitle2"
+                                variant="outlined"
                                 style={{ margin: "5px" }} />
                         )) : null}
                         {props.entrie.fields.tags.map(tag => (

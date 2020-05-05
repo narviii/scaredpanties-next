@@ -272,7 +272,7 @@ function Brand(props) {
 
                     {props.entrie.fields.reviews ? <Reviews reviews={props.entrie.fields.reviews} /> : null}
 
-                    {(props.entrie.stockists.items.length > 0) ? <Stockists stockists={props.entrie.stockists} /> : <Divider style={{ margin: '10px' }} variant="middle" />}
+                    {(props.entrie.stockists.items.length > 0) ? <Stockists stockists={props.entrie.stockists} /> : null}
 
                     {props.entrie.fields.gallery ? <BrandGallery pics={props.entrie.fields.gallery} /> : null}
                     {props.entrie.fields.instalinks ? <IgGallery brand={props.entrie.fields.title} instalinks={props.entrie.fields.instalinks} /> : null}
