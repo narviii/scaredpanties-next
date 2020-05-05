@@ -120,7 +120,7 @@ function BrandGallery(props) {
             <Box className={classes.root}>
                 <GridList cellHeight={matches ? 'auto' : 400} cols={matches ? 1 : 2}>
                     {props.pics.map(pic => (
-                        <GridListTile key={pic.fields.title} cols={pic.fields.file.details.image.width / pic.fields.file.details.image.height > 1 ? 2 : 1}>
+                        <GridListTile key={pic.fields.title} cols={matches ? 1 : (pic.fields.file.details.image.width / pic.fields.file.details.image.height > 1 ? 2 : 1)}>
                             <ModalImage className={classes.modal}
                                 hideDownload
                                 small={pic.fields.file.url + '?w=800'}
@@ -142,12 +142,29 @@ function BrandGallery(props) {
 function Reviews(props) {
     return (
         <div style={{ padding: '10px' }}>
-            <Typography align="center" variant="h5" color="textSecondary">Reviews about the brand products:</Typography>
-            <Box style={{ padding: '5px' }}>
-                {props.reviews.map(review => <Link style={{ padding: '5px', display: "block" }} color="textPrimary" target="_blank" href={review.link}>
-                    {review.title}
-                </Link>)}
-            </Box>
+            <Typography align="center" variant="h5" color="textSecondary">Read about it in the reviews:</Typography>
+            <Grid container alignItems="stretch" spacing={1} style={{ padding: '5px' }}>
+                {props.reviews.map(review =>
+                    <Grid key={review.link} xs={12} sm={6} md={4} item>
+                        <Link
+                            onClick={() => {
+                                ReactGA.event({
+                                    category: 'user',
+                                    action: 'outbound:review',
+                                    label: review.link
+                                })
+                            }}
+
+                            align="center"
+                            style={{ padding: '5px', display: "block" }}
+                            color="textPrimary" target="_blank"
+                            href={review.link}>
+                            {review.title}
+                        </Link>
+                    </Grid>
+                )
+                }
+            </Grid>
             <Divider style={{ margin: '10px' }} variant="middle" />
 
         </div>
@@ -167,7 +184,7 @@ function Brand(props) {
             <Head>
                 <HeadContent
                     description={props.entrie.fields.desc}
-                    title={props.entrie.fields.title+' from ' + props.entrie.fields.origin + " at lingerie brands catalog."}
+                    title={props.entrie.fields.title + ' from ' + props.entrie.fields.origin + " at lingerie brands catalog."}
                     image={'https:' + props.entrie.fields.thumbnail.fields.file.url + '?w=1024' + '&fm=jpg'}
 
 
@@ -207,10 +224,10 @@ function Brand(props) {
 
                             </Box>
 
-                            <Link 
-                            href={'/?origin='+props.entrie.fields.origin}
-                            
-                            underline='none'
+                            <Link
+                                href={'/?origin=' + props.entrie.fields.origin}
+
+                                underline='none'
                             >
                                 <Typography align={matches ? "center" : "left"} variant='subtitle2'>{props.entrie.fields.origin}</Typography>
                             </Link>

@@ -12,22 +12,24 @@ import Grid from '@material-ui/core/Grid'
 export function Stockists(props) {
     const stockists = props.stockists.items.map(item => (
         <Grid item key={item.fields.name} item xs={6} sm={6} md={4} lg={3}>
-            <Link target="_blank" onClick={() => {
-                ReactGA.event({
-                    category: 'user',
-                    action: 'outbound:stockist',
-                    label: item.fields.name
-                })
-            }} key={item.fields.name} color="textPrimary" href={item.fields.link}>{item.fields.name}</Link>
+            <Link align="center" target="_blank"
+                onClick={() => {
+                    ReactGA.event({
+                        category: 'user',
+                        action: 'outbound:stockist',
+                        label: item.fields.name
+                    })
+                }}
+                key={item.fields.name} color="textPrimary" href={item.fields.link}>{item.fields.name}</Link>
         </Grid>
     ))
     return (
         <div style={{ margin: '30px 0px 30px 0px' }}>
 
             <Box style={{}}>
-                <Typography align="center" variant="h5" color="textSecondary">You can buy it from these stockists:</Typography>
+                <Typography align="center" variant="h5" color="textSecondary">Buy it from these stockists:</Typography>
 
-                <Grid container alignItems="stretch"  spacing={1} style={{ padding: '15px' }}>
+                <Grid container alignItems="stretch" spacing={1} style={{ padding: '15px' }}>
                     {stockists}
                 </Grid>
             </Box>
