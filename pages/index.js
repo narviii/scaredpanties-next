@@ -247,13 +247,17 @@ function OrderSelector(props) {
 
     return (
         <ToggleButtonGroup style={{ margin: "auto" }}
-            value={(!router.query.order) ? "newest" : router.query.order}
+            value={router.query.order}
             onChange={handleChange}
             size="large" exclusive
             aria-label="ordering">
-            <ToggleButton aria-label="newest" value="newest">
-                Newest
+            <ToggleButton aria-label="updated" value="lastUpdated">
+                Updated
             </ToggleButton>
+            <ToggleButton aria-label="created" value="lastCreated">
+                Created
+            </ToggleButton>
+
             <ToggleButton aria-label="alphabet" value="alphabet">
                 Alphabet
             </ToggleButton>
@@ -303,9 +307,14 @@ function MainPage(props) {
 
 
 MainPage.getInitialProps = async (context) => {
+    const order={
+        "lastUpdated":"-sys.updatedAt",
+        "lastCreated":"-sys.createdAt",
+        "alphabet":"fields.title"
+    }
     let entries = await client.getEntries({
         include: 1,
-        order: (context.query.order == 'alphabet' ? 'fields.title' : '-sys.updatedAt'),
+        order: order[context.query.order],
         'fields.tags[all]': (context.query.tags == 'All' || context.query.tags === '') ? undefined : context.query.tags,
         'fields.origin': (context.query.origin === 'All' || context.query.origin === '') ? undefined : context.query.origin,
         'fields.sizes': (context.query.sizes != 'All') ? context.query.sizes : undefined,

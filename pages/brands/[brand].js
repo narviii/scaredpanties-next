@@ -142,7 +142,7 @@ function BrandGallery(props) {
 function Reviews(props) {
     return (
         <div style={{ padding: '10px' }}>
-            <Typography align="center" variant="h5" color="textSecondary">Read about it in the reviews:</Typography>
+            <Typography align="center" variant="h5" color="textSecondary">Read about it in reviews:</Typography>
             <Grid container alignItems="stretch" spacing={1} style={{ padding: '5px' }}>
                 {props.reviews.map(review =>
                     <Grid key={review.link} xs={12} sm={6} md={4} item>

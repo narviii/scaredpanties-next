@@ -218,7 +218,7 @@ function PostCard(props) {
                             size="small"
                             component="a"
                             href={'/?origin=' + props.entrie.fields.origin}
-                            variant="subtitle2" 
+                            variant="outlined" 
                             label={props.entrie.fields.origin}
                             />
                             
@@ -256,6 +256,10 @@ function PostCard(props) {
                     <Typography color="textSecondary" align="right" variant="caption" display="block" gutterBottom>
                         {'Last update: ' + moment(props.entrie.sys.updatedAt).fromNow()}
                     </Typography>
+                    <Typography color="textSecondary" align="right" variant="caption" display="block" gutterBottom>
+                        {'Added: ' + moment(props.entrie.sys.createdAt).fromNow()}
+                    </Typography>
+
 
 
                     <Box display="flex" flexWrap="wrap" justifyContent="center">
