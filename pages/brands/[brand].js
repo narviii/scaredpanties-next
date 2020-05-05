@@ -144,7 +144,7 @@ function Reviews(props) {
         <div style={{ padding: '10px' }}>
             <Typography align="center" variant="h5" color="textSecondary">Reviews about the brand products:</Typography>
             <Box style={{ padding: '5px' }}>
-                {props.reviews.map(review => <Link style={{ padding: '5px', display: "block" }} color="textPrimary" target="_blank" href={review.url}>
+                {props.reviews.map(review => <Link style={{ padding: '5px', display: "block" }} color="textPrimary" target="_blank" href={review.link}>
                     {review.title}
                 </Link>)}
             </Box>
