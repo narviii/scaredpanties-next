@@ -23,7 +23,9 @@ import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import { UserContext, DbContext, UserDocContext, LoginDialogContext } from '../src/context'
 import LaunchIcon from '@material-ui/icons/Launch';
 import firebase from 'firebase'
-import Button from '@material-ui/core/Button'
+import InstagramIcon from '@material-ui/icons/Instagram';
+import RateReviewIcon from '@material-ui/icons/RateReview';
+import Tooltip from '@material-ui/core/Tooltip';
 
 
 const useStyles = makeStyles(theme => ({
@@ -92,6 +94,15 @@ const useStyles = makeStyles(theme => ({
 
     },
 
+    chip: {
+        display: 'flex',
+        marginTop:'10px',
+        justifyContent: 'space-between',
+        flexWrap: 'wrap',
+        '& > *': {
+            margin: "0 10px 0px 10px",
+        },
+    },
 
 
 
@@ -99,10 +110,38 @@ const useStyles = makeStyles(theme => ({
 }))
 
 
+function InstalinkChip(props) {
 
+    if (props.instalinks) {
+        return (
+        
+            <Chip
+                size="small"
+                
+                icon={<InstagramIcon />}
+                label={props.instalinks.length} />
+                
+        )
+    } else return null
+
+}
+
+function ReviewChip(props) {
+    if (props.reviews) {
+        return (
+        
+            <Chip
+                size="small"
+                style={{marginLeft:"10px"}}
+                icon={<RateReviewIcon />}
+                label={props.reviews.length} />
+       
+            
+            )
+    } else return null
+}
 
 function PostCard(props) {
-
     function addFav() {
         db.collection('users').doc(user.uid).update({
             favs: firebase.firestore.FieldValue.arrayUnion(props.entrie.sys.id)
@@ -212,16 +251,18 @@ function PostCard(props) {
                     }
                     subheader={
 
+
                         <Chip
-                            style={{marginTop:'5px'}}
+
                             clickable
                             size="small"
                             component="a"
                             href={'/?origin=' + props.entrie.fields.origin}
-                            variant="outlined" 
+                            variant="outlined"
                             label={props.entrie.fields.origin}
-                            />
-                            
+                        />
+
+
 
                     }
 
@@ -253,12 +294,23 @@ function PostCard(props) {
                     <Typography variant="body2" color="textSecondary" gutterBottom component="p">
                         {props.entrie.fields.desc}
                     </Typography>
-                    <Typography color="textSecondary" align="right" variant="caption" display="block" gutterBottom>
-                        {'Last update: ' + moment(props.entrie.sys.updatedAt).fromNow()}
-                    </Typography>
-                    <Typography color="textSecondary" align="right" variant="caption" display="block" gutterBottom>
-                        {'Added: ' + moment(props.entrie.sys.createdAt).fromNow()}
-                    </Typography>
+                    <Box className={classes.chip}>
+                        <div >
+                            <InstalinkChip style={{marginLeft:"5px"}} instalinks={props.entrie.fields.instalinks} />
+                            <ReviewChip style={{marginLeft:"5px"}} reviews={props.entrie.fields.reviews} />
+
+                        </div>
+                        <div>
+                            <Typography align="right" color="textSecondary" variant="caption" display="block" gutterBottom>
+                                {'Last update: ' + moment(props.entrie.sys.updatedAt).fromNow()}
+                            </Typography>
+                            <Typography align="right" color="textSecondary" variant="caption" display="block" gutterBottom>
+                                {'Added: ' + moment(props.entrie.sys.createdAt).fromNow()}
+                            </Typography>
+                        </div>
+
+                    </Box>
+
 
 
 
@@ -280,7 +332,7 @@ function PostCard(props) {
                                 href={'/?tags=' + tag}
                                 key={tag}
                                 label={tag}
-                                variant="subtitle2"
+                                variant="outlined"
                                 style={{ margin: "5px" }} />
                         ))}
 
