@@ -32,6 +32,7 @@ const url = require('url'); // built-in utility
 import Head from 'next/head'
 import { HeadContent } from '../../src/headcontent'
 import { useRouter } from 'next/router'
+import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 
 const fetcher = url => fetch(url).then(r => r.json())
 
@@ -242,7 +243,7 @@ function Brand(props) {
                                         href={'/?sizes=' + tag}
                                         key={tag}
                                         label={tag}
-                                        variant="subtitle2"
+                                        variant="outlined"
                                         style={{ margin: "10px" }}
                                     />
                                 )) : null}

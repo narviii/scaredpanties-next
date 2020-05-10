@@ -26,6 +26,7 @@ import firebase from 'firebase'
 import InstagramIcon from '@material-ui/icons/Instagram';
 import RateReviewIcon from '@material-ui/icons/RateReview';
 import Tooltip from '@material-ui/core/Tooltip';
+import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 
 
 const useStyles = makeStyles(theme => ({
@@ -96,7 +97,7 @@ const useStyles = makeStyles(theme => ({
 
     chip: {
         display: 'flex',
-        marginTop:'10px',
+        marginTop: '10px',
         justifyContent: 'space-between',
         flexWrap: 'wrap',
         '& > *': {
@@ -114,13 +115,13 @@ function InstalinkChip(props) {
 
     if (props.instalinks) {
         return (
-        
+
             <Chip
                 size="small"
-                
+                style={{ margin: "5px" }}
                 icon={<InstagramIcon />}
                 label={props.instalinks.length} />
-                
+
         )
     } else return null
 
@@ -129,19 +130,37 @@ function InstalinkChip(props) {
 function ReviewChip(props) {
     if (props.reviews) {
         return (
-        
+
             <Chip
                 size="small"
-                style={{marginLeft:"10px"}}
+                style={{ margin: "5px" }}
                 icon={<RateReviewIcon />}
                 label={props.reviews.length} />
-       
-            
-            )
+
+
+        )
     } else return null
 }
 
+function StockistsChip(props) {
+    if (props.stockists.total>0) {
+        return (
+
+            <Chip
+                size="small"
+                style={{ margin: "5px" }}
+                icon={<ShoppingCartIcon />}
+                label={props.stockists.items.length} />
+
+
+        )
+    } else return null
+}
+
+
 function PostCard(props) {
+
+    console.log(props.entrie)
     function addFav() {
         db.collection('users').doc(user.uid).update({
             favs: firebase.firestore.FieldValue.arrayUnion(props.entrie.sys.id)
@@ -294,22 +313,32 @@ function PostCard(props) {
                     <Typography variant="body2" color="textSecondary" gutterBottom component="p">
                         {props.entrie.fields.desc}
                     </Typography>
-                    <Box className={classes.chip}>
-                        <div >
-                            <InstalinkChip style={{marginLeft:"5px"}} instalinks={props.entrie.fields.instalinks} />
-                            <ReviewChip style={{marginLeft:"5px"}} reviews={props.entrie.fields.reviews} />
 
-                        </div>
-                        <div>
+
+
+                    <Grid container spacing={1} alignItems="stretch">
+                        <Grid item xs={6}>
+                            <InstalinkChip style={{ marginLeft: "5px" }} instalinks={props.entrie.fields.instalinks} />
+                            <ReviewChip style={{ marginLeft: "5px" }} reviews={props.entrie.fields.reviews} />
+                            <StockistsChip style={{ marginLeft: "5px" }} stockists={props.entrie.stockists} />
+                        </Grid>
+
+
+
+
+                        <Grid item xs={6}>
                             <Typography align="right" color="textSecondary" variant="caption" display="block" gutterBottom>
-                                {'Last update: ' + moment(props.entrie.sys.updatedAt).fromNow()}
+                                {'Updated: ' + moment(props.entrie.sys.updatedAt).fromNow()}
                             </Typography>
                             <Typography align="right" color="textSecondary" variant="caption" display="block" gutterBottom>
                                 {'Added: ' + moment(props.entrie.sys.createdAt).fromNow()}
                             </Typography>
-                        </div>
+                        </Grid>
+                    </Grid>
 
-                    </Box>
+
+
+
 
 
 

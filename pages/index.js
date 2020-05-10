@@ -152,6 +152,7 @@ function SelectOrigin(props) {
 function SelectTags(props) {
     const classes = useStyles();
     const router = useRouter();
+    
     const handleChange = (event) => {
         ReactGA.event({
             category: 'user',
@@ -326,12 +327,12 @@ MainPage.getInitialProps = async (context) => {
 
 
     entries.items = await Promise.all(entries.items.map(async (entry) => {
-        entry.stockists = await client.getEntries({
-            links_to_entry: entry.sys.id,
-            include: 0
-        })
-        return entry
-    }))
+         entry.stockists = await client.getEntries({
+             links_to_entry: entry.sys.id,
+             include: 0
+         })
+         return entry
+     }))
 
 
     const stats = await client.getEntries({
