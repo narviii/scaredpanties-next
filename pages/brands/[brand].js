@@ -33,6 +33,10 @@ import Head from 'next/head'
 import { HeadContent } from '../../src/headcontent'
 import { useRouter } from 'next/router'
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
+import InstagramIcon from '@material-ui/icons/Instagram';
+import RateReviewIcon from '@material-ui/icons/RateReview';
+import PhotoLibraryIcon from '@material-ui/icons/PhotoLibrary';
+
 
 const fetcher = url => fetch(url).then(r => r.json())
 
@@ -98,7 +102,10 @@ function IgGallery(props) {
 
     return (
         <div style={{ margin: '30px 0 30px 0' }}>
-            <Typography color="textSecondary" align="center" variant='h5'>Spotted on Instagram</Typography>
+            <Box style={{display:"flex",justifyContent:"center"}}>
+                <InstagramIcon style={{marginRight:'5px'}}/>
+                <Typography color="textSecondary" align="center" variant='h5'>Spotted on Instagram</Typography>
+            </Box>
             <Box className={classes.root}>
 
                 <Grid container spacing={0} alignItems="stretch">
@@ -117,7 +124,10 @@ function BrandGallery(props) {
     return (
 
         <div style={{ margin: '30px 0 30px 0' }}>
-            <Typography color="textSecondary" align="center" variant='h5'>Brand gallery</Typography>
+            <Box style={{display:"flex",justifyContent:"center"}}>
+                <PhotoLibraryIcon style={{marginRight:'5px'}}/>
+                <Typography color="textSecondary" align="center" variant='h5'>Brand gallery</Typography>
+            </Box>
             <Box className={classes.root}>
                 <GridList cellHeight={matches ? 'auto' : 400} cols={matches ? 1 : 2}>
                     {props.pics.map(pic => (
@@ -143,7 +153,10 @@ function BrandGallery(props) {
 function Reviews(props) {
     return (
         <div style={{ padding: '10px' }}>
-            <Typography align="center" variant="h5" color="textSecondary">Read about it in reviews:</Typography>
+            <Box style={{display:"flex",justifyContent:"center"}}>
+                <RateReviewIcon style={{marginRight:'5px'}}/>
+                <Typography align="center" variant="h5" color="textSecondary">Read about it in reviews:</Typography>
+            </Box>
             <Grid container alignItems="stretch" spacing={1} style={{ padding: '5px' }}>
                 {props.reviews.map(review =>
                     <Grid key={review.link} xs={12} sm={6} md={4} item>
@@ -251,7 +264,7 @@ function Brand(props) {
                                     <Chip
                                         clickable
                                         component="a"
-                                        variant="subtitle2"
+                                        variant="outlined"
                                         href={'/?tags=' + tag}
                                         key={tag}
                                         label={tag}

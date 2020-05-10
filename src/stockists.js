@@ -5,6 +5,8 @@ import Box from '@material-ui/core/Box';
 import React from 'react'
 import ReactGA from '../src/reactga'
 import Grid from '@material-ui/core/Grid'
+import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
+
 
 
 
@@ -27,7 +29,10 @@ export function Stockists(props) {
         <div style={{ margin: '30px 0px 30px 0px' }}>
 
             <Box style={{}}>
-                <Typography align="center" variant="h5" color="textSecondary">Buy it from these stockists:</Typography>
+                <Box style={{display:"flex",justifyContent:"center"}}>
+                    <ShoppingCartIcon style={{marginRight:'5px'}}/>
+                    <Typography align="center" variant="h5" color="textSecondary">Buy it from these stockists</Typography>
+                </Box>
 
                 <Grid container alignItems="stretch" spacing={1} style={{ padding: '15px' }}>
                     {stockists}

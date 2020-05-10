@@ -160,7 +160,6 @@ function StockistsChip(props) {
 
 function PostCard(props) {
 
-    console.log(props.entrie)
     function addFav() {
         db.collection('users').doc(user.uid).update({
             favs: firebase.firestore.FieldValue.arrayUnion(props.entrie.sys.id)
