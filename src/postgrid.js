@@ -27,7 +27,7 @@ import InstagramIcon from '@material-ui/icons/Instagram';
 import RateReviewIcon from '@material-ui/icons/RateReview';
 import Tooltip from '@material-ui/core/Tooltip';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
-
+import CardActionArea from '@material-ui/core/CardActionArea';
 
 const useStyles = makeStyles(theme => ({
     cardMedia: {
@@ -300,7 +300,7 @@ function PostCard(props) {
 
                 >
                     <CardMedia
-                        image={props.entrie.fields.thumbnail ? props.entrie.fields.thumbnail.fields.file.url + '?w=1024' + '&fm=jpg' : 'https://via.placeholder.com/150'}
+                        image={props.entrie.fields.thumbnail ? props.entrie.fields.thumbnail.fields.file.url + '?w=512' + '&fm=png' : 'https://via.placeholder.com/150'}
                         className={classes.cardMedia}
                         title={props.entrie.fields.title + ' lingerie'}
                     >
@@ -353,18 +353,21 @@ function PostCard(props) {
                                 variant="outlined"
                                 style={{ margin: "5px" }} />
                         )) : null}
-                        {props.entrie.fields.tags.map(tag => (
-                            <Chip
-                                clickable
-                                component="a"
-                                href={'/?tags=' + tag}
-                                key={tag}
-                                label={tag}
-                                variant="outlined"
-                                style={{ margin: "5px" }} />
-                        ))}
+                        </Box>
+                        <Box display="flex" flexWrap="wrap" justifyContent="center">
+                            {props.entrie.fields.tags.map(tag => (
+                                <Chip
+                                    clickable
+                                    component="a"
+                                    href={'/?tags=' + tag}
+                                    key={tag}
+                                    label={tag}
+                                    variant="outlined"
+                                    style={{ margin: "5px" }} />
+                            ))}
+                        </Box>
 
-                    </Box>
+                    
 
                 </CardContent>
 
@@ -409,7 +412,7 @@ export function PostGrid(props) {
     return (
         <Container maxWidth="xl">
             {props.entries.items.length == 0 ? <Typography align="center" color="textSecondary" style={{ margin: "100px" }} variant="h2">such emtpy.... nothing to show!</Typography> : null}
-            <Grid container spacing={4} alignItems="stretch">
+            <Grid container spacing={2} alignItems="stretch">
                 {props.entries.items.map(entrie => (
                     <PostCard entrie={entrie} key={entrie.fields.title} />
                 ))}
