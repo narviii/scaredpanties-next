@@ -27,7 +27,7 @@ import InstagramIcon from '@material-ui/icons/Instagram';
 import RateReviewIcon from '@material-ui/icons/RateReview';
 import Tooltip from '@material-ui/core/Tooltip';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
-import CardActionArea from '@material-ui/core/CardActionArea';
+import Divider from '@material-ui/core/Divider';
 
 const useStyles = makeStyles(theme => ({
     cardMedia: {
@@ -252,7 +252,7 @@ function PostCard(props) {
                                 underline='none'
                                 color="textPrimary"
                                 href={'brands/' + props.entrie.fields.slug}
-                                target="_blank"
+                                
                                 href={props.entrie.fields.link} >
                                 <LaunchIcon
                                     onClick={() => {

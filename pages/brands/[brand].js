@@ -139,7 +139,6 @@ function BrandGallery(props) {
                                 alt={pic.fields.title}
                             />;
 
-                            <GridListTileBar title={pic.fields.title} />
                         </GridListTile>
                     ))}
                 </GridList>

@@ -30,7 +30,6 @@ import { HeadContent } from '../src/headcontent'
 
 
 function StockCard(props) {
-    console.log(props.entrie)
     const matches = useMediaQuery('(max-width:600px)');
 
 
@@ -78,7 +77,7 @@ function StockCard(props) {
                             {props.entrie.fields.country}
                         </Typography>
                     </Box>
-                    
+
 
                     <Box style={matches ? { justifyContent: 'center', flexDirection: 'row', display: 'flex', marginTop: '20px' } : { display: 'flex', flexDirection: 'row' }}>
 
@@ -86,25 +85,23 @@ function StockCard(props) {
                     </Box>
                 </Box>
 
-                <Typography style={{margin:'30px'}}variant="h5" align="center">Brands</Typography>
+                <Typography style={{ margin: '30px' }} variant="h5" align="center">Brands</Typography>
                 <Grid style={{ marginTop: "30px" }} container spacing={4} alignItems="stretch">
                     {props.entrie.fields.brands.map(brand => (
-                        <Grid item xs={12} sm={6} md={4} lg={3}>
+                        <Grid style={{ display: "flex" }} item xs={12} sm={6} md={4} lg={3}>
                             <Link
-                                href={brand.fields.link}
+                                href={'brands/' + brand.fields.slug}
                                 underline='none'
                                 color="textPrimary"
-                                target="_blank"
-                                onClick={
-                                    ReactGA.event({
-                                        category: 'user',
-                                        action: 'outbound',
-                                        label: brand.fields.title
-                                    })
-
-                                }
                             >
                                 <Typography>{brand.fields.title}</Typography>
+
+                            </Link>
+                            <Link href={brand.fields.link}
+                                color="textPrimary"
+                                target="_blank"
+                            >
+                                <LaunchIcon style={{ marginLeft: "5px" }} fontSize="small" />
                             </Link>
                         </Grid>
                     ))}
