@@ -20,12 +20,14 @@ import Chip from '@material-ui/core/Chip';
 import IconButton from '@material-ui/core/IconButton'
 import { useContext } from "react";
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
-import { UserContext, DbContext, UserDocContext } from '../src/context'
+import { UserContext, DbContext, UserDocContext, LoginDialogContext } from '../src/context'
+import LaunchIcon from '@material-ui/icons/Launch';
 import firebase from 'firebase'
-import Divider from '@material-ui/core/Divider';
+import InstagramIcon from '@material-ui/icons/Instagram';
+import RateReviewIcon from '@material-ui/icons/RateReview';
 import Tooltip from '@material-ui/core/Tooltip';
-const axios = require('axios');
-
+import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
+import Divider from '@material-ui/core/Divider';
 
 const useStyles = makeStyles(theme => ({
     cardMedia: {
@@ -93,6 +95,15 @@ const useStyles = makeStyles(theme => ({
 
     },
 
+    chip: {
+        display: 'flex',
+        marginTop: '10px',
+        justifyContent: 'space-between',
+        flexWrap: 'wrap',
+        '& > *': {
+            margin: "0 10px 0px 10px",
+        },
+    },
 
 
 
@@ -100,29 +111,50 @@ const useStyles = makeStyles(theme => ({
 }))
 
 
-function Stockists(props) {
-    const stockists = props.stockists.items.map(item => (
-        <Link target="_blank" onClick={() => {
-            ReactGA.event({
-                category: 'user',
-                action: 'outbound:stockist',
-                label: item.fields.name
-            })
-        }} style={{ margin: 'auto' }} key={item.fields.name} color="textPrimary" href={item.fields.link}>{item.fields.name}</Link>
-    ))
-    return (
-        <div>
-            <Divider style={{ margin: '10px' }} variant="middle" />
-            <Box style={{}}>
-                <Typography variant="body2" color="textSecondary">You can buy it from these stockists:</Typography>
+function InstalinkChip(props) {
 
-                <Box style={{ display: 'flex', flexDirection: 'column', flexWrap: 'wrap', maxHeight: '90px', margin: '10px auto' }}>
-                    {stockists}
-                </Box>
-            </Box>
-            <Divider style={{ margin: '10px' }} variant="middle" />
-        </div>
-    )
+    if (props.instalinks) {
+        return (
+
+            <Chip
+                size="small"
+                style={{ margin: "5px" }}
+                icon={<InstagramIcon />}
+                label={props.instalinks.length} />
+
+        )
+    } else return null
+
+}
+
+function ReviewChip(props) {
+    if (props.reviews) {
+        return (
+
+            <Chip
+                size="small"
+                style={{ margin: "5px" }}
+                icon={<RateReviewIcon />}
+                label={props.reviews.length} />
+
+
+        )
+    } else return null
+}
+
+function StockistsChip(props) {
+    if (props.stockists.total>0) {
+        return (
+
+            <Chip
+                size="small"
+                style={{ margin: "5px" }}
+                icon={<ShoppingCartIcon />}
+                label={props.stockists.items.length} />
+
+
+        )
+    } else return null
 }
 
 
@@ -158,8 +190,17 @@ function PostCard(props) {
     let favButton
     const classes = useStyles();
 
-    //console.log(stockists)
-    //console.log(props.entrie)
+    const test = useContext(LoginDialogContext);
+    const open = test.loginDialogOpen
+    const setOpen = test.setLoginDialogOpen
+
+    const loginDialogOpen = () => {
+        ReactGA.event({ category: 'user', action: 'auth', label: 'loginDialog' })
+        setOpen(true)
+    }
+
+
+
     if (userDoc) {
 
         if (userDoc.data() && userDoc.data().favs && userDoc.data().favs.includes(props.entrie.sys.id)) {
@@ -177,7 +218,7 @@ function PostCard(props) {
         }
     } else {
         favButton = (
-            <IconButton onClick={props.loginDialogOpen} >
+            <IconButton onClick={loginDialogOpen} >
                 <FavoriteBorderIcon color='disabled' style={{ margin: "auto", fontSize: 30 }} />
             </IconButton>
         )
@@ -196,39 +237,51 @@ function PostCard(props) {
                         action: classes.cardAction
                     }}
                     title={
-                        <Link
-                            underline='none'
-                            color="textPrimary"
-                            href={props.entrie.fields.link}
-                            target="_blank"
-                            onClick={() => {
-                                axios.get('/api/viewcount', {
-                                    params: {
-                                        brandname: props.entrie.fields.title
-                                    }
-                                })
-                                    .catch(function (error) {
-                                        console.log(error);
-                                    })
-                                ReactGA.event({
-                                    category: 'user',
-                                    action: 'outbound',
-                                    label: props.entrie.fields.title
-                                })
-                            }}
+                        <div style={{ display: "inline" }}>
+                            <Link
+                                underline='none'
+                                color="textPrimary"
+                                href={'brands/' + props.entrie.fields.slug}
 
-                        >
+                            >
 
-                            {props.entrie.fields.title}
-                        </Link>
+                                {props.entrie.fields.title}
+                            </Link>
+                            <Link
+                                style={{ marginLeft: "10px" }}
+                                underline='none'
+                                color="textPrimary"
+                                href={'brands/' + props.entrie.fields.slug}
+                                
+                                href={props.entrie.fields.link} >
+                                <LaunchIcon
+                                    onClick={() => {
+                                        ReactGA.event({
+                                            category: 'user',
+                                            action: 'outbound',
+                                            label: props.entrie.fields.title
+                                        })
+                                    }}
+
+                                    fontSize="small" />
+                            </Link>
+                        </div>
                     }
-                    subheader={<Box >
-                        <Typography display="inline" variant="subtitle2" color="textSecondary">
-                            {props.entrie.fields.origin}
-                        </Typography>
+                    subheader={
 
 
-                    </Box>
+                        <Chip
+
+                            clickable
+                            size="small"
+                            component="a"
+                            href={'/?origin=' + props.entrie.fields.origin}
+                            variant="outlined"
+                            label={props.entrie.fields.origin}
+                        />
+
+
+
                     }
 
                     action={favButton}
@@ -236,7 +289,7 @@ function PostCard(props) {
                 <Link
                     color="textPrimary"
                     target="_blank"
-                    href={props.entrie.fields.link}
+                    href={'brands/' + props.entrie.fields.slug}
                     onClick={() => {
                         ReactGA.event({
                             category: 'user',
@@ -247,8 +300,9 @@ function PostCard(props) {
 
                 >
                     <CardMedia
-                        image={props.entrie.fields.thumbnail ? props.entrie.fields.thumbnail.fields.file.url + '?w=1024' + '&fm=jpg' : 'https://via.placeholder.com/150'}
+                        image={props.entrie.fields.thumbnail ? props.entrie.fields.thumbnail.fields.file.url + '?w=512' + '&fm=png' : 'https://via.placeholder.com/150'}
                         className={classes.cardMedia}
+                        title={props.entrie.fields.title + ' lingerie'}
                     >
                     </CardMedia>
                 </Link>
@@ -258,21 +312,62 @@ function PostCard(props) {
                     <Typography variant="body2" color="textSecondary" gutterBottom component="p">
                         {props.entrie.fields.desc}
                     </Typography>
-                    <Typography color="textSecondary" align="right" variant="caption" display="block" gutterBottom>
-                        {'Last update: ' + moment(props.entrie.sys.updatedAt).fromNow()}
-                    </Typography>
 
-                    {(props.entrie.stockists.items.length > 0) ? <Stockists stockists={props.entrie.stockists} /> : <Divider style={{ margin: '10px' }} variant="middle" />}
 
-                    <Box display="flex" flexWrap="wrap" justifyContent="left">
+
+                    <Grid container spacing={1} alignItems="stretch">
+                        <Grid item xs={6}>
+                            <InstalinkChip style={{ marginLeft: "5px" }} instalinks={props.entrie.fields.instalinks} />
+                            <ReviewChip style={{ marginLeft: "5px" }} reviews={props.entrie.fields.reviews} />
+                            <StockistsChip style={{ marginLeft: "5px" }} stockists={props.entrie.stockists} />
+                        </Grid>
+
+
+
+
+                        <Grid item xs={6}>
+                            <Typography align="right" color="textSecondary" variant="caption" display="block" gutterBottom>
+                                {'Updated: ' + moment(props.entrie.sys.updatedAt).fromNow()}
+                            </Typography>
+                            <Typography align="right" color="textSecondary" variant="caption" display="block" gutterBottom>
+                                {'Added: ' + moment(props.entrie.sys.createdAt).fromNow()}
+                            </Typography>
+                        </Grid>
+                    </Grid>
+
+
+
+
+
+
+
+
+                    <Box display="flex" flexWrap="wrap" justifyContent="center">
                         {props.entrie.fields.sizes ? props.entrie.fields.sizes.map(tag => (
-                            <Chip key={tag} label={tag} style={{ margin: "10px" }} />
+                            <Chip
+                                clickable
+                                component="a"
+                                href={'/?sizes=' + tag}
+                                key={tag}
+                                label={tag}
+                                variant="outlined"
+                                style={{ margin: "5px" }} />
                         )) : null}
-                        {props.entrie.fields.tags.map(tag => (
-                            <Chip key={tag} label={tag} style={{ margin: "10px" }} />
-                        ))}
+                        </Box>
+                        <Box display="flex" flexWrap="wrap" justifyContent="center">
+                            {props.entrie.fields.tags.map(tag => (
+                                <Chip
+                                    clickable
+                                    component="a"
+                                    href={'/?tags=' + tag}
+                                    key={tag}
+                                    label={tag}
+                                    variant="outlined"
+                                    style={{ margin: "5px" }} />
+                            ))}
+                        </Box>
 
-                    </Box>
+                    
 
                 </CardContent>
 
@@ -317,9 +412,9 @@ export function PostGrid(props) {
     return (
         <Container maxWidth="xl">
             {props.entries.items.length == 0 ? <Typography align="center" color="textSecondary" style={{ margin: "100px" }} variant="h2">such emtpy.... nothing to show!</Typography> : null}
-            <Grid container spacing={4} alignItems="stretch">
+            <Grid container spacing={2} alignItems="stretch">
                 {props.entries.items.map(entrie => (
-                    <PostCard loginDialogOpen={props.loginDialogOpen} entrie={entrie} key={entrie.fields.title} />
+                    <PostCard entrie={entrie} key={entrie.fields.title} />
                 ))}
             </Grid>
             <Pagination

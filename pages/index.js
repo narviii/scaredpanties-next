@@ -13,33 +13,20 @@ import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import { Hero } from '../src/hero'
 import { Footer } from '../src/footer';
 import { PostGrid } from '../src/postgrid'
-import firebase from '../src/firebase'
 import ReactGA from '../src/reactga'
-import { useAuthState } from 'react-firebase-hooks/auth';
 import { originList, tagList, sizeList } from '../src/constants'
-import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
-import Dialog from '@material-ui/core/Dialog';
 import { Nav } from '../src/nav'
-import { useDocument } from 'react-firebase-hooks/firestore';
-import { UserContext, DbContext, UserDocContext } from '../src/context'
+import { FirebaseContext, UserContext, DbContext, UserDocContext, LoginDialogContext } from '../src/context'
 import { client } from '../src/contentful'
-import Typography from '@material-ui/core/Typography'
+import { useContext } from "react";
+import Head from 'next/head'
+import {HeadContent } from '../src/headcontent'
 
 
 
 const url = "https://scaredpanties.us20.list-manage.com/subscribe/post?u=65173dffd9ab714c0d2d985ab&amp;id=ed2dc9ceb2";
 
 
-const uiConfig = {
-    signInFlow: 'popup',
-    credentialHelper: 'none',
-    signInOptions: [
-        firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-        firebase.auth.EmailAuthProvider.PROVIDER_ID,
-        firebase.auth.FacebookAuthProvider.PROVIDER_ID
-    ]
-
-};
 
 
 originList.sort()
@@ -165,6 +152,7 @@ function SelectOrigin(props) {
 function SelectTags(props) {
     const classes = useStyles();
     const router = useRouter();
+    
     const handleChange = (event) => {
         ReactGA.event({
             category: 'user',
@@ -260,13 +248,17 @@ function OrderSelector(props) {
 
     return (
         <ToggleButtonGroup style={{ margin: "auto" }}
-            value={(!router.query.order) ? "newest" : router.query.order}
+            value={router.query.order}
             onChange={handleChange}
             size="large" exclusive
             aria-label="ordering">
-            <ToggleButton aria-label="newest" value="newest">
-                Newest
+            <ToggleButton aria-label="updated" value="lastUpdated">
+                Updated
             </ToggleButton>
+            <ToggleButton aria-label="created" value="lastCreated">
+                Created
+            </ToggleButton>
+
             <ToggleButton aria-label="alphabet" value="alphabet">
                 Alphabet
             </ToggleButton>
@@ -277,84 +269,53 @@ function OrderSelector(props) {
 
 
 function MainPage(props) {
-    const classes = useStyles();
-
-    const [open, setOpen] = useState(false)
-
-    const loginDialogClose = (authResult, redirectUrl) => {
-        if (authResult.user) {
-            const userRef = db.collection('users').doc(authResult.user.uid)
-            userRef.get().then((doc) => {
-                if (doc.exists) {
-                    //console.log('yes')
-                } else {
-                    userRef.set({ favs: [] })
-                    //console.log('no')
-                }
-            })
-        }
-        setOpen(false)
-    }
-
-    const loginDialogOpen = () => {
-        ReactGA.event({ category: 'user', action: 'auth', label: 'loginDialog' })
-        setOpen(true)
-    }
-
-
-    const [user, initialising, error] = useAuthState(firebase.auth());
-    const db = firebase.firestore();
-
-
-    const [userDoc, loading, errorDoc] = useDocument(
-        user ? db.collection('users').doc(user.uid) : null)
-
-
-
-
-
-
     ReactGA.pageview('/catalog');
 
-
+    const classes = useStyles();
+    const firebase = useContext(FirebaseContext);
 
     return (
 
         <React.Fragment>
+            <Head>
+                <HeadContent
+                    description="A list and catalog of lingerie brands assembled and lovely currated by scaredpanties."
+                    title="Lingerie brands catalog."
+                    image="https://blog.scaredpanties.com/content/images/2020/01/fb_preview.jpg"
+                    url="https://catalog.scaredpanties.com"
+
+                />
+            </Head>
             <CssBaseline />
-            <style jsx global>{`
-            `}</style>
-            <UserDocContext.Provider value={userDoc}>
-                <DbContext.Provider value={db}>
-                    <UserContext.Provider value={user}>
-                        <Nav loginDialogOpen={loginDialogOpen} firebase={firebase} />
-                        <Dialog open={open} onClose={loginDialogClose} aria-labelledby="loginDialog">
-                            <StyledFirebaseAuth uiConfig={{ ...uiConfig, callbacks: { signInSuccessWithAuthResult: loginDialogClose } }} firebaseAuth={firebase.auth()} />
-                        </Dialog>
-                        <Hero search={true} />
-                        <Container maxWidth='lg' style={{ margin: '30px auto 30px ' }} >
-                            <Box justifyContent="center" alignContent="center" display="flex" flexWrap="wrap">
-                                <SelectOrigin />
-                                <SelectTags />
-                                <SelectSize />
-                                <OrderSelector />
-                            </Box>
-                        </Container>
-                        <PostGrid loginDialogOpen={loginDialogOpen} entries={props.entries} />
-                        <Footer entries={props.stats} originList={originList} />
-                    </UserContext.Provider>
-                </DbContext.Provider>
-            </UserDocContext.Provider>
+            <Nav />
+            <Hero />
+            <Container maxWidth='lg' style={{ margin: '30px auto 30px ' }} >
+                <Box justifyContent="center" alignContent="center" display="flex" flexWrap="wrap">
+                    <SelectOrigin />
+                    <SelectTags />
+                    <SelectSize />
+                    <OrderSelector />
+                </Box>
+            </Container>
+            <PostGrid entries={props.entries} />
+            <Footer entries={props.stats} originList={originList} />
         </React.Fragment>
 
     );
 
 }
 
+
+
 MainPage.getInitialProps = async (context) => {
+    const order={
+        "lastUpdated":"-sys.updatedAt",
+        "lastCreated":"-sys.createdAt",
+        "alphabet":"fields.title"
+    }
     let entries = await client.getEntries({
         include: 1,
-        order: (context.query.order == 'alphabet' ? 'fields.title' : '-sys.updatedAt'),
+        order: order[context.query.order],
         'fields.tags[all]': (context.query.tags == 'All' || context.query.tags === '') ? undefined : context.query.tags,
         'fields.origin': (context.query.origin === 'All' || context.query.origin === '') ? undefined : context.query.origin,
         'fields.sizes': (context.query.sizes != 'All') ? context.query.sizes : undefined,
@@ -363,16 +324,16 @@ MainPage.getInitialProps = async (context) => {
         skip: parseInt(context.query.offset) ? parseInt(context.query.offset) : 0
     })
 
-    
+
 
     entries.items = await Promise.all(entries.items.map(async (entry) => {
-        entry.stockists = await client.getEntries({
-            links_to_entry: entry.sys.id,
-            include: 0
-        })
-        return entry
-    }))
-    
+         entry.stockists = await client.getEntries({
+             links_to_entry: entry.sys.id,
+             include: 0
+         })
+         return entry
+     }))
+
 
     const stats = await client.getEntries({
         limit: 1

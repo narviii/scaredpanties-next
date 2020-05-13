@@ -14,10 +14,12 @@ import Dialog from '@material-ui/core/Dialog';
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 import { useDocument } from 'react-firebase-hooks/firestore';
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { UserContext, DbContext, UserDocContext } from '../src/context'
+import { FirebaseContext, UserContext, DbContext, UserDocContext, LoginDialogContext } from '../src/context'
 import { originList } from '../src/constants'
 import Favorite from '@material-ui/icons/Favorite';
 import ReactGA from '../src/reactga'
+import Head from 'next/head'
+import {HeadContent } from '../src/headcontent'
 
 
 
@@ -120,24 +122,28 @@ function Search(props) {
 
     return (
         <React.Fragment>
+            <Head>
+                <HeadContent
+                    description="A list and catalog of lingerie brands assembled and lovely currated by scaredpanties."
+                    title="Lingerie brands catalog."
+                    image="https://blog.scaredpanties.com/content/images/2020/01/fb_preview.jpg"
+                    url="https://catalog.scaredpanties.com"
+
+                />
+            </Head>
+
             <CssBaseline />
-            <UserDocContext.Provider value={userDoc}>
-                <DbContext.Provider value={db}>
-                    <UserContext.Provider value={user}>
 
-                        <Nav loginDialogOpen={loginDialogOpen} firebase={firebase} />
-                        <Dialog open={open} onClose={loginDialogClose} aria-labelledby="loginDialog">
-                            <StyledFirebaseAuth classes={{ 'mdl-card': { backgroundColor: 'red' } }} uiConfig={{ ...uiConfig, callbacks: { signInSuccessWithAuthResult: loginDialogClose } }} firebaseAuth={firebase.auth()} />
-                        </Dialog>
-                        
+            <Nav />
+            <Dialog open={open} onClose={loginDialogClose} aria-labelledby="loginDialog">
+                <StyledFirebaseAuth classes={{ 'mdl-card': { backgroundColor: 'red' } }} uiConfig={{ ...uiConfig, callbacks: { signInSuccessWithAuthResult: loginDialogClose } }} firebaseAuth={firebase.auth()} />
+            </Dialog>
 
-                        {displayLink}
 
-                        <PostGrid loginDialogOpen={loginDialogOpen} entries={props.entries} />
-                        <Footer entries={props.stats} originList={originList} />
-                    </UserContext.Provider>
-                </DbContext.Provider>
-            </UserDocContext.Provider>
+            {displayLink}
+
+            <PostGrid loginDialogOpen={loginDialogOpen} entries={props.entries} />
+            <Footer entries={props.stats} originList={originList} />
 
         </React.Fragment>
 

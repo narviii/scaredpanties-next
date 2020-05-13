@@ -5,7 +5,7 @@ import Toolbar from '@material-ui/core/Toolbar'
 import React from 'react'
 import { makeStyles } from '@material-ui/core/styles';
 import { useContext } from "react";
-import { UserContext, DbContext, UserDocContext } from '../src/context'
+import { UserContext, DbContext, UserDocContext, LoginDialogContext, FirebaseContext } from '../src/context'
 import { useState } from 'react'
 import { useAuthState } from 'react-firebase-hooks/auth';
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
@@ -15,8 +15,12 @@ import IconButton from '@material-ui/core/IconButton'
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import Link from '@material-ui/core/Link';
-import Typography from '@material-ui/core/Typography'
 import LocalCafeIcon from '@material-ui/icons/LocalCafe';
+import ReactGA from '../src/reactga'
+
+
+
+
 
 const useStyles = makeStyles(theme => ({
     menuButton: {
@@ -41,19 +45,79 @@ const useStyles = makeStyles(theme => ({
 }));
 
 function LoginControl(props) {
-    const classes = useStyles()
-    if (props.user) {
-        return <Button size="large" color="inherit" onClick={props.logout}>Log out</Button>
-    } else {
-        return <Button size="large" onClick={props.loginDialogOpen} color="inherit">Login/Sign up</Button>
+
+    const firebase = useContext(FirebaseContext);
+
+    const uiConfig = {
+        signInFlow: 'popup',
+        credentialHelper: 'none',
+        signInOptions: [
+            firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+            firebase.auth.EmailAuthProvider.PROVIDER_ID,
+            firebase.auth.FacebookAuthProvider.PROVIDER_ID
+        ]
+
+    };
+
+
+    const db = firebase.firestore();
+    const [user, initialising, error] = useAuthState(firebase.auth());
+
+    const test = useContext(LoginDialogContext);
+    const open = test.loginDialogOpen
+    const setOpen = test.setLoginDialogOpen
+
+
+    const loginDialogClose = (authResult, redirectUrl) => {
+        if (authResult.user) {
+            const userRef = db.collection('users').doc(authResult.user.uid)
+            userRef.get().then((doc) => {
+                if (doc.exists) {
+                    //console.log('yes')
+                } else {
+                    userRef.set({ favs: [] })
+                    //console.log('no')
+                }
+            })
+        }
+        setOpen(false)
     }
+
+    const loginDialogOpen = () => {
+        ReactGA.event({ category: 'user', action: 'auth', label: 'loginDialog' })
+        setOpen(true)
+    }
+
+    const logout = () => {
+        firebase.auth().signOut();
+    };
+
+
+    const classes = useStyles()
+    const loginButton = user ? <Button size="large" color="inherit" onClick={logout}>Log out</Button> : <Button size="large" onClick={loginDialogOpen} color="inherit">Login/Sign up</Button>
+
+
+    return (
+        <div>
+            {loginButton}
+            <Dialog open={open} onClose={loginDialogClose} aria-labelledby="loginDialog">
+                <StyledFirebaseAuth uiConfig={{ ...uiConfig, callbacks: { signInSuccessWithAuthResult: loginDialogClose } }} firebaseAuth={firebase.auth()} />
+            </Dialog>
+        </div>
+    )
+
 
 }
 
 
 export function Nav(props) {
 
+    const firebase = useContext(FirebaseContext);
+
     const [anchorEl, setAnchorEl] = React.useState(null);
+    const [user, initialising, error] = useAuthState(firebase.auth());
+
+
 
     const handleClick = event => {
         setAnchorEl(event.currentTarget);
@@ -63,17 +127,12 @@ export function Nav(props) {
         setAnchorEl(null);
     };
 
-    const firebase = props.firebase;
-    const user = useContext(UserContext);
     const classes = useStyles();
 
 
 
     const [open, setOpen] = useState(false)
 
-    const logout = () => {
-        firebase.auth().signOut();
-    };
 
     return (
         <div>
@@ -83,6 +142,8 @@ export function Nav(props) {
 
                         <Button size="large" color="inherit" href="/" > HOME </Button>
                         <Button size="large" color="inherit" href="/search" > SEARCH </Button>
+                        <Button size="large" color="inherit" href="/stockists" > STOCKISTS </Button>
+
                         <Subscribe butToggle='true' />
                         <Button size="large" href="https://blog.scaredpanties.com" >  BLOG </Button>
                         <Button href="https://www.buymeacoffee.com/scaredpanties" startIcon={<LocalCafeIcon />}>
@@ -111,7 +172,15 @@ export function Nav(props) {
                                 <MenuItem style={{ justifyContent: 'center' }} >
                                     SEARCH
                                 </MenuItem>
+
                             </Link>
+                            <Link underline='none' color="textPrimary" href="/stockists" >
+                                <MenuItem style={{ justifyContent: 'center' }} >
+                                    STOCKISTS
+                                </MenuItem>
+
+                            </Link>
+
                             <Link underline='none' color="textPrimary" href="https://blog.scaredpanties.com" >
                                 <MenuItem style={{ justifyContent: 'center' }}>
                                     BLOG
@@ -125,7 +194,7 @@ export function Nav(props) {
 
                             <Link underline='none' color='textPrimary' href="https://www.buymeacoffee.com/scaredpanties">
                                 <MenuItem>
-                                <LocalCafeIcon style={{marginRight:'5px'}} />
+                                    <LocalCafeIcon style={{ marginRight: '5px' }} />
                                 BUY ME A COFFEE
                                 </MenuItem>
                             </Link>
@@ -136,7 +205,7 @@ export function Nav(props) {
 
                     {user ? <Button size="large" color="inherit" href={'/favs?myfavs=' + user.uid} > MY FAVORITES </Button> : null}
 
-                    <LoginControl user={user} loginDialogOpen={props.loginDialogOpen} logout={logout} />
+                    <LoginControl />
 
                 </Toolbar>
 

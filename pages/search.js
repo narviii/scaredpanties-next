@@ -18,20 +18,11 @@ import Dialog from '@material-ui/core/Dialog';
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 import { useDocument } from 'react-firebase-hooks/firestore';
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { UserContext, DbContext, UserDocContext } from '../src/context'
+import { FirebaseContext, UserContext, DbContext, UserDocContext, LoginDialogContext } from '../src/context'
 import ReactGA from '../src/reactga'
+import Head from 'next/head'
+import { HeadContent } from '../src/headcontent'
 
-
-
-const uiConfig = {
-    signInFlow: 'popup',
-    credentialHelper: 'none',
-    signInOptions: [
-        firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-        firebase.auth.EmailAuthProvider.PROVIDER_ID,
-        firebase.auth.FacebookAuthProvider.PROVIDER_ID
-    ],
-};
 
 
 
@@ -80,12 +71,12 @@ function SearchBar(props) {
 
     }
     return (
-        <Container maxWidth='lg' style={{padding:'15px  15px '}} >
+        <Container maxWidth='lg' style={{ padding: '15px  15px ' }} >
 
             <Grid container justify="center" alignItems="center" spacing={2}>
 
                 <Grid item>
-                    <TextField onKeyDown={enterPress}  value={input} onChange={(e) => setInput(e.target.value)} className={classes.searchBar} id="brand-search" label="Search for a brand" variant="outlined" />
+                    <TextField onKeyDown={enterPress} value={input} onChange={(e) => setInput(e.target.value)} className={classes.searchBar} id="brand-search" label="Search for a brand" variant="outlined" />
                 </Grid>
                 <Grid item>
                     <Button onClick={handleSearch} fullWidth size="large" variant="outlined" color="inherit"> SEARCH</Button>
@@ -99,56 +90,27 @@ function SearchBar(props) {
 
 function Search(props) {
 
-    const [open, setOpen] = useState(false)
-
-    const loginDialogClose = (authResult, redirectUrl) => {
-        if (authResult.user) {
-            const userRef = db.collection('users').doc(authResult.user.uid)
-            userRef.get().then((doc) => {
-                if (doc.exists) {
-                    //console.log('yes')
-                } else {
-                    userRef.set({ favs: [] })
-                    //console.log('no')
-                }
-            })
-        }
-        setOpen(false)
-    }
-
-    const loginDialogOpen = () => {
-        setOpen(true)
-    }
-
-    const [user, initialising, error] = useAuthState(firebase.auth());
-    const db = firebase.firestore();
-
-
-    const [userDoc, loading, errorDoc] = useDocument(
-        user ? db.collection('users').doc(user.uid) : null)
-
 
 
     ReactGA.pageview('catalog/search');
 
     return (
         <React.Fragment>
-            <CssBaseline />
-            <UserDocContext.Provider value={userDoc}>
-                <DbContext.Provider value={db}>
-                    <UserContext.Provider value={user}>
+            <Head>
+                <HeadContent
+                    description="A list and catalog of lingerie brands assembled and lovely currated by scaredpanties."
+                    title="Lingerie brands catalog."
+                    image="https://blog.scaredpanties.com/content/images/2020/01/fb_preview.jpg"
+                    url="https://catalog.scaredpanties.com"
 
-                        <Nav loginDialogOpen={loginDialogOpen} firebase={firebase} />
-                        <Dialog open={open} onClose={loginDialogClose} aria-labelledby="loginDialog">
-                            <StyledFirebaseAuth classes={{ 'mdl-card': { backgroundColor: 'red' } }} uiConfig={{ ...uiConfig, callbacks: { signInSuccessWithAuthResult: loginDialogClose } }} firebaseAuth={firebase.auth()} />
-                        </Dialog>
-                        <Hero />
-                        <SearchBar />
-                        <PostGrid loginDialogOpen={loginDialogOpen} entries={props.entries} />
-                        <Footer entries={props.stats} originList={originList} />
-                    </UserContext.Provider>
-                </DbContext.Provider>
-            </UserDocContext.Provider>
+                />
+            </Head>
+
+            <Nav />
+            <Hero />
+            <SearchBar />
+            <PostGrid entries={props.entries} />
+            <Footer entries={props.stats} originList={originList} />
 
         </React.Fragment>
 
