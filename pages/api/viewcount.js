@@ -11,6 +11,7 @@ let serviceAccount = require('./apploan-535837fc3b12.json');
 
 
 export default async function viewcount(req, res) {
+    console.log(req)
     const db = admin.firestore();
     const increment = admin.firestore.FieldValue.increment(1);
     db.collection('brand_views').doc(req.query.brandname).update({views:increment})
