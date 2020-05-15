@@ -252,7 +252,7 @@ function PostCard(props) {
                                 underline='none'
                                 color="textPrimary"
                                 href={'brands/' + props.entrie.fields.slug}
-                                
+                                target="_blank"
                                 href={props.entrie.fields.link} >
                                 <LaunchIcon
                                     onClick={() => {
