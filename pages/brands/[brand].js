@@ -102,8 +102,8 @@ function IgGallery(props) {
 
     return (
         <div style={{ margin: '30px 0 30px 0' }}>
-            <Box style={{display:"flex",justifyContent:"center"}}>
-                <InstagramIcon style={{marginRight:'5px'}}/>
+            <Box style={{ display: "flex", justifyContent: "center" }}>
+                <InstagramIcon style={{ marginRight: '5px' }} />
                 <Typography color="textSecondary" align="center" variant='h5'>Spotted on Instagram</Typography>
             </Box>
             <Box className={classes.root}>
@@ -124,8 +124,8 @@ function BrandGallery(props) {
     return (
 
         <div style={{ margin: '30px 0 30px 0' }}>
-            <Box style={{display:"flex",justifyContent:"center"}}>
-                <PhotoLibraryIcon style={{marginRight:'5px'}}/>
+            <Box style={{ display: "flex", justifyContent: "center" }}>
+                <PhotoLibraryIcon style={{ marginRight: '5px' }} />
                 <Typography color="textSecondary" align="center" variant='h5'>Brand gallery</Typography>
             </Box>
             <Box className={classes.root}>
@@ -152,8 +152,8 @@ function BrandGallery(props) {
 function Reviews(props) {
     return (
         <div style={{ padding: '10px' }}>
-            <Box style={{display:"flex",justifyContent:"center"}}>
-                <RateReviewIcon style={{marginRight:'5px'}}/>
+            <Box style={{ display: "flex", justifyContent: "center" }}>
+                <RateReviewIcon style={{ marginRight: '5px' }} />
                 <Typography align="center" variant="h5" color="textSecondary">Read about it in reviews:</Typography>
             </Box>
             <Grid container alignItems="stretch" spacing={1} style={{ padding: '5px' }}>
@@ -184,6 +184,7 @@ function Reviews(props) {
 
     )
 }
+
 
 
 function Brand(props) {
@@ -239,11 +240,30 @@ function Brand(props) {
 
                             <Link
                                 href={'/?origin=' + props.entrie.fields.origin}
-
+                                color="textPrimary"
                                 underline='none'
+                                variant="subtitle2"
                             >
                                 <Typography align={matches ? "center" : "left"} variant='subtitle2'>{props.entrie.fields.origin}</Typography>
                             </Link>
+                            {props.entrie.fields.instagram ?
+                                <React.Fragment>
+                                    <Divider style={{ margin: '10px' }} />
+                                    <Link style={matches ? { display: "flex", margin: "40px", justifyContent: "center" } : { display: "flex", marginTop: "20px" }}
+                                        target="_blank"
+                                        underline='none'
+                                        color="textPrimary"
+                                        href={'https://www.instagram.com/' + props.entrie.fields.instagram}
+                                    >
+                                        <InstagramIcon style={{ marginRight: "5px" }} fontSize="small" />
+                                        <Typography variant="body2">
+                                            {props.entrie.fields.instagram}
+                                        </Typography>
+
+                                    </Link>
+                                </React.Fragment>
+                                : null
+                            }
                         </Box>
 
                         <Box style={{ margin: '0px 20px' }}>
