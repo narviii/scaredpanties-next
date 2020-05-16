@@ -265,8 +265,8 @@ function Brand(props) {
                                 : null
                             }
                         </Box>
-
-                        <Box style={{ margin: '0px 20px' }}>
+                        <div style={{flexGrow:1,width:"50%"}}/>
+                        <Box style={{ margin: '0px 20px',width:"100%" }}>
                             <Box display="flex" flexWrap="wrap" justifyContent="space-around">
                                 {props.entrie.fields.sizes ? props.entrie.fields.sizes.map(tag => (
                                     <Chip
