@@ -74,6 +74,7 @@ const useStyles = makeStyles((theme) => ({
 function GrdTile(props) {
     const classes = useStyles();
     const { data, error } = useSWR(`https://api.instagram.com/oembed?url=` + props.link, fetcher)
+    if (error) return null
     return (
         <Grid item xs={6} sm={6} md={4} lg={3} key={props.link}>
             <Card>
@@ -121,6 +122,7 @@ function BrandGallery(props) {
     const classes = useStyles();
     const theme = useTheme();
     const matches = useMediaQuery(theme.breakpoints.down('xs'));
+    
     return (
 
         <div style={{ margin: '30px 0 30px 0' }}>
@@ -134,7 +136,7 @@ function BrandGallery(props) {
                         <GridListTile key={pic.fields.title} cols={matches ? 1 : (pic.fields.file.details.image.width / pic.fields.file.details.image.height > 1 ? 2 : 1)}>
                             <ModalImage className={classes.modal}
                                 hideDownload
-                                small={pic.fields.file.url + '?w=800'}
+                                small={(pic.fields.file.details.image.width / pic.fields.file.details.image.height > 1)?pic.fields.file.url + '?w=800&h=400&fit=fill':pic.fields.file.url + '?w=400&h=400&fit=fill'}
                                 large={pic.fields.file.url}
                                 alt={pic.fields.title}
                             />;
@@ -265,7 +267,7 @@ function Brand(props) {
                                 : null
                             }
                         </Box>
-                        <div style={{flexGrow:1,width:"50%"}}/>
+                        <div style={{flexGrow:1,width:"10%"}}/>
                         <Box style={{ margin: '0px 20px',width:"100%" }}>
                             <Box display="flex" flexWrap="wrap" justifyContent="space-around">
                                 {props.entrie.fields.sizes ? props.entrie.fields.sizes.map(tag => (

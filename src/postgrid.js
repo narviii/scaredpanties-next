@@ -32,7 +32,8 @@ import Divider from '@material-ui/core/Divider';
 const useStyles = makeStyles(theme => ({
     cardMedia: {
 
-        paddingTop: '75%', // 16:9
+        maxWidth: '100%',
+        height: 'auto'
 
 
     },
@@ -143,7 +144,7 @@ function ReviewChip(props) {
 }
 
 function StockistsChip(props) {
-    if (props.stockists.total>0) {
+    if (props.stockists.total > 0) {
         return (
 
             <Chip
@@ -288,7 +289,7 @@ function PostCard(props) {
                 />
                 <Link
                     color="textPrimary"
-                    target="_blank"
+                    
                     href={'brands/' + props.entrie.fields.slug}
                     onClick={() => {
                         ReactGA.event({
@@ -300,10 +301,14 @@ function PostCard(props) {
 
                 >
                     <CardMedia
-                        image={props.entrie.fields.thumbnail ? props.entrie.fields.thumbnail.fields.file.url + '?w=512' + '&fm=png' : 'https://via.placeholder.com/150'}
-                        className={classes.cardMedia}
+                        
                         title={props.entrie.fields.title + ' lingerie'}
                     >
+                        <picture>
+
+                            <source srcSet={props.entrie.fields.thumbnail.fields.file.url + '?w=512' + '&h=330' + '&fit=fill' + '&fm=webp'} />
+                            <img  style={{width:'100%'}} src={props.entrie.fields.thumbnail.fields.file.url + '?w=512'+'&fit=fill' + '&h=330' + '&fm=png'} alt={props.entrie.fields.title + ' lingerie'} />
+                        </picture>
                     </CardMedia>
                 </Link>
 
@@ -353,21 +358,21 @@ function PostCard(props) {
                                 variant="outlined"
                                 style={{ margin: "5px" }} />
                         )) : null}
-                        </Box>
-                        <Box display="flex" flexWrap="wrap" justifyContent="center">
-                            {props.entrie.fields.tags.map(tag => (
-                                <Chip
-                                    clickable
-                                    component="a"
-                                    href={'/?tags=' + tag}
-                                    key={tag}
-                                    label={tag}
-                                    variant="outlined"
-                                    style={{ margin: "5px" }} />
-                            ))}
-                        </Box>
+                    </Box>
+                    <Box display="flex" flexWrap="wrap" justifyContent="center">
+                        {props.entrie.fields.tags.map(tag => (
+                            <Chip
+                                clickable
+                                component="a"
+                                href={'/?tags=' + tag}
+                                key={tag}
+                                label={tag}
+                                variant="outlined"
+                                style={{ margin: "5px" }} />
+                        ))}
+                    </Box>
 
-                    
+
 
                 </CardContent>
 
