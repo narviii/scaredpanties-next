@@ -258,7 +258,7 @@ function Brand(props) {
                                         href={'https://www.instagram.com/' + props.entrie.fields.instagram}
                                     >
                                         <InstagramIcon style={{ marginRight: "5px" }} fontSize="small" />
-                                        <Typography variant="body2">
+                                        <Typography variant="body2"> 
                                             {props.entrie.fields.instagram}
                                         </Typography>
 
