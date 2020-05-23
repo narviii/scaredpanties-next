@@ -289,7 +289,7 @@ function PostCard(props) {
                 />
                 <Link
                     color="textPrimary"
-                    target="_blank"
+                    
                     href={'brands/' + props.entrie.fields.slug}
                     onClick={() => {
                         ReactGA.event({
@@ -306,7 +306,7 @@ function PostCard(props) {
                     >
                         <picture>
 
-                            <source srcset={props.entrie.fields.thumbnail.fields.file.url + '?w=512' + '&h=330' + '&fit=fill' + '&fm=webp'} />
+                            <source srcSet={props.entrie.fields.thumbnail.fields.file.url + '?w=512' + '&h=330' + '&fit=fill' + '&fm=webp'} />
                             <img  style={{width:'100%'}} src={props.entrie.fields.thumbnail.fields.file.url + '?w=512'+'&fit=fill' + '&h=330' + '&fm=png'} alt={props.entrie.fields.title + ' lingerie'} />
                         </picture>
                     </CardMedia>
