@@ -31,6 +31,7 @@
     "react-firebase-hooks": "^2.1.1",
     "react-firebaseui": "^4.1.0",
     "react-ga": "^2.7.0",
+    "react-lazy-load": "^3.0.13",
     "react-mailchimp-subscribe": "^2.1.0",
     "react-modal-image": "^2.5.0",
     "sitemap": "^5.1.0",

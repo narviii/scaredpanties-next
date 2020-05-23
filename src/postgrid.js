@@ -27,7 +27,7 @@ import InstagramIcon from '@material-ui/icons/Instagram';
 import RateReviewIcon from '@material-ui/icons/RateReview';
 import Tooltip from '@material-ui/core/Tooltip';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
-import Divider from '@material-ui/core/Divider';
+import LazyLoad from 'react-lazy-load';
 
 const useStyles = makeStyles(theme => ({
     cardMedia: {
@@ -289,7 +289,7 @@ function PostCard(props) {
                 />
                 <Link
                     color="textPrimary"
-                    
+
                     href={'brands/' + props.entrie.fields.slug}
                     onClick={() => {
                         ReactGA.event({
@@ -301,14 +301,15 @@ function PostCard(props) {
 
                 >
                     <CardMedia
-                        
+
                         title={props.entrie.fields.title + ' lingerie'}
                     >
-                        <picture>
+                        <LazyLoad height={330} offsetVertical={100}>
+                            <picture>
 
-                            <source srcSet={props.entrie.fields.thumbnail.fields.file.url + '?w=512' + '&h=330' + '&fit=fill' + '&fm=webp'} />
-                            <img  style={{width:'100%'}} src={props.entrie.fields.thumbnail.fields.file.url + '?w=512'+'&fit=fill' + '&h=330' + '&fm=png'} alt={props.entrie.fields.title + ' lingerie'} />
-                        </picture>
+                                <source srcSet={props.entrie.fields.thumbnail.fields.file.url + '?w=512' + '&h=330' + '&fit=fill' + '&fm=webp'} />
+                                <img style={{ width: '100%' }} src={props.entrie.fields.thumbnail.fields.file.url + '?w=512' + '&fit=fill' + '&h=330' + '&fm=png'} alt={props.entrie.fields.title + ' lingerie'} />
+                            </picture></LazyLoad>
                     </CardMedia>
                 </Link>
 
