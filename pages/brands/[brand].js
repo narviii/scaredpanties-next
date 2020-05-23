@@ -192,7 +192,7 @@ function Reviews(props) {
 function Brand(props) {
     const avatarStyleBig = { width: '50px', marginRight: "30px", height: '50px' }
     const avatarStyleSmall = { width: '50px', margin: 'auto', height: '50px' }
-    const matches = useMediaQuery('(max-width:800px)');
+    const matches = useMediaQuery('(max-width:850px)');
     ReactGA.pageview('/catalog/brands/' + props.entrie.fields.slug);
     return (
         <React.Fragment>
@@ -217,7 +217,7 @@ function Brand(props) {
                         <Box style={{ width: "100%" }}>
 
                             <Box style={matches ? { display: 'flex', justifyContent: 'center', flexWrap: 'wrap' } : { display: 'flex' }}>
-                                <Typography align="center" variant='h4'>
+                                <Typography align="left" variant='h4'>
                                     {props.entrie.fields.title}
                                 </Typography>
                                 <Link
@@ -251,7 +251,7 @@ function Brand(props) {
                             {props.entrie.fields.instagram ?
                                 <React.Fragment>
                                     <Divider style={{ margin: '10px' }} />
-                                    <Link style={matches ? { display: "flex", margin: "40px", justifyContent: "center" } : { display: "flex", marginTop: "20px" }}
+                                    <Link style={matches ? { display: "flex", margin: "10px", justifyContent: "center" } : { display: "flex", marginTop: "20px" }}
                                         target="_blank"
                                         underline='none'
                                         color="textPrimary"
@@ -268,8 +268,8 @@ function Brand(props) {
                             }
                         </Box>
                         <div style={{flexGrow:1,width:"10%"}}/>
-                        <Box style={{ margin: '0px 20px',width:"100%" }}>
-                            <Box display="flex" flexWrap="wrap" justifyContent="space-around">
+                        <Box style={{ padding:'5px',width:"100%" }}>
+                            <Box display="flex" flexWrap="wrap" justifyContent={matches?"center":"space-around"}>
                                 {props.entrie.fields.sizes ? props.entrie.fields.sizes.map(tag => (
                                     <Chip
                                         clickable
