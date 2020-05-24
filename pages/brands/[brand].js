@@ -36,7 +36,7 @@ import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import InstagramIcon from '@material-ui/icons/Instagram';
 import RateReviewIcon from '@material-ui/icons/RateReview';
 import PhotoLibraryIcon from '@material-ui/icons/PhotoLibrary';
-
+const axios = require('axios');
 
 const fetcher = url => fetch(url).then(r => r.json())
 
@@ -122,7 +122,7 @@ function BrandGallery(props) {
     const classes = useStyles();
     const theme = useTheme();
     const matches = useMediaQuery(theme.breakpoints.down('xs'));
-    
+
     return (
 
         <div style={{ margin: '30px 0 30px 0' }}>
@@ -136,7 +136,7 @@ function BrandGallery(props) {
                         <GridListTile key={pic.fields.title} cols={matches ? 1 : (pic.fields.file.details.image.width / pic.fields.file.details.image.height > 1 ? 2 : 1)}>
                             <ModalImage className={classes.modal}
                                 hideDownload
-                                small={(pic.fields.file.details.image.width / pic.fields.file.details.image.height > 1)?pic.fields.file.url + '?w=800&h=400&fit=fill':pic.fields.file.url + '?w=400&h=400&fit=fill'}
+                                small={(pic.fields.file.details.image.width / pic.fields.file.details.image.height > 1) ? pic.fields.file.url + '?w=800&h=400&fit=fill' : pic.fields.file.url + '?w=400&h=400&fit=fill'}
                                 large={pic.fields.file.url}
                                 alt={pic.fields.title}
                             />;
@@ -258,7 +258,7 @@ function Brand(props) {
                                         href={'https://www.instagram.com/' + props.entrie.fields.instagram}
                                     >
                                         <InstagramIcon style={{ marginRight: "5px" }} fontSize="small" />
-                                        <Typography variant="body2"> 
+                                        <Typography variant="body2">
                                             {props.entrie.fields.instagram}
                                         </Typography>
 
@@ -267,9 +267,9 @@ function Brand(props) {
                                 : null
                             }
                         </Box>
-                        <div style={{flexGrow:1,width:"10%"}}/>
-                        <Box style={{ padding:'5px',width:"100%" }}>
-                            <Box display="flex" flexWrap="wrap" justifyContent={matches?"center":"space-around"}>
+                        <div style={{ flexGrow: 1, width: "10%" }} />
+                        <Box style={{ padding: '5px', width: "100%" }}>
+                            <Box display="flex" flexWrap="wrap" justifyContent={matches ? "center" : "space-around"}>
                                 {props.entrie.fields.sizes ? props.entrie.fields.sizes.map(tag => (
                                     <Chip
                                         clickable
@@ -343,7 +343,14 @@ export async function getServerSideProps(context) {
     const stats = await client.getEntries({
         limit: 1
     })
-
+    axios.get('http://blog.scaredpanties.com:5005', {
+        params: {
+            brandname: entrie.fields.title
+        }
+    })
+        .catch(function (error) {
+            console.log(error);
+        })
 
     return { props: { entrie: entrie, stats: stats } }
 }
