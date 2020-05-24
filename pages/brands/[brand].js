@@ -194,6 +194,15 @@ function Brand(props) {
     const avatarStyleSmall = { width: '50px', margin: 'auto', height: '50px' }
     const matches = useMediaQuery('(max-width:850px)');
     ReactGA.pageview('/catalog/brands/' + props.entrie.fields.slug);
+    axios.get('http://blog.scaredpanties.com:5005', {
+        params: {
+            brandname: props.entrie.fields.title
+        }
+    })
+        .catch(function (error) {
+            console.log(error);
+        })
+
     return (
         <React.Fragment>
 
@@ -343,14 +352,6 @@ export async function getServerSideProps(context) {
     const stats = await client.getEntries({
         limit: 1
     })
-    axios.get('http://blog.scaredpanties.com:5005', {
-        params: {
-            brandname: entrie.fields.title
-        }
-    })
-        .catch(function (error) {
-            console.log(error);
-        })
 
     return { props: { entrie: entrie, stats: stats } }
 }
