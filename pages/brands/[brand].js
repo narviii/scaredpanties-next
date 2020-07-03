@@ -223,7 +223,7 @@ function Brand(props) {
                                 <Typography align="left" variant='h4'>
                                     {props.entrie.fields.title}
                                 </Typography>
-                                <Link
+                                {!props.entrie.fields.down?<Link
                                     onClick={() => {
                                         ReactGA.event({
                                             category: 'user',
@@ -239,7 +239,7 @@ function Brand(props) {
                                     target="_blank"
                                     href={props.entrie.fields.link} >
                                     <LaunchIcon fontSize="small" />
-                                </Link>
+                                </Link>:null}
 
                             </Box>
 
@@ -251,6 +251,8 @@ function Brand(props) {
                             >
                                 <Typography align={matches ? "center" : "left"} variant='subtitle2'>{props.entrie.fields.origin}</Typography>
                             </Link>
+                            {props.entrie.fields.down?<Typography style={{margin:"5px"}}align={matches ? "center" : "left"} color="secondary" variant='subtitle2'>WEBSITE IS DOWN</Typography>:null}
+
                             {props.entrie.fields.instagram ?
                                 <React.Fragment>
                                     <Divider style={{ margin: '10px' }} />

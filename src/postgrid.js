@@ -248,11 +248,11 @@ function PostCard(props) {
 
                                 {props.entrie.fields.title}
                             </Link>
-                            <Link
+                            {!props.entrie.fields.down ? <Link
                                 style={{ marginLeft: "10px" }}
                                 underline='none'
                                 color="textPrimary"
-                                href={'brands/' + props.entrie.fields.slug}
+
                                 target="_blank"
                                 href={props.entrie.fields.link} >
                                 <LaunchIcon
@@ -265,22 +265,28 @@ function PostCard(props) {
                                     }}
 
                                     fontSize="small" />
-                            </Link>
+                            </Link> : null}
                         </div>
                     }
                     subheader={
 
-
-                        <Chip
-
-                            clickable
-                            size="small"
-                            component="a"
-                            href={'/?origin=' + props.entrie.fields.origin}
-                            variant="outlined"
-                            label={props.entrie.fields.origin}
-                        />
-
+                        <>
+                            <Chip
+                                clickable
+                                size="small"
+                                component="a"
+                                href={'/?origin=' + props.entrie.fields.origin}
+                                variant="outlined"
+                                label={props.entrie.fields.origin}
+                            />
+                            {props.entrie.fields.down?<Chip
+                                style={{ marginLeft: "5px" }}
+                                size="small"
+                                component="a"
+                                color="secondary"
+                                variant="outlined"
+                                label="WEBSITE IS DOWN"/>:null}
+                        </>
 
 
                     }
@@ -289,7 +295,7 @@ function PostCard(props) {
                 />
                 <Link
                     color="textPrimary"
-                    
+
                     href={'brands/' + props.entrie.fields.slug}
                     onClick={() => {
                         ReactGA.event({
@@ -301,13 +307,13 @@ function PostCard(props) {
 
                 >
                     <CardMedia
-                        
+
                         title={props.entrie.fields.title + ' lingerie'}
                     >
                         <picture>
 
                             <source srcSet={props.entrie.fields.thumbnail.fields.file.url + '?w=512' + '&h=330' + '&fit=fill' + '&fm=webp'} />
-                            <img  style={{width:'100%'}} src={props.entrie.fields.thumbnail.fields.file.url + '?w=512'+'&fit=fill' + '&h=330' + '&fm=png'} alt={props.entrie.fields.title + ' lingerie'} />
+                            <img style={{ width: '100%' }} src={props.entrie.fields.thumbnail.fields.file.url + '?w=512' + '&fit=fill' + '&h=330' + '&fm=png'} alt={props.entrie.fields.title + ' lingerie'} />
                         </picture>
                     </CardMedia>
                 </Link>
