@@ -194,14 +194,8 @@ function Brand(props) {
     const avatarStyleSmall = { width: '50px', margin: 'auto', height: '50px' }
     const matches = useMediaQuery('(max-width:850px)');
     ReactGA.pageview('/catalog/brands/' + props.entrie.fields.slug);
-    axios.get('http://blog.scaredpanties.com:5005', {
-        params: {
-            brandname: props.entrie.fields.title
-        }
-    })
-        .catch(function (error) {
-            console.log(error);
-        })
+    
+   
 
     return (
         <React.Fragment>
@@ -229,7 +223,7 @@ function Brand(props) {
                                 <Typography align="left" variant='h4'>
                                     {props.entrie.fields.title}
                                 </Typography>
-                                <Link
+                                {!props.entrie.fields.down?<Link
                                     onClick={() => {
                                         ReactGA.event({
                                             category: 'user',
@@ -245,7 +239,7 @@ function Brand(props) {
                                     target="_blank"
                                     href={props.entrie.fields.link} >
                                     <LaunchIcon fontSize="small" />
-                                </Link>
+                                </Link>:null}
 
                             </Box>
 
@@ -257,6 +251,8 @@ function Brand(props) {
                             >
                                 <Typography align={matches ? "center" : "left"} variant='subtitle2'>{props.entrie.fields.origin}</Typography>
                             </Link>
+                            {props.entrie.fields.down?<Typography style={{margin:"5px"}}align={matches ? "center" : "left"} color="secondary" variant='subtitle2'>WEBSITE IS DOWN</Typography>:null}
+
                             {props.entrie.fields.instagram ?
                                 <React.Fragment>
                                     <Divider style={{ margin: '10px' }} />
@@ -352,6 +348,17 @@ export async function getServerSideProps(context) {
     const stats = await client.getEntries({
         limit: 1
     })
+
+    
+
+    axios.get('http://blog.scaredpanties.com:5005', {
+        params: {
+            brandname: entrie.fields.title
+        }
+    })
+        .catch(function (error) {
+            console.log(error);
+        })
 
     return { props: { entrie: entrie, stats: stats } }
 }

@@ -34,7 +34,8 @@ export  const originList = [
     "China",
     "Sweden",
     "Colombia",
-    "Chile"
+    "Chile",
+    "Czech Republic"
 ]
 
 export const tagList = [
