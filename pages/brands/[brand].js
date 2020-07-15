@@ -16,6 +16,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
 import GridListTileBar from '@material-ui/core/GridListTileBar';
+
 import useSWR from 'swr'
 import fetch from 'unfetch'
 import Grid from '@material-ui/core/Grid'
@@ -25,17 +26,16 @@ import { Stockists } from '../../src/stockists'
 import ModalImage from "react-modal-image";
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useTheme } from '@material-ui/core/styles';
-import Favorite from '@material-ui/icons/Favorite';
 import { Nav } from '../../src/nav'
 import LaunchIcon from '@material-ui/icons/Launch';
 const url = require('url'); // built-in utility
 import Head from 'next/head'
 import { HeadContent } from '../../src/headcontent'
-import { useRouter } from 'next/router'
-import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import InstagramIcon from '@material-ui/icons/Instagram';
 import RateReviewIcon from '@material-ui/icons/RateReview';
 import PhotoLibraryIcon from '@material-ui/icons/PhotoLibrary';
+import CardHeader from '@material-ui/core/CardHeader';
+
 const axios = require('axios');
 
 const fetcher = url => fetch(url).then(r => r.json())
@@ -194,8 +194,8 @@ function Brand(props) {
     const avatarStyleSmall = { width: '50px', margin: 'auto', height: '50px' }
     const matches = useMediaQuery('(max-width:850px)');
     ReactGA.pageview('/catalog/brands/' + props.entrie.fields.slug);
-    
-   
+
+
 
     return (
         <React.Fragment>
@@ -223,7 +223,7 @@ function Brand(props) {
                                 <Typography align="left" variant='h4'>
                                     {props.entrie.fields.title}
                                 </Typography>
-                                {!props.entrie.fields.down?<Link
+                                {!props.entrie.fields.down ? <Link
                                     onClick={() => {
                                         ReactGA.event({
                                             category: 'user',
@@ -239,7 +239,7 @@ function Brand(props) {
                                     target="_blank"
                                     href={props.entrie.fields.link} >
                                     <LaunchIcon fontSize="small" />
-                                </Link>:null}
+                                </Link> : null}
 
                             </Box>
 
@@ -251,7 +251,7 @@ function Brand(props) {
                             >
                                 <Typography align={matches ? "center" : "left"} variant='subtitle2'>{props.entrie.fields.origin}</Typography>
                             </Link>
-                            {props.entrie.fields.down?<Typography style={{margin:"5px"}}align={matches ? "center" : "left"} color="secondary" variant='subtitle2'>WEBSITE IS DOWN</Typography>:null}
+                            {props.entrie.fields.down ? <Typography style={{ margin: "5px" }} align={matches ? "center" : "left"} color="secondary" variant='subtitle2'>WEBSITE IS DOWN</Typography> : null}
 
                             {props.entrie.fields.instagram ?
                                 <React.Fragment>
@@ -318,6 +318,62 @@ function Brand(props) {
                     {props.entrie.fields.instalinks ? <IgGallery brand={props.entrie.fields.title} instalinks={props.entrie.fields.instalinks} /> : null}
 
                 </Paper>
+                <Container style={{ margin: '30px auto' }} maxWidth='md'>
+
+
+                    <Grid container spacing={2} alignItems="flex-end" justify="space-around">
+
+                        {props.randEntries.items.map(entrie => (
+                            <Grid item xs={12} sm={4} md={4} lg={4}>
+                                <Card>
+                                    <CardHeader title={
+                                        <div style={{ display: "inline" }}>
+                                            <Link
+                                                underline='none'
+                                                color="textPrimary"
+                                                href={'brands/' + entrie.fields.slug}
+
+                                            >
+
+                                                {entrie.fields.title}
+                                            </Link>
+                                            {!entrie.fields.down ? <Link
+                                                style={{ marginLeft: "10px" }}
+                                                underline='none'
+                                                color="textPrimary"
+
+                                                target="_blank"
+                                                href={entrie.fields.link} >
+                                                <LaunchIcon
+                                                    onClick={() => {
+                                                        ReactGA.event({
+                                                            category: 'user',
+                                                            action: 'outbound',
+                                                            label: entrie.fields.title
+                                                        })
+                                                    }}
+
+                                                    fontSize="small" />
+                                            </Link> : null}
+                                        </div>
+                                    } />
+                                    <CardMedia
+
+                                        title={entrie.fields.title + ' lingerie'}
+                                    >
+                                        <picture>
+
+                                            <source srcSet={entrie.fields.thumbnail.fields.file.url + '?w=512' + '&h=330' + '&fit=fill' + '&fm=webp'} />
+                                            <img style={{ width: '100%' }} src={entrie.fields.thumbnail.fields.file.url + '?w=512' + '&fit=fill' + '&h=330' + '&fm=png'} alt={entrie.fields.title + ' lingerie'} />
+                                        </picture>
+                                    </CardMedia>
+                                </Card>
+                            </Grid>
+                        ))}
+
+                    </Grid >
+
+                </Container>
                 <Footer entries={props.stats} originList={originList} />
 
             </Container>
@@ -327,6 +383,22 @@ function Brand(props) {
 
 
 export async function getServerSideProps(context) {
+    let totEntries = await client.getEntries({
+        include: 1,
+
+        'content_type': 'post',
+        limit: 0,
+
+    })
+    const skipRandom = Math.floor(Math.random() * (totEntries.total - 3));
+    const randEntries = await client.getEntries({
+        include: 1,
+        skip: skipRandom,
+        'content_type': 'post',
+        limit: 3,
+
+    })
+
     let entries = await client.getEntries({
         include: 1,
         'fields.slug': context.params.brand,
@@ -349,7 +421,7 @@ export async function getServerSideProps(context) {
         limit: 1
     })
 
-    
+
 
     axios.get('http://blog.scaredpanties.com:5005', {
         params: {
@@ -360,7 +432,7 @@ export async function getServerSideProps(context) {
             console.log(error);
         })
 
-    return { props: { entrie: entrie, stats: stats } }
+    return { props: { entrie: entrie, stats: stats, randEntries: randEntries } }
 }
 
 export default Brand
