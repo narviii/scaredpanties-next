@@ -22,12 +22,10 @@ import { useContext } from "react";
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import { UserContext, DbContext, UserDocContext, LoginDialogContext } from '../src/context'
 import LaunchIcon from '@material-ui/icons/Launch';
-import firebase from 'firebase'
+import firebase from '../src/firebase'
 import InstagramIcon from '@material-ui/icons/Instagram';
 import RateReviewIcon from '@material-ui/icons/RateReview';
-import Tooltip from '@material-ui/core/Tooltip';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
-import Divider from '@material-ui/core/Divider';
 
 const useStyles = makeStyles(theme => ({
     cardMedia: {
