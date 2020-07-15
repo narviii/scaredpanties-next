@@ -329,9 +329,10 @@ function Brand(props) {
                                     <CardHeader title={
                                         <div style={{ display: "inline" }}>
                                             <Link
+                                                
                                                 underline='none'
                                                 color="textPrimary"
-                                                href={'brands/' + entrie.fields.slug}
+                                                href={entrie.fields.slug}
 
                                             >
 
