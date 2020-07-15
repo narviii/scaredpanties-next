@@ -325,7 +325,7 @@ MainPage.getInitialProps = async (context) => {
     })
 
 
-
+   
     entries.items = await Promise.all(entries.items.map(async (entry) => {
          entry.stockists = await client.getEntries({
              links_to_entry: entry.sys.id,
