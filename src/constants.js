@@ -35,7 +35,11 @@ export  const originList = [
     "Sweden",
     "Colombia",
     "Chile",
-    "Czech Republic"
+    "Czech Republic",
+    "Lithuania",
+    "Ireland",
+    "Greece",
+    "Monaco"
 ]
 
 export const tagList = [
@@ -57,12 +61,16 @@ export const tagList = [
     "Maternity",
     "Surgery",
     "Thermal",
-    "Shoes"
+    "Shoes",
+    "Kids",
+    "Stick-on",
+    "Resortwear"
 ]
 
 export const sizeList = [
     "All",
     "Tailored",
     "Small cup",
-    "Large cup"
+    "Large cup",
+    "Bespoke"
 ]
