@@ -16,6 +16,9 @@ import { makeStyles } from '@material-ui/core/styles';
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
 import GridListTileBar from '@material-ui/core/GridListTileBar';
+import { UserContext, DbContext, UserDocContext, LoginDialogContext } from '../../src/context'
+import { useContext } from "react";
+import { useState } from 'react';
 
 import useSWR from 'swr'
 import fetch from 'unfetch'
@@ -37,6 +40,10 @@ import PhotoLibraryIcon from '@material-ui/icons/PhotoLibrary';
 import CardHeader from '@material-ui/core/CardHeader';
 
 const axios = require('axios');
+const igShortCode = (url) =>{
+    return url.split('/')[4]
+  }
+
 
 const fetcher = url => fetch(url).then(r => r.json())
 
@@ -73,8 +80,31 @@ const useStyles = makeStyles((theme) => ({
 
 function GrdTile(props) {
     const classes = useStyles();
-    const { data, error } = useSWR(`https://api.instagram.com/oembed?url=` + props.link, fetcher)
-    if (error) return null
+    const db = useContext(DbContext);
+    const [linkObj, setLinkObj] = useState(0);
+    const [empty,setEmpty] = useState(0)
+
+    //console.log(props.link)
+    //console.log(igShortCode(props.link))
+
+    const linkRef = db.collection("instalinks").doc(igShortCode(props.link));
+
+    linkRef.get().then(function(doc) {
+        if (doc.exists) {
+            setLinkObj(doc.data())
+            //console.log("Document data:", doc.data());
+        } else {
+            // doc.data() will be undefined in this case
+            setEmpty(true)
+            //console.log("No such document!");
+        }
+    }).catch(function(error) {
+        console.log("Error getting document:", error);
+        setEmpty(true)
+    });
+
+    //const { data, error } = useSWR(`https://api.instagram.com/oembed?url=` + props.link, fetcher)
+    if (empty == true) return null
     return (
         <Grid item xs={6} sm={6} md={4} lg={3} key={props.link}>
             <Card>
@@ -85,8 +115,8 @@ function GrdTile(props) {
 
                 >
                     <CardMedia
-                        title={data ? data.author_name + ' wearing ' + props.brand : null}
-                        image={'https://' + url.parse(props.link).hostname + url.parse(props.link).pathname + 'media'}
+                        title={linkObj.usernameText + ' wearing ' + props.brand}
+                        image={linkObj.image}
                         className={classes.cardMedia} />
                 </Link>
             </Card>
