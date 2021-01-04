@@ -22,4 +22,10 @@ theme.typography.h6 = {
   },
 };
 
+theme.typography.h5 = {
+  fontSize: '1.3rem',
+  '@media (max-width:650px)': {
+    fontSize: '1rem',
+  },
+};
 export default theme;

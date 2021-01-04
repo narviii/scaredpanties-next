@@ -21,6 +21,7 @@ import { client } from '../src/contentful'
 import { useContext } from "react";
 import Head from 'next/head'
 import {HeadContent } from '../src/headcontent'
+import Button from '@material-ui/core/Button';
 
 
 

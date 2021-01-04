@@ -19,6 +19,7 @@ export default async function sitemap(req,res) {
     smStream.write({ url: ``, changefreq: 'weekly',priority: 0.9, })
     smStream.write({ url: `/search`, changefreq: 'weekly',priority: 0.3})
     smStream.write({ url: `/stockists`, changefreq: 'weekly',priority: 0.5})
+    smStream.write({ url: `/pricetrack`, changefreq: 'daily',priority: 0.5})
     entries.items.forEach(item=>item.fields.slug?smStream.write({url:"brands/"+item.fields.slug,changefreq: 'weekly',priority: 0.9,lastmod:item.sys.updatedAt}):null)
     for(i=0;i<=pages;i++){
         smStream.write({ url: `?sizes=&origin=&tags=&offset=${i*12}`, changefreq: 'weekly'})
