@@ -33,8 +33,15 @@ import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import Checkbox from '@material-ui/core/Checkbox';
+import ToggleButton from '@material-ui/lab/ToggleButton';
+import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 
 
+const discount = {
+    small: 0.05,
+    medium: 0.15,
+    large: 0.3
+}
 
 
 const useStyles = makeStyles(theme => ({
@@ -59,6 +66,43 @@ const getSmallLink = (link) => {
 
 }
 
+function SelectDiscount(props) {
+    const router = useRouter();
+    const handleChange = (event, priceChange) => {
+
+        router.push({
+            pathname: router.pathname,
+            query: {
+
+                ...router.query, priceChange: priceChange,
+
+
+            },
+        })
+
+
+    }
+
+    return (
+        <ToggleButtonGroup style={{ margin: "5px" }}
+            value={router.query.priceChange}
+            onChange={handleChange}
+            size="large" exclusive
+            aria-label="ordering">
+            <ToggleButton aria-label=" min 5% " value="small">
+                min 5%
+            </ToggleButton>
+            <ToggleButton aria-label=" min 10% " value="medium">
+                min 10%
+            </ToggleButton>
+            <ToggleButton aria-label=" min 30% " value="large">
+                min 30%
+            </ToggleButton>
+        </ToggleButtonGroup>
+    )
+}
+
+
 function SelectEvent(props) {
     const router = useRouter();
     const classes = useStyles();
@@ -77,24 +121,24 @@ function SelectEvent(props) {
             },
         })
     };
-    const { priceUp, priceDown} = state;
+    const { priceUp, priceDown } = state;
 
-    return(
+    return (
         <FormControl component="fieldset" >
             <FormHelperText>Select filter</FormHelperText>
-        <FormGroup row>
-          <FormControlLabel 
-            control={<Checkbox checked={priceUp} color="primary" onChange={handleChange} name="priceUp" />}
-            label="price increased"
-          />
-          <FormControlLabel
-            control={<Checkbox checked={priceDown} color="primary" onChange={handleChange} name="priceDown" />}
-            label="Price decreased"
-          />
-          
-        </FormGroup>
-        
-      </FormControl>
+            <FormGroup row>
+                <FormControlLabel
+                    control={<Checkbox checked={priceUp} color="primary" onChange={handleChange} name="priceUp" />}
+                    label="price increased"
+                />
+                <FormControlLabel
+                    control={<Checkbox checked={priceDown} color="primary" onChange={handleChange} name="priceDown" />}
+                    label="Price decreased"
+                />
+
+            </FormGroup>
+
+        </FormControl>
     )
 }
 
@@ -130,8 +174,8 @@ function PriceTrack(props) {
         <React.Fragment>
             <Head>
                 <HeadContent
-                    description="Lingerie price tracker"
-                    title="Lingerie price tracker"
+                    description="An automatic tracker for discounts in selected lingerie stores."
+                    title="Lingerie price tracker by Scaredpanties."
                     image="https://blog.scaredpanties.com/content/images/2020/01/fb_preview.jpg"
                     url="https://catalog.scaredpanties.com"
 
@@ -139,10 +183,11 @@ function PriceTrack(props) {
             </Head>
 
             <Nav />
-            <Hero />
+            <Hero text="Lingerie discounts price tracker. I scan quite a few lingerie sites for changes in prices so you don't have to."/>
             <Container maxWidth='lg' style={{ margin: '30px auto 30px ' }} >
                 <Box justifyContent="center" alignContent="center" display="flex" flexWrap="wrap">
-                    <SelectEvent/>
+                    <SelectEvent />
+                    <SelectDiscount />
                 </Box>
             </Container>
             <Container style={{ margin: '30px auto' }} maxWidth='xl'>
@@ -151,13 +196,18 @@ function PriceTrack(props) {
                         <Grid item key={entry._id} xs={12} sm={6} md={4} lg={3}>
 
                             <Card>
+                                <Link
+                                    target="_blank"
+                                    underline='none'
+                                    color="textPrimary"
+                                    href={entry.productLink}>
+                                    <CardMedia className={classes.cardMedia} image={getSmallLink(entry.image)} />
+                                </Link>
 
-                                <CardMedia
-                                    className={classes.cardMedia}
-                                    image={getSmallLink(entry.image)} />
                                 <CardContent >
                                     <Typography variant="caption">
                                         <Link
+                                            target="_blank"
                                             underline='none'
                                             color="textPrimary"
                                             href={entry.shopLink}
@@ -168,6 +218,7 @@ function PriceTrack(props) {
                                     </Typography>
                                     <Typography gutterBottom>
                                         <Link
+                                            target="_blank"
                                             underline='none'
                                             color="textPrimary"
                                             href={entry.productLink}
@@ -203,7 +254,7 @@ function PriceTrack(props) {
 
                                         </Grid>
                                         <Grid item xs={5}>
-                                            <Typography variant="body">
+                                            <Typography variant="body2">
                                                 {"from " + entry.oldPrice + " to " + entry.newPrice}
                                             </Typography>
 
@@ -240,19 +291,21 @@ export async function getServerSideProps(context) {
         limit: 1
     })
     let limit = 20
-    const eventList=[]
+    const eventList = []
 
-    const priceUp = context.query.priceUp?JSON.parse(context.query.priceUp):true
-    const priceDown = context.query.priceDown?JSON.parse(context.query.priceDown):true
-    
-    if (priceUp==true){
+    const priceUp = context.query.priceUp ? JSON.parse(context.query.priceUp) : true
+    const priceDown = context.query.priceDown ? JSON.parse(context.query.priceDown) : true
+
+    if (priceUp == true) {
         eventList.push('Price increased')
     }
 
-    if (priceDown==true){
+    if (priceDown == true) {
         eventList.push('Price decreased')
     }
 
+    const discountFloat = context.query.priceChange ? discount[context.query.priceChange] : 0.05
+    //console.log(discountFloat)
 
 
     const { db } = await connectToDatabase();
@@ -310,7 +363,7 @@ export async function getServerSideProps(context) {
                     '$gt': [
                         {
                             '$abs': '$gain'
-                        }, 0.01
+                        }, discountFloat
                     ]
                 }
             }

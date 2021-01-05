@@ -13,7 +13,7 @@ const useStyles=makeStyles(theme=>({
         height: ' 100%',
         backgroundPosition: 'center',
         backgroundSize: 'cover',
-        padding: theme.spacing(10, 0, 10),
+        padding: theme.spacing(5, 0, 5),
         marginBottom:'0px'
     },
 
@@ -31,7 +31,7 @@ export function Hero(props) {
                     </Link>
                     <Container maxWidth="sm">
                         <Typography variant="h6" align="center" color="textSecondary" className={classes.heroTypography} paragraph>
-                        A handpicked and lovely curated catalogue: lingerie companies and brands. Like and share favourites with friends.
+                       {props.text}
                 </Typography>
                     </Container>
                 </Container>
