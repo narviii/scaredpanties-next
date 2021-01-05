@@ -21,6 +21,7 @@ import { client } from '../src/contentful'
 import { useContext } from "react";
 import Head from 'next/head'
 import {HeadContent } from '../src/headcontent'
+import Button from '@material-ui/core/Button';
 
 
 
@@ -288,7 +289,7 @@ function MainPage(props) {
             </Head>
             <CssBaseline />
             <Nav />
-            <Hero />
+            <Hero text="A handpicked and lovely curated catalogue: lingerie companies and brands. Like and share favourites with friends."/>
             <Container maxWidth='lg' style={{ margin: '30px auto 30px ' }} >
                 <Box justifyContent="center" alignContent="center" display="flex" flexWrap="wrap">
                     <SelectOrigin />

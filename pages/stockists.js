@@ -130,7 +130,7 @@ function Stockists(props) {
             </Head>
 
             <Nav />
-            <Hero />
+            <Hero text="List of stockists sites with brands they represent."/>
             <Container style={{ margin: '30px auto' }} maxWidth='lg'>
                 <Grid direction="row" container spacing={4}>
                     {props.entries.items.map(entrie => (
