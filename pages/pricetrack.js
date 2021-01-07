@@ -183,7 +183,7 @@ function PriceTrack(props) {
             </Head>
 
             <Nav />
-            <Hero text="Lingerie discounts price tracker. I scan quite a few lingerie sites for changes in prices so you don't have to."/>
+            <Hero text="Lingerie discounts live tracker. I scan quite a few lingerie websites for price changes so that you don't have to."/>
             <Container maxWidth='lg' style={{ margin: '30px auto 30px ' }} >
                 <Box justifyContent="center" alignContent="center" display="flex" flexWrap="wrap">
                     <SelectEvent />

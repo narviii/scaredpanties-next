@@ -46,13 +46,13 @@ export function Subscribe(props) {
         <DialogTitle id="form-dialog-title">Subscribe to catalog updates</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Leave your email and i will let you know when something new will pop up
+          Leave your email and I will let you know when something new pops up
           </DialogContentText>
           <TextField
             value={email}
             margin="dense"
             id="name"
-            label="Email Address"
+            label="Email address"
             type="email"
             onChange={(e) => setEmail(e.target.value)}
             fullWidth
