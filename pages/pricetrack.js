@@ -129,7 +129,7 @@ function SelectEvent(props) {
             <FormGroup row>
                 <FormControlLabel
                     control={<Checkbox checked={priceUp} color="primary" onChange={handleChange} name="priceUp" />}
-                    label="price increased"
+                    label="Price increased"
                 />
                 <FormControlLabel
                     control={<Checkbox checked={priceDown} color="primary" onChange={handleChange} name="priceDown" />}
