@@ -129,7 +129,7 @@ function SelectEvent(props) {
             <FormGroup row>
                 <FormControlLabel
                     control={<Checkbox checked={priceUp} color="primary" onChange={handleChange} name="priceUp" />}
-                    label="price increased"
+                    label="Price increased"
                 />
                 <FormControlLabel
                     control={<Checkbox checked={priceDown} color="primary" onChange={handleChange} name="priceDown" />}
@@ -183,7 +183,7 @@ function PriceTrack(props) {
             </Head>
 
             <Nav />
-            <Hero text="Lingerie discounts price tracker. I scan quite a few lingerie sites for changes in prices so you don't have to."/>
+            <Hero text="Lingerie discounts live tracker. I scan quite a few lingerie websites for price changes so that you don't have to."/>
             <Container maxWidth='lg' style={{ margin: '30px auto 30px ' }} >
                 <Box justifyContent="center" alignContent="center" display="flex" flexWrap="wrap">
                     <SelectEvent />

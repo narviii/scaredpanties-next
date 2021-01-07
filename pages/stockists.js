@@ -130,7 +130,7 @@ function Stockists(props) {
             </Head>
 
             <Nav />
-            <Hero text="List of stockists sites with brands they represent."/>
+            <Hero text="Lingerie stockists and brands they carry. Look for your local store or the best deal for the coveted piece."/>
             <Container style={{ margin: '30px auto' }} maxWidth='lg'>
                 <Grid direction="row" container spacing={4}>
                     {props.entries.items.map(entrie => (

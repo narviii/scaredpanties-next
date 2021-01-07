@@ -289,7 +289,7 @@ function MainPage(props) {
             </Head>
             <CssBaseline />
             <Nav />
-            <Hero text="A handpicked and lovely curated catalogue: lingerie companies and brands. Like and share favourites with friends."/>
+            <Hero text="Handpicked lingerie database: Brands from all around the world. Like brands to save for yourself or to share your favourites with friends."/>
             <Container maxWidth='lg' style={{ margin: '30px auto 30px ' }} >
                 <Box justifyContent="center" alignContent="center" display="flex" flexWrap="wrap">
                     <SelectOrigin />
