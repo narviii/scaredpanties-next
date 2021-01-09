@@ -35,7 +35,8 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import Checkbox from '@material-ui/core/Checkbox';
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
-
+import Chip from '@material-ui/core/Chip';
+import Badge from '@material-ui/core/Badge';
 
 const discount = {
     small: 0.05,
@@ -142,10 +143,60 @@ function SelectEvent(props) {
     )
 }
 
+function BrandListSelect(props) {
+    const router = useRouter();
+    const handleReset = (event) => {
+        router.push({
+            pathname: router.pathname,
+            query: {}
+        })
+    }
+    const handleClick = (brand) => {
+
+
+        router.push({
+            pathname: router.pathname,
+            query: {
+                ...router.query, brand: brand,limit:20
+            },
+        })
+
+    };
+    //console.log(props.brandListArray)
+    return (
+        <Container maxWidth='xl' style={{ margin: '30px auto 30px ' }} >
+            <Typography align="center" gutterBottom >These brands had updates in last 7 days:</Typography>
+            <Box justifyContent="center" alignContent="center" display="flex" flexWrap="wrap">
+                {props.brandListArray.map((elem) => {
+                    return (
+                        <div key={elem._id} style={{ margin: "10px" }}>
+                            <Badge badgeContent={elem.count} color="primary">
+                                <Chip clickable label={elem._id} key={elem._id} onClick={() => handleClick(elem._id)} />
+                            </Badge>
+
+                        </div>
+
+                    )
+
+                })}
+                <Container style={{ margin: '5px auto', display: "flex" }} maxWidth='xl'>
+                    <Button style={{ margin: "auto" }}
+                        size="small"
+                        onClick={handleReset}
+                        variant="contained"
+                        color="primary">
+                        Reset filter
+                                </Button>
+                </Container>
+            </Box>
+        </Container>
+    )
+}
+
 function PriceTrack(props) {
     let limit
     const handleClick = () => {
-        console.log(router.query.limit)
+        //console.log(router.query.limit)
         if (!router.query.limit) {
             limit = 20
         } else {
@@ -161,7 +212,7 @@ function PriceTrack(props) {
             },
         })
 
-        console.log(limit)
+        //console.log(limit)
     }
     ReactGA.pageview('/pricetrack');
 
@@ -183,13 +234,15 @@ function PriceTrack(props) {
             </Head>
 
             <Nav />
-            <Hero text="Lingerie discounts live tracker. I scan quite a few lingerie websites for price changes so that you don't have to."/>
+            <Hero text="Lingerie discounts live tracker. I scan quite a few lingerie websites for price changes so that you don't have to." />
             <Container maxWidth='lg' style={{ margin: '30px auto 30px ' }} >
                 <Box justifyContent="center" alignContent="center" display="flex" flexWrap="wrap">
                     <SelectEvent />
                     <SelectDiscount />
                 </Box>
             </Container>
+            <BrandListSelect brandListArray={props.brandListArray} />
+
             <Container style={{ margin: '30px auto' }} maxWidth='xl'>
                 <Grid container spacing={4} alignItems="stretch">
                     {props.history.map(entry => (
@@ -307,6 +360,7 @@ export async function getServerSideProps(context) {
     const discountFloat = context.query.priceChange ? discount[context.query.priceChange] : 0.05
     //console.log(discountFloat)
 
+    const brandFilter = context.query.brand
 
     const { db } = await connectToDatabase();
     if (context.query.limit) {
@@ -315,14 +369,61 @@ export async function getServerSideProps(context) {
         limit = 20
     }
 
+    let brandListAgg =
+        [
+            {
+                '$sort': {
+                    '_id': -1
+                }
+            }, {
+                '$match': {
+                    '$expr': {
+                        '$gt': [
+                            '$updatedAt', {
+                                '$subtract': [
+                                    '$$NOW', 604800000
+
+                                ]
+                            }
+                        ]
+                    }
+                }
+            }, {
+                '$group': {
+                    '_id': '$shopTitle',
+                    'count': {
+                        '$sum': 1
+                    }
+                }
+            }
+        ]
+
     let agg = [
         {
             '$match': {
                 'event': {
                     '$in': eventList
                 }
+
+
+            },
+
+        },
+        {
+            '$match': {
+                '$expr': {
+                    '$gt': [
+                        '$updatedAt', {
+                            '$subtract': [
+                                '$$NOW', 604800000
+
+                            ]
+                        }
+                    ]
+                }
             }
-        }, {
+        },
+        {
             '$addFields': {
                 'oldPriceDouble': {
                     '$convert': {
@@ -376,16 +477,102 @@ export async function getServerSideProps(context) {
         }
     ]
 
-    //console.log(agg)
+    let aggBrand = [
+        {
+            '$match': {
+                'event': {
+                    '$in': eventList
+                },
+                'shopTitle': brandFilter
+
+            }
+        },
+        {
+            '$match': {
+                '$expr': {
+                    '$gt': [
+                        '$updatedAt', {
+                            '$subtract': [
+                                '$$NOW', 604800000
+
+                            ]
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            '$addFields': {
+                'oldPriceDouble': {
+                    '$convert': {
+                        'input': '$oldPrice',
+                        'to': 'double'
+                    }
+                },
+                'newPriceDouble': {
+                    '$convert': {
+                        'input': '$newPrice',
+                        'to': 'double'
+                    }
+                }
+            }
+        }, {
+            '$match': {
+                '$expr': {
+                    '$gt': [
+                        '$oldPriceDouble', 0
+                    ]
+                }
+            }
+        }, {
+            '$addFields': {
+                'gain': {
+                    '$divide': [
+                        {
+                            '$subtract': [
+                                '$newPriceDouble', '$oldPriceDouble'
+                            ]
+                        }, '$oldPriceDouble'
+                    ]
+                }
+            }
+        }, {
+            '$match': {
+                '$expr': {
+                    '$gt': [
+                        {
+                            '$abs': '$gain'
+                        }, discountFloat
+                    ]
+                }
+            }
+        }, {
+            '$sort': {
+                '_id': -1
+            }
+        }, {
+            '$limit': limit
+        }
+    ]
+    let aggFin
+    //console.log(brandFilter)
+    if (brandFilter) {
+        aggFin = aggBrand
+    } else aggFin = agg
+
+    const brandListArray = await db
+        .collection("history")
+        .aggregate(brandListAgg)
+        .toArray();
 
     const history = await db
         .collection("history")
-        .aggregate(agg)
+        .aggregate(aggFin)
         .toArray();
 
 
-    //console.log(history.length)
-    return { props: { stats: stats, history: JSON.parse(JSON.stringify(history)) } }
+    //console.log(brandListArray)
+    return { props: { stats: stats, brandListArray: JSON.parse(JSON.stringify(brandListArray)), history: JSON.parse(JSON.stringify(history)) } }
 }
 
 export default PriceTrack;
