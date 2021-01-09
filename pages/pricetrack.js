@@ -171,7 +171,7 @@ function BrandListSelect(props) {
                     return (
                         <div key={elem._id} style={{ margin: "10px" }}>
                             <Badge badgeContent={elem.count} color="primary">
-                                <Chip clickable label={elem._id} key={elem._id} onClick={() => handleClick(elem._id)} />
+                                <Chip color ={(elem._id==router.query.brand)?"primary":"default"} clickable label={elem._id} key={elem._id} onClick={() => handleClick(elem._id)} />
                             </Badge>
 
                         </div>
