@@ -49,7 +49,7 @@ const useStyles = makeStyles(theme => ({
     cardMedia: {
 
         height: 0,
-        paddingTop: '56.25%', // 16:9
+        paddingTop: '100%', // 16:9
 
 
     }
@@ -58,8 +58,8 @@ const useStyles = makeStyles(theme => ({
 const getSmallLink = (link) => {
     if (link) {
         let myLink = link.split('?')[0];
-        myLink = myLink.replace('.jpg', '_1024x768.jpg')
-        myLink = myLink.replace('.png', '_1024x768.png')
+        myLink = myLink.replace('.jpg', '_1024x1024.jpg')
+        myLink = myLink.replace('.png', '_1024x1024.png')
         return myLink
     } else return null
 
@@ -246,7 +246,7 @@ function PriceTrack(props) {
             <Container style={{ margin: '30px auto' }} maxWidth='xl'>
                 <Grid container spacing={4} alignItems="stretch">
                     {props.history.map(entry => (
-                        <Grid item key={entry._id} xs={12} sm={6} md={4} lg={3}>
+                        <Grid item key={entry._id} xs={12} sm={6} md={4} lg={3} xl={2}>
 
                             <Card>
                                 <Link
