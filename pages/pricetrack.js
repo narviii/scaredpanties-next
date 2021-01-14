@@ -198,11 +198,11 @@ function PriceTrack(props) {
     const handleClick = () => {
         //console.log(router.query.limit)
         if (!router.query.limit) {
-            limit = 20
+            limit = 18
         } else {
             limit = parseInt(router.query.limit)
         }
-        limit += 20
+        limit += 18
 
         router.push({
             pathname: router.pathname,
@@ -246,7 +246,7 @@ function PriceTrack(props) {
             <Container style={{ margin: '30px auto' }} maxWidth='xl'>
                 <Grid container spacing={4} alignItems="stretch">
                     {props.history.map(entry => (
-                        <Grid item key={entry._id} xs={12} sm={6} md={4} lg={3} xl={2}>
+                        <Grid item key={entry._id} xs={12} sm={6} md={4} lg={4} xl={2}>
 
                             <Card>
                                 <Link
@@ -343,7 +343,7 @@ export async function getServerSideProps(context) {
     const stats = await client.getEntries({
         limit: 1
     })
-    let limit = 20
+    let limit = 18
     const eventList = []
 
     const priceUp = context.query.priceUp ? JSON.parse(context.query.priceUp) : true
@@ -366,7 +366,7 @@ export async function getServerSideProps(context) {
     if (context.query.limit) {
         limit = parseInt(context.query.limit)
     } else {
-        limit = 20
+        limit = 18
     }
 
     let brandListAgg =

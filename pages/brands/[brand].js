@@ -345,7 +345,7 @@ function Brand(props) {
                     {(props.entrie.stockists.items.length > 0) ? <Stockists stockists={props.entrie.stockists} /> : null}
 
                     {props.entrie.fields.gallery ? <BrandGallery pics={props.entrie.fields.gallery} /> : null}
-                    {props.entrie.fields.instalinks ? <IgGallery brand={props.entrie.fields.title} instalinks={props.entrie.fields.instalinks} /> : null}
+                    {/*props.entrie.fields.instalinks ? <IgGallery brand={props.entrie.fields.title} instalinks={props.entrie.fields.instalinks} /> : null*/}
 
                 </Paper>
                 <Container style={{ margin: '30px auto' }} maxWidth='md'>

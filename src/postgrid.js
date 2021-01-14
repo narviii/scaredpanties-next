@@ -326,7 +326,6 @@ function PostCard(props) {
 
                     <Grid container spacing={1} alignItems="stretch">
                         <Grid item xs={6}>
-                            <InstalinkChip style={{ marginLeft: "5px" }} instalinks={props.entrie.fields.instalinks} />
                             <ReviewChip style={{ marginLeft: "5px" }} reviews={props.entrie.fields.reviews} />
                             <StockistsChip style={{ marginLeft: "5px" }} stockists={props.entrie.stockists} />
                         </Grid>
