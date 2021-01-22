@@ -20,8 +20,13 @@ import { FirebaseContext, UserContext, DbContext, UserDocContext, LoginDialogCon
 import { client } from '../src/contentful'
 import { useContext } from "react";
 import Head from 'next/head'
-import {HeadContent } from '../src/headcontent'
+import { HeadContent } from '../src/headcontent'
 import Button from '@material-ui/core/Button';
+import Paper from '@material-ui/core/Paper';
+import { Typography } from '@material-ui/core';
+import Link from '@material-ui/core/Link'
+import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
+
 
 
 
@@ -153,7 +158,7 @@ function SelectOrigin(props) {
 function SelectTags(props) {
     const classes = useStyles();
     const router = useRouter();
-    
+
     const handleChange = (event) => {
         ReactGA.event({
             category: 'user',
@@ -289,7 +294,24 @@ function MainPage(props) {
             </Head>
             <CssBaseline />
             <Nav />
-            <Hero text="Handpicked lingerie database: Brands from all around the world. Like brands to save for yourself or to share your favourites with friends."/>
+            <Hero text="Handpicked lingerie database: Brands from all around the world. Like brands to save for yourself or to share your favourites with friends." />
+            <Container disableGutters="true" maxWidth='false'>
+
+                <Box p={3} flexWrap="wrap" display="flex" alignItems="center" bgcolor="info.main">
+                    <Box flexGrow={0.5} />
+                    <MonetizationOnIcon fontSize="large" style={{ marginRight: '5px' }} />
+                    <Typography  >
+                        New! Lingerie discounts live tracker. I scan quite a few lingerie websites for price changes(and discounts) so that you don't have to.
+                       </Typography>
+                    <Box flexGrow={0.5} />
+                    <Button style={{marginTop:"5px"}} href="/pricetrack" variant="contained" color="secondary">
+                        Show me
+                       </Button>
+                       <Box flexGrow={0.5} />
+
+                </Box>
+
+            </Container>
             <Container maxWidth='lg' style={{ margin: '30px auto 30px ' }} >
                 <Box justifyContent="center" alignContent="center" display="flex" flexWrap="wrap">
                     <SelectOrigin />
@@ -309,10 +331,10 @@ function MainPage(props) {
 
 
 MainPage.getInitialProps = async (context) => {
-    const order={
-        "lastUpdated":"-sys.updatedAt",
-        "lastCreated":"-sys.createdAt",
-        "alphabet":"fields.title"
+    const order = {
+        "lastUpdated": "-sys.updatedAt",
+        "lastCreated": "-sys.createdAt",
+        "alphabet": "fields.title"
     }
     let entries = await client.getEntries({
         include: 1,
@@ -326,14 +348,14 @@ MainPage.getInitialProps = async (context) => {
     })
 
 
-   
+
     entries.items = await Promise.all(entries.items.map(async (entry) => {
-         entry.stockists = await client.getEntries({
-             links_to_entry: entry.sys.id,
-             include: 0
-         })
-         return entry
-     }))
+        entry.stockists = await client.getEntries({
+            links_to_entry: entry.sys.id,
+            include: 0
+        })
+        return entry
+    }))
 
 
     const stats = await client.getEntries({
