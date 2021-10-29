@@ -144,10 +144,7 @@ export function Nav(props) {
                         <Button size="large" color="inherit" href="/" > HOME </Button>
                         <Button size="large" color="inherit" href="/search" > SEARCH </Button>
                         <Button size="large" color="inherit" href="/stockists" > STOCKISTS </Button>
-                        <Badge  badgeContent="new!" color="primary">
-                            <Button  size="large" color="inherit" href="/pricetrack" > PRICE TRACKER </Button>
-                        </Badge>
-
+                        
                         <Subscribe butToggle='true' />
                         <Button size="large" href="https://blog.scaredpanties.com" >  BLOG </Button>
                         <Button href="https://www.buymeacoffee.com/scaredpanties" startIcon={<LocalCafeIcon />}>
@@ -184,15 +181,7 @@ export function Nav(props) {
                                 </MenuItem>
 
                             </Link>
-                            <Badge badgeContent="new!" color="primary">
-                                <Link underline='none' color="textPrimary" href="/pricetrack" >
-                                    <MenuItem style={{ justifyContent: 'center' }} >
-                                        PRICE TRACKER
-                                    </MenuItem>
-    
-                                </Link>
-                            </Badge>
-
+                            
                             <Link underline='none' color="textPrimary" href="https://blog.scaredpanties.com" >
                                 <MenuItem style={{ justifyContent: 'center' }}>
                                     BLOG
