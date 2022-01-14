@@ -28,7 +28,7 @@ import { HeadContent } from '../src/headcontent'
 
 const client = contentful.createClient({
     space: 'y1tpc6gwyz3g',
-    accessToken: 'cQFcNJC5X35eWPkZ1ybown-nRQG4QOmxkwMZKootKeE'
+    accessToken: process.env.NEXT_PUBLIC_CONTENTFUL
 })
 
 const useStyles = makeStyles(theme => ({
