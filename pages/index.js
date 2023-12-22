@@ -30,6 +30,7 @@ import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
 
 
 
+
 const url = "https://scaredpanties.us20.list-manage.com/subscribe/post?u=65173dffd9ab714c0d2d985ab&amp;id=ed2dc9ceb2";
 
 
@@ -284,6 +285,20 @@ function MainPage(props) {
 
         <React.Fragment>
             <Head>
+                <aside
+                    style={{
+                        height: '50px',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        backgroundColor: 'black',
+                        fontSize: 'large'
+                    }}
+                >
+                    <p style={{ margin: 0, color: 'white' }}>
+                        Check out my new project! <a href="https://ifeelbeautiful.ca/?utm_source=catalog.scaredpanties.com&utm_medium=referral&utm_content=top_banner">I FEEL BEAUTIFUL</a>. An <a href="https://ifeelbeautiful.ca/collections/all-products?utm_source=catalog.scaredpanties.com&utm_medium=referral&utm_content=top_banner">indie makeup</a> store for Canadians.
+                    </p>
+                </aside>
                 <HeadContent
                     description="A list and catalog of lingerie brands assembled and lovely currated by scaredpanties."
                     title="Lingerie brands catalog."
@@ -297,7 +312,7 @@ function MainPage(props) {
             <Hero text="Handpicked lingerie database: Brands from all around the world. Like brands to save for yourself or to share your favourites with friends." />
             <Container disableGutters="true" maxWidth='false'>
 
-                
+
 
             </Container>
             <Container maxWidth='lg' style={{ margin: '30px auto 30px ' }} >
@@ -310,7 +325,7 @@ function MainPage(props) {
             </Container>
             <PostGrid entries={props.entries} />
             <Footer entries={props.stats} originList={originList} />
-        </React.Fragment>
+        </React.Fragment >
 
     );
 
