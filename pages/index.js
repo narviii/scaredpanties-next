@@ -296,7 +296,7 @@ function MainPage(props) {
                     }}
                 >
                     <p style={{ margin: 0, color: 'white' }}>
-                        Check out my new project! <a href="https://ifeelbeautiful.ca/?utm_source=catalog.scaredpanties.com&utm_medium=referral&utm_content=top_banner">I FEEL BEAUTIFUL</a>. An <a href="https://ifeelbeautiful.ca/collections/all-products?utm_source=catalog.scaredpanties.com&utm_medium=referral&utm_content=top_banner">indie makeup</a> store for Canadians.
+                        Check out my new project! <a style={{ color: 'white' }} href="https://ifeelbeautiful.ca/?utm_source=catalog.scaredpanties.com&utm_medium=referral&utm_content=top_banner">I FEEL BEAUTIFUL</a>. An <a style={{ color: 'white' }} href="https://ifeelbeautiful.ca/collections/all-products?utm_source=catalog.scaredpanties.com&utm_medium=referral&utm_content=top_banner">indie makeup</a> store.
                     </p>
                 </aside>
                 <HeadContent
